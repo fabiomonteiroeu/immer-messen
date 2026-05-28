@@ -15,6 +15,7 @@
     "docker:down": "docker compose down",
     "docker:reset": "docker compose down -v",
     "secrets:prod": "node scripts/generate-prod-secrets.mjs",
+    "secrets:prod:file": "node scripts/generate-prod-secrets.mjs > /tmp/prod-secrets.env && echo 'wrote /tmp/prod-secrets.env'",
     "seed:prod": "STRAPI_URL=https://cms.fabiomonteiro.cloud node apps/cms/scripts/seed-import.mjs",
     "seed:prod:dry": "STRAPI_URL=https://cms.fabiomonteiro.cloud node apps/cms/scripts/seed-import.mjs --dry-run",
     "patch:about:prod": "STRAPI_URL=https://cms.fabiomonteiro.cloud node apps/cms/scripts/patch-about-content.mjs"
