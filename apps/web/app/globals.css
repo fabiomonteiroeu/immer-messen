@@ -3031,6 +3031,12 @@ body.menu-open {
     max-width: none;
   }
 
+  .home-tech__media,
+  .home-tech__cta {
+    -webkit-clip-path: none;
+    clip-path: none;
+  }
+
   .cases-rects {
     grid-template-columns: 1fr 1fr;
   }
