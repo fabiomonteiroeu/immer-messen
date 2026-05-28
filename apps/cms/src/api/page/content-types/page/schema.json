@@ -1,0 +1,83 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pages",
+  "info": {
+    "singularName": "page",
+    "pluralName": "pages",
+    "displayName": "Page",
+    "description": "Institutional pages rendered by the public website"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 120,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "pageKey": {
+      "type": "enumeration",
+      "enum": ["home", "technology", "solutions", "about", "contact", "lgpd"],
+      "required": true
+    },
+    "summary": {
+      "type": "text",
+      "maxLength": 320,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "blocks": {
+      "type": "dynamiczone",
+      "components": [
+        "page.hero-block",
+        "page.page-hero-block",
+        "page.text-block",
+        "page.media-text-block",
+        "page.accordion-block",
+        "page.feature-grid-block",
+        "page.application-areas-block",
+        "page.cases-block",
+        "page.news-carousel-block",
+        "page.partners-block",
+        "page.contact-form-block",
+        "page.lgpd-content-block",
+        "page.raw-embed-block",
+        "page.about-content-block"
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    }
+  }
+}

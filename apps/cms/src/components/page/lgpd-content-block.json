@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_page_lgpd_content_blocks",
+  "info": {
+    "displayName": "LGPD Content Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "summaryTitle": {
+      "type": "string"
+    },
+    "sections": {
+      "type": "component",
+      "repeatable": true,
+      "component": "page.lgpd-section",
+      "required": true
+    }
+  }
+}

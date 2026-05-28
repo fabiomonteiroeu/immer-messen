@@ -1,0 +1,45 @@
+{
+  "collectionName": "components_page_hero_blocks",
+  "info": {
+    "displayName": "Hero Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 120
+    },
+    "subtitle": {
+      "type": "text",
+      "maxLength": 320
+    },
+    "posterImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "backgroundVideo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["videos", "files"]
+    },
+    "ctaLabel": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "ctaHref": {
+      "type": "string"
+    },
+    "alignment": {
+      "type": "enumeration",
+      "enum": ["left", "center", "right"],
+      "default": "left"
+    }
+  }
+}

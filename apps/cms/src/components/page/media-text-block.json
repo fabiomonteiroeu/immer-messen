@@ -1,0 +1,54 @@
+{
+  "collectionName": "components_page_media_text_blocks",
+  "info": {
+    "displayName": "Media Text Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "heading": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    },
+    "media": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images", "videos", "files"]
+    },
+    "mediaPosition": {
+      "type": "enumeration",
+      "enum": ["left", "right"],
+      "default": "left"
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": ["home-tech", "tech-band", "interface"]
+    },
+    "ctaLabel": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "ctaHref": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "features": {
+      "type": "component",
+      "repeatable": true,
+      "component": "page.feature-card"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@immer-messen/cms",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "strapi develop",
+    "build": "strapi build",
+    "start": "strapi start",
+    "seed:check": "node ./scripts/seed-content.mjs",
+    "seed:import": "node ./scripts/seed-import.mjs",
+    "seed:import:dry": "node ./scripts/seed-import.mjs --dry-run",
+    "lint": "echo 'cms lint placeholder - to be implemented in phase 1.3'",
+    "test": "echo 'cms test placeholder - to be implemented in phase 1.3'",
+    "typecheck": "echo 'cms typecheck placeholder - to be implemented in phase 1.3'"
+  },
+  "dependencies": {
+    "@strapi/strapi": "latest",
+    "pg": "latest",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.30.3",
+    "styled-components": "6.1.19"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "^5.9.3"
+  }
+}

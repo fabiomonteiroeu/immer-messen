@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_page_cases_blocks",
+  "info": {
+    "displayName": "Cases Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "displayMode": {
+      "type": "enumeration",
+      "enum": ["manual", "latest"],
+      "default": "latest"
+    },
+    "cases": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::case-study.case-study"
+    }
+  }
+}

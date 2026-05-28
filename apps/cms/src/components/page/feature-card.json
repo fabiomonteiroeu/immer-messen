@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_page_feature_cards",
+  "info": {
+    "displayName": "Feature Card"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "icon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "description": {
+      "type": "text",
+      "maxLength": 220
+    }
+  }
+}

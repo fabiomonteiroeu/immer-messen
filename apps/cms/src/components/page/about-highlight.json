@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_page_about_highlights",
+  "info": {
+    "displayName": "About Highlight"
+  },
+  "options": {},
+  "attributes": {
+    "badgeLabel": {
+      "type": "string",
+      "maxLength": 60,
+      "default": "INCEPTION PROGRAM"
+    },
+    "leftHeading": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "leftBody": {
+      "type": "richtext",
+      "required": true
+    },
+    "media": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "rightHeading": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "rightBody": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

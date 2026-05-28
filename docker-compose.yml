@@ -1,0 +1,64 @@
+services:
+  web:
+    image: node:20-alpine
+    working_dir: /workspace
+    command: sh -c "corepack enable && pnpm install && pnpm --filter @immer-messen/web dev --hostname 0.0.0.0 --port 3000"
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.example
+      - apps/web/.env.example
+    volumes:
+      - ./:/workspace
+    depends_on:
+      cms:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  cms:
+    image: node:20-alpine
+    working_dir: /workspace
+    command: sh -c "corepack enable && pnpm install && pnpm --filter @immer-messen/cms dev"
+    ports:
+      - "1337:1337"
+    env_file:
+      - .env.example
+      - apps/cms/.env.example
+    volumes:
+      - ./:/workspace
+      - cms-uploads:/workspace/apps/cms/public/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:1337/admin"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
+
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-immer_messen}
+      POSTGRES_USER: ${POSTGRES_USER:-immer}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-replace-with-postgres-password}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-immer} -d ${POSTGRES_DB:-immer_messen}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+volumes:
+  postgres-data:
+  cms-uploads:

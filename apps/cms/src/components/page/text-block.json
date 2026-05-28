@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_page_text_blocks",
+  "info": {
+    "displayName": "Text Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "required": true,
+      "maxLength": 120
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    },
+    "width": {
+      "type": "enumeration",
+      "enum": ["narrow", "default", "wide"],
+      "default": "default"
+    },
+    "theme": {
+      "type": "enumeration",
+      "enum": ["light", "dark", "brand"],
+      "default": "light"
+    }
+  }
+}

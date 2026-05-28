@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_page_raw_embed_blocks",
+  "info": {
+    "displayName": "Raw Embed Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "provider": {
+      "type": "string",
+      "required": true
+    },
+    "embedCode": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

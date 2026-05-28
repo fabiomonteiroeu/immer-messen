@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "lib": ["ES2021"],
+    "target": "ES2021",
+    "strict": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "noEmitOnError": true,
+    "noImplicitThis": true,
+    "outDir": "dist"
+  },
+  "include": [
+    "./",
+    "src/**/*.json",
+    "src/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "config/**/*.ts"
+  ],
+  "exclude": ["node_modules", "build", "dist", ".cache", ".tmp", "src/admin", "**/*.test.ts"]
+}

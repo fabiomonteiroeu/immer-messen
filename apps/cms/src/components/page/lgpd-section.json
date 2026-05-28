@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_page_lgpd_sections",
+  "info": {
+    "displayName": "LGPD Section"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

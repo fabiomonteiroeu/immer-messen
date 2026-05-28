@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_page_application_areas_blocks",
+  "info": {
+    "displayName": "Application Areas Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "areas": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::application-area.application-area"
+    }
+  }
+}

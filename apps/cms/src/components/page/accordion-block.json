@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_page_accordion_blocks",
+  "info": {
+    "displayName": "Accordion Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "body": {
+      "type": "richtext"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "page.accordion-item",
+      "required": true
+    }
+  }
+}

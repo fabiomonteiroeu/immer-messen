@@ -1,0 +1,18 @@
+{
+  "name": "immer-messen",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @immer-messen/web --filter @immer-messen/cms dev",
+    "dev:web": "pnpm --filter @immer-messen/web dev",
+    "dev:cms": "pnpm --filter @immer-messen/cms dev",
+    "build": "pnpm -r build",
+    "lint": "node scripts/validate-workspace.mjs lint && pnpm -r lint",
+    "test": "node --test tests/workspace-smoke.test.mjs && pnpm -r test",
+    "typecheck": "node scripts/validate-workspace.mjs typecheck && pnpm -r typecheck",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:reset": "docker compose down -v"
+  }
+}

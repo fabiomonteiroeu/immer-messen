@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_page_about_content_blocks",
+  "info": {
+    "displayName": "About Content Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "rows": {
+      "type": "component",
+      "repeatable": true,
+      "component": "page.about-row"
+    },
+    "highlight": {
+      "type": "component",
+      "repeatable": false,
+      "component": "page.about-highlight"
+    }
+  }
+}

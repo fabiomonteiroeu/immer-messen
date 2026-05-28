@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_page_page_hero_blocks",
+  "info": {
+    "displayName": "Page Hero Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 120
+    },
+    "subtitle": {
+      "type": "text",
+      "maxLength": 220
+    },
+    "posterImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "backgroundVideo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["videos", "files"]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_page_feature_grid_blocks",
+  "info": {
+    "displayName": "Feature Grid Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "cards": {
+      "type": "component",
+      "repeatable": true,
+      "component": "page.feature-card",
+      "required": true
+    }
+  }
+}

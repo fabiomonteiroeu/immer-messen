@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_page_about_rows",
+  "info": {
+    "displayName": "About Row"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    },
+    "media": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "mediaPosition": {
+      "type": "enumeration",
+      "enum": ["left", "right"],
+      "default": "left"
+    }
+  }
+}
