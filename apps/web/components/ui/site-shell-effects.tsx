@@ -4,15 +4,32 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import { useAppSelector } from "@/lib/store/hooks";
+import {
+  getInstitutionalPageKeyFromSlug,
+  type InstitutionalPageKey,
+} from "@/lib/cms/page-routes";
+import { isSupportedLocale, type SupportedLocale } from "@/lib/i18n/config";
 
 type SiteShellEffectsProps = {
   homeHref: string;
 };
 
+const TRANSPARENT_PAGE_KEYS: InstitutionalPageKey[] = ["home", "technology"];
+
+function isTransparentHeaderPath(pathname: string, homeHref: string): boolean {
+  if (pathname === homeHref || pathname === `${homeHref}/`) return true;
+  const segments = pathname.split("/").filter(Boolean);
+  if (segments.length !== 2) return false;
+  const [localeSeg, slug] = segments;
+  if (!isSupportedLocale(localeSeg)) return false;
+  const pageKey = getInstitutionalPageKeyFromSlug(localeSeg as SupportedLocale, slug);
+  return pageKey ? TRANSPARENT_PAGE_KEYS.includes(pageKey) : false;
+}
+
 export function SiteShellEffects({ homeHref }: SiteShellEffectsProps) {
   const mobileMenuOpen = useAppSelector((state) => state.ui.mobileMenuOpen);
   const pathname = usePathname();
-  const isHome = pathname === homeHref || pathname === `${homeHref}/`;
+  const isTransparent = isTransparentHeaderPath(pathname, homeHref);
 
   useEffect(() => {
     const header = document.querySelector(".site-header");
@@ -33,8 +50,8 @@ export function SiteShellEffects({ homeHref }: SiteShellEffectsProps) {
   useEffect(() => {
     const header = document.querySelector(".site-header");
     if (!header) return;
-    header.classList.toggle("header--transparent", isHome);
-  }, [isHome]);
+    header.classList.toggle("header--transparent", isTransparent);
+  }, [isTransparent]);
 
   useEffect(() => {
     document.body.classList.toggle("menu-open", mobileMenuOpen);

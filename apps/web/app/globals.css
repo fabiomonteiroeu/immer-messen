@@ -3124,7 +3124,7 @@ body.menu-open {
   }
 
   .hero {
-    min-height: 80vh;
+    min-height: 100vh;
   }
 
   .hero__title {
