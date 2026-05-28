@@ -82,6 +82,7 @@ html {
 
 body {
   margin: 0;
+  overflow-x: hidden;
   font-family: var(--ff-sans);
   font-size: var(--fs-base);
   line-height: 1.55;
@@ -1901,6 +1902,9 @@ body.menu-open {
   font-size: .95rem;
   outline: 2px solid transparent;
   transition: outline-color .2s;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .contact-form input:focus,
@@ -3091,6 +3095,11 @@ body.menu-open {
   .contact-form,
   .contato-form {
     grid-template-columns: 1fr;
+  }
+
+  .contact-card {
+    padding: 1.5rem;
+    width: calc(100% - 1.5rem);
   }
 
   .hero {
