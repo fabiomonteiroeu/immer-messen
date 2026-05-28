@@ -14,8 +14,20 @@ RUN pnpm install --filter @immer-messen/web --frozen-lockfile
 
 # --- build ---
 FROM deps AS build
+# NEXT_PUBLIC_* precisam estar disponíveis em build-time pois são inlined no bundle
+# e no CSP. EasyPanel passa env vars como --build-arg automaticamente.
+ARG NEXT_PUBLIC_SITE_URL=http://localhost:3000
+ARG NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
+ARG NEXT_PUBLIC_DEFAULT_LOCALE=pt-BR
+ARG NEXT_PUBLIC_SUPPORTED_LOCALES=pt-BR,en,es
+ARG NEXT_PUBLIC_ELFSIGHT_LINKEDIN_WIDGET_ID=
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
+    NEXT_PUBLIC_STRAPI_URL=$NEXT_PUBLIC_STRAPI_URL \
+    NEXT_PUBLIC_DEFAULT_LOCALE=$NEXT_PUBLIC_DEFAULT_LOCALE \
+    NEXT_PUBLIC_SUPPORTED_LOCALES=$NEXT_PUBLIC_SUPPORTED_LOCALES \
+    NEXT_PUBLIC_ELFSIGHT_LINKEDIN_WIDGET_ID=$NEXT_PUBLIC_ELFSIGHT_LINKEDIN_WIDGET_ID \
+    NEXT_TELEMETRY_DISABLED=1
 COPY apps/web ./apps/web
-ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm --filter @immer-messen/web build
 
 # --- runtime (standalone Next.js output) ---
