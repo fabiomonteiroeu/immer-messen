@@ -27,5 +27,8 @@ ENV NODE_ENV=production \
     HOST=0.0.0.0 \
     PORT=1337
 COPY --from=build /workspace ./
+# Garante a pasta de uploads (gitignored, volume pode ou não estar montado em cima).
+RUN mkdir -p /workspace/apps/cms/public/uploads \
+ && chmod -R 0777 /workspace/apps/cms/public/uploads
 EXPOSE 1337
 CMD ["pnpm", "--filter", "@immer-messen/cms", "start"]
