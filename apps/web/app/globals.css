@@ -3022,6 +3022,15 @@ body.menu-open {
     grid-template-columns: 1fr 1fr;
   }
 
+  .home-tech__feature {
+    align-items: center;
+    text-align: center;
+  }
+
+  .home-tech__feature p {
+    max-width: none;
+  }
+
   .cases-rects {
     grid-template-columns: 1fr 1fr;
   }
