@@ -692,12 +692,13 @@ const newsArticles = newsArticleDefs.flatMap((def) =>
 const caseStudyDefs = [
   {
     key: "projeto-pd-petrobras",
-    slug: "projeto-pd-petrobras",
+    documentId: "yi1ofae5swyt61vzdv8zcog5",
     sectorCategory: "offshore",
     applicationAreaKeys: ["integridade-estrutural"],
-    coverAssetKey: "case-placeholder-cabos-submarinos",
+    coverAssetKey: "case-cover-petrobras",
     "pt-BR": {
-      title: "Projeto P&D Petrobras",
+      slug: "monitoramento-de-gasodutos",
+      title: "Monitoramento de gasodutos",
       summary: "Monitoramento de integridade de dutos flexíveis submarinos com sensoriamento distribuído.",
       challenge: "<p>Garantir observabilidade de dutos submarinos com menor tempo de resposta e sem ampliar a complexidade de campo.</p>",
       solution: "<p>A Immer Messen aplicou tecnologia DAS de fase em toda a extensão do ativo, integrando eventos ao ambiente operacional do cliente.</p>",
@@ -707,6 +708,7 @@ const caseStudyDefs = [
       seoDescription: "Case de monitoramento de integridade de dutos flexíveis submarinos.",
     },
     en: {
+      slug: "projeto-pd-petrobras",
       title: "Petrobras R&D Project",
       summary: "Integrity monitoring of flexible submarine pipelines with distributed sensing.",
       challenge: "<p>Ensure observability of submarine pipelines with shorter response time and without increasing field complexity.</p>",
@@ -717,9 +719,10 @@ const caseStudyDefs = [
       seoDescription: "Integrity monitoring case for flexible submarine pipelines.",
     },
     es: {
+      slug: "projeto-pd-petrobras",
       title: "Proyecto I+D Petrobras",
       summary: "Monitoreo de integridad de ductos flexibles submarinos con sensado distribuido.",
-      challenge: "<p>Garantizar observabilidad de ductos submarinos con menor tiempo de respuesta y sin ampliar la complejidad en campo.</p>",
+      challenge: "<p>Garantizar observabilidad de ductos submarinos con menor tempo de resposta y sin ampliar la complejidad en campo.</p>",
       solution: "<p>Immer Messen aplicó tecnología DAS de fase a lo largo del activo, integrando eventos al entorno operativo del cliente.</p>",
       results: "<p>Reducción del tiempo de respuesta de hasta 80% frente a inspecciones tradicionales y construcción de una base de conocimiento para futuras expansiones.</p>",
       body: "<p>Proyecto de validación técnica enfocado en monitoreo continuo, localización precisa de eventos e integración con procesos operativos.</p>",
@@ -729,12 +732,13 @@ const caseStudyDefs = [
   },
   {
     key: "monitoramento-acustico-de-cetaceos",
-    slug: "monitoramento-acustico-de-cetaceos",
+    documentId: "heyjvuo6793hbue6p3ehulk5",
     sectorCategory: "meio-ambiente",
     applicationAreaKeys: ["meio-ambiente", "sismica"],
-    coverAssetKey: "case-placeholder-baleias",
+    coverAssetKey: "case-cover-baleias",
     "pt-BR": {
-      title: "Monitoramento acústico de cetáceos",
+      slug: "monitoramento-de-baleias",
+      title: "Monitoramento de baleias",
       summary: "Estudo de impacto de atividade sísmica em fauna marinha com observabilidade acústica distribuída.",
       challenge: "<p>Monitorar atividade acústica marinha em um contexto offshore sujeito a ruído operacional e variação ambiental.</p>",
       solution: "<p>Uso de DAS para classificar padrões acústicos e estruturar alertas para o time técnico.</p>",
@@ -744,6 +748,7 @@ const caseStudyDefs = [
       seoDescription: "Case ambiental com uso de DAS para fauna marinha.",
     },
     en: {
+      slug: "monitoramento-acustico-de-cetaceos",
       title: "Acoustic monitoring of cetaceans",
       summary: "Study of seismic activity impact on marine fauna with distributed acoustic observability.",
       challenge: "<p>Monitor marine acoustic activity in an offshore context subject to operational noise and environmental variation.</p>",
@@ -754,10 +759,11 @@ const caseStudyDefs = [
       seoDescription: "Environmental case using DAS for marine fauna.",
     },
     es: {
+      slug: "monitoramento-acustico-de-cetaceos",
       title: "Monitoreo acústico de cetáceos",
       summary: "Estudio del impacto de la actividad sísmica en la fauna marina con observabilidad acústica distribuida.",
       challenge: "<p>Monitorear la actividad acústica marina en un contexto offshore sujeto a ruido operativo y variación ambiental.</p>",
-      solution: "<p>Uso de DAS para clasificar patrones acústicos y estructurar alertas para el equipo técnico.</p>",
+      solution: "<p>Uso de DAS para classificar patrones acústicos y estructurar alertas para el equipo técnico.</p>",
       results: "<p>Mayor cobertura observacional y consolidación de una referencia técnica para aplicaciones ambientales offshore.</p>",
       body: "<p>Proyecto enfocado en el impacto ambiental, catalogación de patrones y apoyo a estudios técnicos marinos.</p>",
       seoTitle: "Monitoreo acústico de cetáceos",
@@ -766,11 +772,12 @@ const caseStudyDefs = [
   },
   {
     key: "monitoramento-de-linhas-de-transmissao",
-    slug: "monitoramento-de-linhas-de-transmissao",
+    documentId: "j36a33h0neyvqeow5lui5hlg",
     sectorCategory: "energia",
     applicationAreaKeys: ["seguranca-patrimonial", "incendios"],
-    coverAssetKey: "case-placeholder-transmissao",
+    coverAssetKey: "case-cover-transmissao",
     "pt-BR": {
+      slug: "monitoramento-de-linhas-de-transmissao",
       title: "Monitoramento de linhas de transmissão",
       summary: "Detecção precoce de falhas e intrusões em torres e corredores de transmissão.",
       challenge: "<p>Antecipar falhas e intrusões em infraestrutura extensa, exposta e de difícil patrulhamento contínuo.</p>",
@@ -781,6 +788,7 @@ const caseStudyDefs = [
       seoDescription: "Case de energia com foco em falhas e intrusões.",
     },
     en: {
+      slug: "monitoramento-de-linhas-de-transmissao",
       title: "Transmission line monitoring",
       summary: "Early detection of failures and intrusions on transmission towers and corridors.",
       challenge: "<p>Anticipate failures and intrusions on extensive, exposed infrastructure that is hard to patrol continuously.</p>",
@@ -791,24 +799,26 @@ const caseStudyDefs = [
       seoDescription: "Energy case focused on failures and intrusions.",
     },
     es: {
+      slug: "monitoramento-de-linhas-de-transmissao",
       title: "Monitoreo de líneas de transmisión",
       summary: "Detección temprana de fallas e intrusiones en torres y corredores de transmisión.",
       challenge: "<p>Anticipar fallas e intrusiones en infraestructura extensa, expuesta y de difícil patrullaje continuo.</p>",
       solution: "<p>Uso de DAS a lo largo de la infraestructura existente con clasificación de eventos y correlación espacial.</p>",
       results: "<p>Mejor predictibilidad operativa y cobertura permanente sin patrullaje físico constante.</p>",
       body: "<p>Caso orientado a infraestructura energética con fuerte dependencia de la detección de eventos lineales y respuesta coordinada.</p>",
-      seoTitle: "Monitoreo de líneas de transmisión",
+      seoTitle: "Monitoreo de líneas de transmissão",
       seoDescription: "Caso de energía enfocado en fallas e intrusiones.",
     },
   },
   {
     key: "monitoramento-de-gasodutos-onshore",
-    slug: "monitoramento-de-gasodutos-onshore",
+    documentId: "c07mowtisq6wm8vuezg2tyzb",
     sectorCategory: "oleo-e-gas",
     applicationAreaKeys: ["vazamentos", "derivacao-clandestina", "escoamento"],
-    coverAssetKey: "case-placeholder-gasodutos",
+    coverAssetKey: "case-cover-gasodutos",
     "pt-BR": {
-      title: "Monitoramento de gasodutos onshore",
+      slug: "monitoramento-de-cabos-submarinos",
+      title: "Monitoramento de cabos submarinos",
       summary: "Detecção de vazamentos e derivação clandestina em gasodutos de longa distância.",
       challenge: "<p>Identificar vazamentos e interferências indevidas em ativos lineares de longa extensão com alta criticidade.</p>",
       solution: "<p>A plataforma DATS combina leitura distribuída, filtragem de ruído e alertas operacionais com localização precisa.</p>",
@@ -818,6 +828,7 @@ const caseStudyDefs = [
       seoDescription: "Case de vazamentos e derivação clandestina em gasodutos.",
     },
     en: {
+      slug: "monitoramento-de-gasodutos-onshore",
       title: "Onshore gas pipeline monitoring",
       summary: "Leak detection and illegal tapping detection on long-distance gas pipelines.",
       challenge: "<p>Identify leaks and unauthorized interference on long, high-criticality linear assets.</p>",
@@ -828,6 +839,7 @@ const caseStudyDefs = [
       seoDescription: "Case on leaks and illegal tapping in gas pipelines.",
     },
     es: {
+      slug: "monitoramento-de-gasodutos-onshore",
       title: "Monitoreo de gasoductos onshore",
       summary: "Detección de fugas y derivación clandestina en gasoductos de larga distancia.",
       challenge: "<p>Identificar fugas e interferencias indebidas en activos lineales de gran extensión y alta criticidad.</p>",
@@ -843,10 +855,11 @@ const caseStudyDefs = [
 const caseStudies = caseStudyDefs.flatMap((def) =>
   locales.map((locale) => ({
     key: def.key,
+    documentId: def.documentId,
     locale,
     data: {
       title: def[locale].title,
-      slug: def.slug,
+      slug: def[locale].slug,
       summary: def[locale].summary,
       sectorCategory: def.sectorCategory,
       challenge: def[locale].challenge,
@@ -856,7 +869,7 @@ const caseStudies = caseStudyDefs.flatMap((def) =>
       seo: seo(
         def[locale].seoTitle,
         def[locale].seoDescription,
-        `https://www.immermessen.com/${locale}/cases/${def.slug}`
+        `https://www.immermessen.com/${locale}/cases/${def[locale].slug}`
       ),
     },
     relationRefs: { applicationAreaKeys: def.applicationAreaKeys },
@@ -1455,6 +1468,10 @@ export const seedContent = {
 export const assetManifest = {
   readyAssets: [
     { assetKey: "logo-immer", sourcePath: "layout-aprovado/assets/img/logo-immer.png", kind: "image" },
+    { assetKey: "case-cover-baleias", sourcePath: "resources/cases-01.png", kind: "image" },
+    { assetKey: "case-cover-transmissao", sourcePath: "resources/cases-01_1.png", kind: "image" },
+    { assetKey: "case-cover-gasodutos", sourcePath: "resources/cases-03.png", kind: "image" },
+    { assetKey: "case-cover-petrobras", sourcePath: "resources/cases-04.png", kind: "image" },
     { assetKey: "hero-home-poster", sourcePath: "layout-aprovado/assets/img/hero-home.png", kind: "image" },
     { assetKey: "hero-home-video", sourcePath: "layout-aprovado/assets/video/HOME.mp4", kind: "video" },
     { assetKey: "technology-video", sourcePath: "layout-aprovado/assets/video/Interrogador.webm", kind: "video" },

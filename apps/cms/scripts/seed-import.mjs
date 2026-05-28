@@ -325,6 +325,16 @@ async function findOneByFilter(plural, params) {
   return res?.data?.[0] ?? null;
 }
 
+async function checkDocumentExists(plural, documentId) {
+  if (DRY_RUN) return true;
+  try {
+    const res = await strapi(`/api/${plural}/${documentId}?status=draft`);
+    return !!(res?.data?.documentId || res?.data?.id);
+  } catch {
+    return false;
+  }
+}
+
 async function upsertLocalizedEntry({ plural, key, locale, data, baseDocumentId }) {
   if (baseDocumentId) {
     const url = `/api/${plural}/${baseDocumentId}?locale=${encodeURIComponent(locale)}`;
@@ -443,6 +453,19 @@ async function seedLocalizedCollection({ collectionKey, plural, items, assetMap,
     variants.sort((a, b) => (a.locale === "pt-BR" ? -1 : 1));
 
     let documentId = null;
+
+    // Check if any variant has a defined documentId and if it exists in Strapi
+    const targetDocId = variants.find((v) => v.documentId)?.documentId;
+    if (targetDocId) {
+      const exists = await checkDocumentExists(plural, targetDocId);
+      if (exists) {
+        documentId = targetDocId;
+        logv(`Using pre-defined documentId ${documentId} for ${collectionKey} ${key}`);
+      } else {
+        logv(`Pre-defined documentId ${targetDocId} for ${collectionKey} ${key} does not exist in target CMS, falling back to lookup/create`);
+      }
+    }
+
     let firstNumericId = null;
 
     for (const variant of variants) {

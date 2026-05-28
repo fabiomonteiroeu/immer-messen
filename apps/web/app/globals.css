@@ -933,8 +933,21 @@ body.menu-open {
   padding-top: 6rem;
 }
 
+.hero__inner .btn {
+  background: #4a4d4f;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+}
+
+.hero__inner .btn:hover {
+  background: #5c6062;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+  filter: none;
+}
+
 .hero__title {
-  font-size: var(--fs-3xl);
+  font-size: calc(var(--fs-3xl) * 0.8);
   font-weight: 600;
   max-width: 14ch;
   line-height: 1.05;
