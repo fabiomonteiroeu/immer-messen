@@ -13,6 +13,10 @@
     "typecheck": "node scripts/validate-workspace.mjs typecheck && pnpm -r typecheck",
     "docker:up": "docker compose up --build",
     "docker:down": "docker compose down",
-    "docker:reset": "docker compose down -v"
+    "docker:reset": "docker compose down -v",
+    "secrets:prod": "node scripts/generate-prod-secrets.mjs",
+    "seed:prod": "STRAPI_URL=https://cms.fabiomonteiro.cloud node apps/cms/scripts/seed-import.mjs",
+    "seed:prod:dry": "STRAPI_URL=https://cms.fabiomonteiro.cloud node apps/cms/scripts/seed-import.mjs --dry-run",
+    "patch:about:prod": "STRAPI_URL=https://cms.fabiomonteiro.cloud node apps/cms/scripts/patch-about-content.mjs"
   }
 }
