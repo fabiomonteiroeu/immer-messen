@@ -232,6 +232,11 @@ CMS admin → **Settings → Global settings → Webhooks → + Create new webho
   - CMS: `DATABASE_HOST`, `WEB_REVALIDATE_URL`
   - Web: `INTERNAL_STRAPI_URL`
 
+### Container entra em loop de restart após adicionar env vars
+- **Causa típica:** você colou no campo Environment vars que JÁ ESTÃO no Dockerfile (`NODE_ENV`, `PORT`, `HOST`, `HOSTNAME`, `NEXT_TELEMETRY_DISABLED`). Redefinir `HOSTNAME=0.0.0.0` em runtime quebra o DNS interno do EasyPanel — o roteador não consegue mais encontrar o container.
+- **Fix:** abra o serviço afetado → Ambiente → **remova** essas variáveis. Salva → redeploya.
+- O script `generate-prod-secrets.mjs` já omite essas variáveis automaticamente.
+
 ### Deploy falha no build de pnpm
 - Erro tipo `ERR_PNPM_NO_LOCKFILE`: verifique que `pnpm-lock.yaml` está commitado (está).
 - Erro tipo `ERR_PNPM_FROZEN_LOCKFILE_WITH_OUTDATED_LOCKFILE`: rode local `pnpm install`, comite o `pnpm-lock.yaml` atualizado e empurre.

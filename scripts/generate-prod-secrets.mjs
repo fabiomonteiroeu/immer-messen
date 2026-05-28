@@ -27,9 +27,8 @@ POSTGRES_USER=immer
 POSTGRES_PASSWORD=${postgresPassword}
 
 # ─── CMS service env vars (EasyPanel App → cms) ───
-HOST=0.0.0.0
-PORT=1337
-NODE_ENV=production
+# NOTA: NÃO defina HOST, PORT, NODE_ENV aqui — já estão no Dockerfile.
+# Redefinir em runtime confunde o roteamento interno do EasyPanel.
 APP_KEYS=${appKeys}
 API_TOKEN_SALT=${apiTokenSalt}
 ADMIN_JWT_SECRET=${adminJwtSecret}
@@ -52,10 +51,8 @@ UPLOAD_CONCURRENT_LIMIT=2
 UPLOAD_DENIED_MIME=image/svg+xml
 
 # ─── Web service env vars (EasyPanel App → web) ───
-NODE_ENV=production
-PORT=3000
-HOSTNAME=0.0.0.0
-NEXT_TELEMETRY_DISABLED=1
+# NOTA: NÃO defina NODE_ENV, PORT, HOSTNAME, NEXT_TELEMETRY_DISABLED aqui — já estão no Dockerfile.
+# Redefinir HOSTNAME=0.0.0.0 em runtime quebra o roteamento interno do EasyPanel.
 NEXT_PUBLIC_SITE_URL=https://immer.fabiomonteiro.cloud
 NEXT_PUBLIC_STRAPI_URL=https://cms.fabiomonteiro.cloud
 INTERNAL_STRAPI_URL=http://immer-messen_cms:1337
@@ -71,4 +68,6 @@ NEXT_PUBLIC_ELFSIGHT_LINKEDIN_WIDGET_ID=
 # 3. Não comite este arquivo nem cole em chat público.
 # 4. Se a internal hostname do seu projeto EasyPanel for diferente de "immer-messen_db" / "immer-messen_cms" / "immer-messen_web",
 #    ajuste DATABASE_HOST, INTERNAL_STRAPI_URL e WEB_REVALIDATE_URL conforme o nome que aparecer em EasyPanel.
+# 5. NUNCA cole HOST, PORT, NODE_ENV, HOSTNAME ou NEXT_TELEMETRY_DISABLED como env vars no EasyPanel.
+#    Esses já estão no Dockerfile e redefini-los em runtime quebra o container.
 `.trim());
