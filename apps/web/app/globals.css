@@ -2725,15 +2725,30 @@ body.menu-open {
   color: var(--c-gray-700);
 }
 
+.case-content {
+  padding: 1rem 0 3rem;
+}
+
 .case-text {
   max-width: 75ch;
+  margin: 0 auto;
   font-size: .98rem;
   color: var(--c-gray-700);
   line-height: 1.75;
 }
 
-.case-text+.case-text {
+.case-text + .case-text,
+.case-text + .case-hero-img,
+.case-hero-img + .case-text {
   margin-top: 2.5rem;
+}
+
+.case-text p {
+  margin: 0 0 1.25rem;
+}
+
+.case-text p:last-child {
+  margin-bottom: 0;
 }
 
 .case-section {

@@ -148,7 +148,27 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
         </div>
       </div>
 
-      <div className="container">
+      <div className="container case-content">
+        {caseEntry.body ? (
+          <div className="case-text" dangerouslySetInnerHTML={{ __html: caseEntry.body }} />
+        ) : null}
+        {caseEntry.coverImage ? (
+          <img
+            alt={caseEntry.coverImage.alternativeText ?? ""}
+            className="case-hero-img"
+            loading="lazy"
+            src={resolveMediaUrl(caseEntry.coverImage.url) ?? undefined}
+          />
+        ) : null}
+        {caseEntry.challenge ? (
+          <div className="case-text" dangerouslySetInnerHTML={{ __html: caseEntry.challenge }} />
+        ) : null}
+        {caseEntry.solution ? (
+          <div className="case-text" dangerouslySetInnerHTML={{ __html: caseEntry.solution }} />
+        ) : null}
+        {caseEntry.results ? (
+          <div className="case-text" dangerouslySetInnerHTML={{ __html: caseEntry.results }} />
+        ) : null}
         {caseEntry.sections.map((section, index) => (
           <CaseSection key={`${section.__component}-${index}`} section={section} />
         ))}

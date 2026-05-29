@@ -252,11 +252,16 @@ export const cmsCaseSchema = z.object({
   slug: z.string().min(1),
   locale: cmsLocaleSchema,
   summary: z.string().min(1),
+  sectorCategory: z.string().nullable().optional(),
   coverImage: cmsMediaSchema.optional(),
   heroMedia: cmsMediaSchema.optional(),
   projectTitle: z.string().optional(),
   projectSubtitle: z.string().optional(),
   details: cmsCaseDetailsSchema.optional(),
+  body: z.string().nullable().optional(),
+  challenge: z.string().nullable().optional(),
+  solution: z.string().nullable().optional(),
+  results: z.string().nullable().optional(),
   sections: z.array(cmsCaseSectionSchema).default([]),
 });
 
