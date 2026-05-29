@@ -77,7 +77,8 @@
       }
     },
     "tags": {
-      "type": "json",
+      "type": "string",
+      "maxLength": 255,
       "pluginOptions": {
         "i18n": {
           "localized": true

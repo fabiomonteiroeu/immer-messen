@@ -600,11 +600,14 @@ export interface ApiCaseStudyCaseStudy extends Struct.CollectionTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 320;
       }>;
-    tags: Schema.Attribute.JSON &
+    tags: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
+      }> &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
       }>;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &

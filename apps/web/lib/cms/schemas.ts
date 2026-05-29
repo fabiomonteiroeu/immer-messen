@@ -235,9 +235,16 @@ export const cmsCaseSchema = z.object({
   startDate: z.string().nullable().optional(),
   duration: z.string().nullable().optional(),
   tags: z
-    .union([z.array(z.string()), z.null()])
+    .union([z.string(), z.array(z.string()), z.null()])
     .optional()
-    .transform((value) => value ?? []),
+    .transform((value) => {
+      if (Array.isArray(value)) return value;
+      if (typeof value !== "string") return [];
+      return value
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0);
+    }),
   projectLogos: z.array(cmsProjectLogoSchema).default([]),
   body: z.string().nullable().optional(),
 });
