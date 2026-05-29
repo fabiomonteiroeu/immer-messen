@@ -1002,9 +1002,9 @@ const pageDefs = [
             rightBody: "<p>Somos o único desenvolvedor brasileiro de tecnologia DFOS com hardware proprietário, algoritmos de IA treinados com dados de campo nacionais e capacidade de entrega de solução completa — do interrogador óptico à plataforma de monitoramento contínuo. Nossa estrutura local permite suporte ágil, precificação competitiva e integração nativa aos requisitos regulatórios do mercado brasileiro.</p>",
           }
         ),
+        partnersBlock("Nossos parceiros", allPartnerKeys),
         casesBlock("Cases", "latest"),
         newsBlock("Notícias", "latest"),
-        partnersBlock("Nossos parceiros", allPartnerKeys),
         contactFormBlock(
           "Fale com a nossa equipe",
           "<p>Se você tem interesse em saber mais sobre as nossas soluções, deixe o seu contato.</p>",
@@ -1092,9 +1092,9 @@ const pageDefs = [
             rightBody: "<p>We are the only Brazilian developer of DFOS technology with proprietary hardware, AI algorithms trained on national field data, and the capability to deliver a full solution — from optical interrogator to continuous monitoring platform. Our local structure enables agile support, competitive pricing and native compliance with Brazilian regulatory requirements.</p>",
           }
         ),
+        partnersBlock("Our partners", allPartnerKeys),
         casesBlock("Cases", "latest"),
         newsBlock("News", "latest"),
-        partnersBlock("Our partners", allPartnerKeys),
         contactFormBlock(
           "Talk to our team",
           "<p>If you would like to learn more about our solutions, leave your contact information.</p>",
@@ -1182,9 +1182,9 @@ const pageDefs = [
             rightBody: "<p>Somos el único desarrollador brasileño de tecnología DFOS con hardware propietario, algoritmos de IA entrenados con datos de campo nacionales y capacidad de entrega de solución completa — del interrogador óptico a la plataforma de monitoreo continuo. Nuestra estructura local permite soporte ágil, precificación competitiva e integración nativa a los requisitos regulatorios del mercado brasileño.</p>",
           }
         ),
+        partnersBlock("Nuestros aliados", allPartnerKeys),
         casesBlock("Casos", "latest"),
         newsBlock("Noticias", "latest"),
-        partnersBlock("Nuestros aliados", allPartnerKeys),
         contactFormBlock(
           "Hable con nuestro equipo",
           "<p>Si desea conocer más sobre nuestras soluciones, déjenos sus datos de contacto.</p>",
