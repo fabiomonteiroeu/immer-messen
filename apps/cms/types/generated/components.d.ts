@@ -1,5 +1,18 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface CaseProjectLogo extends Struct.ComponentSchema {
+  collectionName: 'components_case_project_logos';
+  info: {
+    displayName: 'Project Logo';
+    icon: 'image';
+  };
+  attributes: {
+    alt: Schema.Attribute.String;
+    logo: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+    url: Schema.Attribute.String;
+  };
+}
+
 export interface PageAboutContentBlock extends Struct.ComponentSchema {
   collectionName: 'components_page_about_content_blocks';
   info: {
@@ -510,6 +523,7 @@ export interface SharedSocialLink extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'case.project-logo': CaseProjectLogo;
       'page.about-content-block': PageAboutContentBlock;
       'page.about-highlight': PageAboutHighlight;
       'page.about-row': PageAboutRow;

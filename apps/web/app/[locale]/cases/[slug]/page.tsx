@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { ContactCard } from "@/components/ui/contact-card";
 import { getCaseBySlug } from "@/lib/cms/cases";
 import { getMockCases } from "@/lib/cms/mock-cases";
-import type { CmsCaseSection } from "@/lib/cms/schemas";
 import { articleJsonLd, jsonLdScript } from "@/lib/seo/jsonld";
 import { getSiteUrl } from "@/lib/seo/site-url";
 import { isSupportedLocale, supportedLocales, type SupportedLocale } from "@/lib/i18n/config";
@@ -20,24 +19,48 @@ type CaseDetailPageProps = {
   params: Promise<{ locale: string; slug: string }>;
 };
 
-const contactByLocale: Record<SupportedLocale, { heading: string; body: string; submit: string; detailsLabel: string }> = {
+const labelsByLocale: Record<
+  SupportedLocale,
+  {
+    heading: string;
+    body: string;
+    submit: string;
+    detailsLabel: string;
+    clientLabel: string;
+    startLabel: string;
+    durationLabel: string;
+    tagsLabel: string;
+  }
+> = {
   "pt-BR": {
     heading: "Fale com a nossa equipe",
     body: "<p>Se voce tem interesse em saber mais sobre as nossas solucoes, deixe o seu contato.</p>",
     submit: "enviar",
     detailsLabel: "Detalhes do Projeto",
+    clientLabel: "Cliente",
+    startLabel: "Data de inicio",
+    durationLabel: "Duracao",
+    tagsLabel: "Tags",
   },
   en: {
     heading: "Talk to our team",
     body: "<p>If you would like to know more about our solutions, leave us your contact.</p>",
     submit: "send",
     detailsLabel: "Project details",
+    clientLabel: "Client",
+    startLabel: "Start date",
+    durationLabel: "Duration",
+    tagsLabel: "Tags",
   },
   es: {
     heading: "Hable con nuestro equipo",
     body: "<p>Si desea saber mas sobre nuestras soluciones, dejenos su contacto.</p>",
     submit: "enviar",
     detailsLabel: "Detalles del proyecto",
+    clientLabel: "Cliente",
+    startLabel: "Fecha de inicio",
+    durationLabel: "Duracion",
+    tagsLabel: "Tags",
   },
 };
 
@@ -79,13 +102,19 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
     notFound();
   }
 
-  const labels = contactByLocale[resolvedLocale];
+  const labels = labelsByLocale[resolvedLocale];
+  const logos = caseEntry.projectLogos.slice(0, 3);
+  const tags = caseEntry.tags ?? [];
+  const hasAnyDetail = Boolean(
+    caseEntry.client || caseEntry.startDate || caseEntry.duration || tags.length > 0,
+  );
+
   const articleLd = articleJsonLd({
     headline: caseEntry.title,
     description: caseEntry.summary,
     image: resolveMediaUrl(caseEntry.heroMedia?.url ?? caseEntry.coverImage?.url) ?? undefined,
     url: `${getSiteUrl()}/${resolvedLocale}/cases/${caseEntry.slug}`,
-    datePublished: caseEntry.details?.startDate,
+    datePublished: caseEntry.startDate ?? undefined,
   });
 
   return (
@@ -109,41 +138,56 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
 
       <div className="container">
         <div className="case-details">
-          <aside className="case-details__card">
-            <div className="case-details__card-head">{labels.detailsLabel}</div>
-            <div className="case-details__card-body">
-              {caseEntry.details?.client ? (
-                <div className="case-details__row">
-                  <b>Cliente:</b> {caseEntry.details.client}
-                </div>
-              ) : null}
-              {caseEntry.details?.startDate ? (
-                <div className="case-details__row">
-                  <b>Inicio:</b> {formatDate(caseEntry.details.startDate, resolvedLocale)}
-                </div>
-              ) : null}
-              {caseEntry.details?.duration ? (
-                <div className="case-details__row">
-                  <b>Duracao:</b> {caseEntry.details.duration}
-                </div>
-              ) : null}
-              {caseEntry.details?.tags && caseEntry.details.tags.length > 0 ? (
-                <div className="case-details__row">
-                  <b>Tags:</b> {caseEntry.details.tags.join(", ")}
-                </div>
-              ) : null}
-            </div>
-          </aside>
+          {hasAnyDetail ? (
+            <aside className="case-details__card">
+              <div className="case-details__card-head">{labels.detailsLabel}</div>
+              <div className="case-details__card-body">
+                {caseEntry.client ? (
+                  <div className="case-details__row">
+                    <b>{labels.clientLabel}:</b> {caseEntry.client}
+                  </div>
+                ) : null}
+                {caseEntry.startDate ? (
+                  <div className="case-details__row">
+                    <b>{labels.startLabel}:</b> {formatDate(caseEntry.startDate, resolvedLocale)}
+                  </div>
+                ) : null}
+                {caseEntry.duration ? (
+                  <div className="case-details__row">
+                    <b>{labels.durationLabel}:</b> {caseEntry.duration}
+                  </div>
+                ) : null}
+                {tags.length > 0 ? (
+                  <div className="case-details__row">
+                    <b>{labels.tagsLabel}:</b> {tags.join(", ")}
+                  </div>
+                ) : null}
+              </div>
+            </aside>
+          ) : null}
           <div>
-            <div className="case-logos">
-              <div className="case-logo-slot">logo 1</div>
-              <div className="case-logo-slot">logo 2</div>
-              <div className="case-logo-slot">logo 3</div>
-            </div>
-            <h1 className="case-project__title">{caseEntry.projectTitle ?? caseEntry.title}</h1>
-            {caseEntry.projectSubtitle ? (
-              <p className="case-project__sub">{caseEntry.projectSubtitle}</p>
+            {logos.length > 0 ? (
+              <div className="case-logos">
+                {logos.map((slot) => {
+                  const src = resolveMediaUrl(slot.logo.url) ?? undefined;
+                  const alt = slot.alt ?? slot.logo.alternativeText ?? "";
+                  const img = <img alt={alt} loading="lazy" src={src} />;
+                  return (
+                    <div className="case-logo-slot" key={slot.id ?? slot.logo.id}>
+                      {slot.url ? (
+                        <a href={slot.url} rel="noopener noreferrer" target="_blank">
+                          {img}
+                        </a>
+                      ) : (
+                        img
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             ) : null}
+            <h1 className="case-project__title">{caseEntry.title}</h1>
+            <p className="case-project__sub">{caseEntry.summary}</p>
           </div>
         </div>
       </div>
@@ -152,26 +196,6 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
         {caseEntry.body ? (
           <div className="case-text" dangerouslySetInnerHTML={{ __html: caseEntry.body }} />
         ) : null}
-        {caseEntry.coverImage ? (
-          <img
-            alt={caseEntry.coverImage.alternativeText ?? ""}
-            className="case-hero-img"
-            loading="lazy"
-            src={resolveMediaUrl(caseEntry.coverImage.url) ?? undefined}
-          />
-        ) : null}
-        {caseEntry.challenge ? (
-          <div className="case-text" dangerouslySetInnerHTML={{ __html: caseEntry.challenge }} />
-        ) : null}
-        {caseEntry.solution ? (
-          <div className="case-text" dangerouslySetInnerHTML={{ __html: caseEntry.solution }} />
-        ) : null}
-        {caseEntry.results ? (
-          <div className="case-text" dangerouslySetInnerHTML={{ __html: caseEntry.results }} />
-        ) : null}
-        {caseEntry.sections.map((section, index) => (
-          <CaseSection key={`${section.__component}-${index}`} section={section} />
-        ))}
       </div>
 
       <ContactCard
@@ -183,35 +207,6 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
       />
     </>
   );
-}
-
-function CaseSection({ section }: { section: CmsCaseSection }) {
-  switch (section.__component) {
-    case "case.text-section":
-      return <p className="case-text" dangerouslySetInnerHTML={{ __html: section.html }} />;
-    case "case.gallery-section":
-      return (
-        <div className="case-gallery">
-          {section.images.map((image) => (
-            <img
-              alt={image.alternativeText ?? ""}
-              key={image.id}
-              loading="lazy"
-              src={resolveMediaUrl(image.url) ?? undefined}
-            />
-          ))}
-        </div>
-      );
-    case "case.hero-image-section":
-      return (
-        <img
-          alt={section.image.alternativeText ?? ""}
-          className="case-hero-img"
-          loading="lazy"
-          src={resolveMediaUrl(section.image.url) ?? undefined}
-        />
-      );
-  }
 }
 
 function formatDate(iso: string, locale: SupportedLocale): string {

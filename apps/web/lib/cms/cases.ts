@@ -26,6 +26,7 @@ export async function getCases({ locale, limit }: GetCasesArgs): Promise<CmsCase
         ...(limit ? { "pagination[pageSize]": limit } : {}),
         "populate[coverImage]": true,
         "populate[heroMedia]": true,
+        "populate[projectLogos][populate][logo]": true,
       },
       schema: cmsCaseCollectionSchema,
       init: {
@@ -76,6 +77,7 @@ export async function getCasesPage({
         "pagination[pageSize]": perPage,
         "populate[coverImage]": true,
         "populate[heroMedia]": true,
+        "populate[projectLogos][populate][logo]": true,
       },
       schema: cmsCaseCollectionSchema,
       init: { next: { revalidate: 300, tags: ["cases", `cases:page:${page}`] } },
@@ -128,6 +130,7 @@ export async function getCaseBySlug({
         "pagination[pageSize]": 1,
         "populate[coverImage]": true,
         "populate[heroMedia]": true,
+        "populate[projectLogos][populate][logo]": true,
       },
       schema: cmsCaseCollectionSchema,
       init: { next: { revalidate: 300, tags: ["cases", `case:${slug}`] } },

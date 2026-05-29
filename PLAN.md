@@ -10,39 +10,23 @@
 ✅ **Postgres**: rodando como serviço dentro do projeto EasyPanel `immer-messen`
 ✅ **Webhook revalidação**: ativo — publicação no Strapi atualiza o frontend em ~5s
 
-## Último commit aplicado mas ainda **não deployado**
+## Pendências de deploy
 
-`c60f693 feat(web): render case body/challenge/solution/results + cover as featured image`
+`HEAD ` — case detail CMS-editável + Strapi schema novo + seed atualizado.
+Pendente:
+1. Deploy CMS no EasyPanel (schema ganha `client/startDate/duration/tags/projectLogos`; perde `challenge/solution/results`).
+2. Rodar `pnpm seed:prod` para popular os 4 cases com os novos campos.
+3. Deploy Web no EasyPanel (page e mocks atualizados).
+4. Smoke test em `/pt-BR/cases/monitoramento-de-gasodutos`.
 
-→ **AÇÃO**: deploy do `web` no EasyPanel pra rebuildar e mostrar a página de detalhes de cases com o conteúdo correto. Visita
-`https://immer.fabiomonteiro.cloud/pt-BR/cases/monitoramento-de-baleias` depois pra validar.
+Plano detalhado: `docs/PLAN-case-detail-cms.md`.
 
 ## Pendências de produto (escopo futuro)
 
-### 1. Página de detalhes de cases — alinhamento total com layout aprovado
-Layout em `resources/case-details-100.jpg`. Atualmente renderiza hero + Detalhes
-do Projeto + 3 logos + título + body/challenge/solution/results + coverImage.
-Faltam:
+### 1. Layout aprovado de case — refinamentos futuros
+Hoje atende o essencial (summary abaixo do título, card 4 itens editável, até 3 logos dinâmicos, body único). Se a composição texto + galeria 3-up + hero alternada do `resources/case-details-100.jpg` ficar abaixo do aceitável com richtext puro, migrar `body` pra dynamic-zone `sections` (case.text-section/gallery/hero-image).
 
-- **Campos do CMS para "Detalhes do Projeto"**: hoje o card mostra
-  Cliente/Data de início/Duração/Tags só se `details` vier preenchido, mas o
-  Strapi `case-study/schema.json` não tem esses campos. Adicionar:
-  - `client: string`
-  - `startDate: date`
-  - `duration: string`
-  - `tags: json (array of strings)`
-  Migração: editar `apps/cms/src/api/case-study/content-types/case-study/schema.json`,
-  rebuild do CMS no EasyPanel (Strapi dev mode adiciona colunas automaticamente,
-  mas em prod com restart pode precisar de migration manual).
-
-- **Logos clientes**: hoje renderizados como `logo 1/2/3` hardcoded. Solução
-  futura: relation manyToMany com `partner` ou campo `clientLogos` (multiple
-  media) na case-study.
-
-- **Sections dynamic zone** para galleries + featured images intercalados com
-  texto (matching exato do layout): criar componente Strapi `case.text-section`,
-  `case.gallery-section`, `case.hero-image-section` (zod schemas já existem).
-  Adicionar dynamic zone `sections` ao case-study schema.
+Colunas órfãs no Postgres pós-migração: `challenge`, `solution`, `results` ainda existem como colunas no DB mas não são mais expostas pela API. Quando confortável, dropar via SQL direto no Postgres do EasyPanel.
 
 ### 2. Bug no seed pt-BR de gasodutos
 Commit do Gemini (`276bebd`) trocou acidentalmente:

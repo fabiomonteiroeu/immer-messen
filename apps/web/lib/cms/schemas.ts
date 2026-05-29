@@ -215,35 +215,11 @@ export const cmsAboutContentBlockSchema = z.object({
   highlight: cmsAboutHighlightSchema.nullable().optional(),
 });
 
-export const cmsCaseTextSectionSchema = z.object({
-  __component: z.literal("case.text-section"),
+export const cmsProjectLogoSchema = z.object({
   id: z.number().int().nonnegative().optional(),
-  html: z.string().min(1),
-});
-
-export const cmsCaseGallerySectionSchema = z.object({
-  __component: z.literal("case.gallery-section"),
-  id: z.number().int().nonnegative().optional(),
-  images: z.array(cmsMediaSchema).default([]),
-});
-
-export const cmsCaseHeroImageSectionSchema = z.object({
-  __component: z.literal("case.hero-image-section"),
-  id: z.number().int().nonnegative().optional(),
-  image: cmsMediaSchema,
-});
-
-export const cmsCaseSectionSchema = z.discriminatedUnion("__component", [
-  cmsCaseTextSectionSchema,
-  cmsCaseGallerySectionSchema,
-  cmsCaseHeroImageSectionSchema,
-]);
-
-export const cmsCaseDetailsSchema = z.object({
-  client: z.string().optional(),
-  startDate: z.string().optional(),
-  duration: z.string().optional(),
-  tags: z.array(z.string()).default([]),
+  logo: cmsMediaSchema,
+  url: z.string().nullable().optional(),
+  alt: z.string().nullable().optional(),
 });
 
 export const cmsCaseSchema = z.object({
@@ -255,14 +231,15 @@ export const cmsCaseSchema = z.object({
   sectorCategory: z.string().nullable().optional(),
   coverImage: cmsMediaSchema.optional(),
   heroMedia: cmsMediaSchema.optional(),
-  projectTitle: z.string().optional(),
-  projectSubtitle: z.string().optional(),
-  details: cmsCaseDetailsSchema.optional(),
+  client: z.string().nullable().optional(),
+  startDate: z.string().nullable().optional(),
+  duration: z.string().nullable().optional(),
+  tags: z
+    .union([z.array(z.string()), z.null()])
+    .optional()
+    .transform((value) => value ?? []),
+  projectLogos: z.array(cmsProjectLogoSchema).default([]),
   body: z.string().nullable().optional(),
-  challenge: z.string().nullable().optional(),
-  solution: z.string().nullable().optional(),
-  results: z.string().nullable().optional(),
-  sections: z.array(cmsCaseSectionSchema).default([]),
 });
 
 export const cmsPageBlockSchema = z.discriminatedUnion("__component", [
@@ -317,7 +294,7 @@ export const cmsSingleResponseSchema = <T extends z.ZodTypeAny>(itemSchema: T) =
 export type CmsPage = z.infer<typeof cmsPageSchema>;
 export type CmsPageBlock = z.infer<typeof cmsPageBlockSchema>;
 export type CmsCase = z.infer<typeof cmsCaseSchema>;
-export type CmsCaseSection = z.infer<typeof cmsCaseSectionSchema>;
+export type CmsProjectLogo = z.infer<typeof cmsProjectLogoSchema>;
 export type CmsNewsArticle = z.infer<typeof cmsNewsSummarySchema>;
 
 export const cmsLinkItemSchema = z.object({

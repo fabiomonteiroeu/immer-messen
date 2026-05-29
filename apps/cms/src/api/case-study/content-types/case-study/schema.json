@@ -60,29 +60,35 @@
       "multiple": false,
       "allowedTypes": ["images", "videos", "files"]
     },
-    "challenge": {
-      "type": "richtext",
+    "client": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "startDate": {
+      "type": "date"
+    },
+    "duration": {
+      "type": "string",
+      "maxLength": 60,
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       }
     },
-    "solution": {
-      "type": "richtext",
+    "tags": {
+      "type": "json",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       }
     },
-    "results": {
-      "type": "richtext",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+    "projectLogos": {
+      "type": "component",
+      "repeatable": true,
+      "component": "case.project-logo",
+      "max": 3
     },
     "body": {
       "type": "richtext",

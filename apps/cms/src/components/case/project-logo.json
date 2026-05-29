@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_case_project_logos",
+  "info": {
+    "displayName": "Project Logo",
+    "icon": "image"
+  },
+  "options": {},
+  "attributes": {
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "url": {
+      "type": "string"
+    },
+    "alt": {
+      "type": "string"
+    }
+  }
+}

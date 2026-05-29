@@ -545,6 +545,16 @@ async function seedCaseStudies(assetIdByKey, areaIds) {
           .map((k) => areaIds.get(k))
           .filter((id) => typeof id === "number");
       }
+
+      const projectLogoKeys = variant.relationRefs?.projectLogoKeys ?? [];
+      data.projectLogos = projectLogoKeys
+        .map((partnerKey) => {
+          const logoId = assetIdByKey.get(`partner-${partnerKey}`);
+          if (!logoId) return null;
+          return { logo: logoId, url: null, alt: null };
+        })
+        .filter((slot) => slot !== null);
+
       return data;
     },
   });
