@@ -9,6 +9,7 @@ const requiredLocales = [
 const REVALIDATE_MODEL_MAP: Record<string, string> = {
   "api::page.page": "page",
   "api::case-study.case-study": "case",
+  "api::news-article.news-article": "news-article",
   "api::footer.footer": "footer",
   "api::global-setting.global-setting": "global-setting",
   "api::cookie-banner.cookie-banner": "cookie-banner",
