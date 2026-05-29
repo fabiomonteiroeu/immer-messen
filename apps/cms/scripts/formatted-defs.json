@@ -1,0 +1,170 @@
+[
+  {
+    "documentId": "f02civls2pqpilpvzbea0u6j",
+    "slug": "projeto-pd-petrobras",
+    "sectorCategory": "offshore",
+    "coverImageName": "cases-04.png",
+    "coverImageMime": "image/png",
+    "heroMediaName": "case-hero-offshore.png",
+    "heroMediaMime": "image/png",
+    "pt-BR": {
+      "slug": "monitoramento-de-gasodutos",
+      "title": "Monitoramento de gasodutos",
+      "summary": "Monitoramento de integridade de dutos flexíveis submarinos com sensoriamento distribuído.",
+      "challenge": "<p>Garantir observabilidade de dutos submarinos com menor tempo de resposta e sem ampliar a complexidade de campo.</p>",
+      "solution": "<p>A Immer Messen aplicou tecnologia DAS de fase em toda a extensão do ativo, integrando eventos ao ambiente operacional do cliente.</p>",
+      "results": "<p>Redução de tempo de resposta em até 80% frente a inspeções tradicionais e construção de base de conhecimento para futuras expansões.</p>",
+      "body": "<p>Projeto de validação técnica com foco em monitoramento contínuo, localização precisa de eventos e integração com processos operacionais.</p>",
+      "seoTitle": "Projeto P&D Petrobras",
+      "seoDescription": "Case de monitoramento de integridade de dutos flexíveis submarinos."
+    },
+    "en": {
+      "slug": "projeto-pd-petrobras",
+      "title": "Petrobras R&D Project",
+      "summary": "Integrity monitoring of flexible submarine pipelines with distributed sensing.",
+      "challenge": "<p>Ensure observability of submarine pipelines with shorter response time and without increasing field complexity.</p>",
+      "solution": "<p>Immer Messen applied phase-based DAS technology along the entire asset, integrating events into the customer's operational environment.</p>",
+      "results": "<p>Up to 80% reduction in response time compared with traditional inspections and a knowledge base built for future expansions.</p>",
+      "body": "<p>Technical validation project focused on continuous monitoring, precise event localization and integration with operational processes.</p>",
+      "seoTitle": "Petrobras R&D Project",
+      "seoDescription": "Integrity monitoring case for flexible submarine pipelines."
+    },
+    "es": {
+      "slug": "projeto-pd-petrobras",
+      "title": "Proyecto I+D Petrobras",
+      "summary": "Monitoreo de integridad de ductos flexibles submarinos con sensado distribuido.",
+      "challenge": "<p>Garantizar observabilidad de ductos submarinos con menor tiempo de respuesta y sin ampliar la complejidad en campo.</p>",
+      "solution": "<p>Immer Messen aplicó tecnología DAS de fase a lo largo del activo, integrando eventos al entorno operativo del cliente.</p>",
+      "results": "<p>Reducción del tiempo de respuesta de hasta 80% frente a inspecciones tradicionales y construcción de una base de conocimiento para futuras expansiones.</p>",
+      "body": "<p>Proyecto de validación técnica enfocado en monitoreo continuo, localización precisa de eventos e integración con procesos operativos.</p>",
+      "seoTitle": "Proyecto I+D Petrobras",
+      "seoDescription": "Caso de monitoreo de integridad de ductos flexibles submarinos."
+    }
+  },
+  {
+    "documentId": "xofeb7ije4vh6nlid3zrf16r",
+    "slug": "monitoramento-acustico-de-cetaceos",
+    "sectorCategory": "meio-ambiente",
+    "coverImageName": "cases-01.png",
+    "coverImageMime": "image/png",
+    "heroMediaName": "case-hero-offshore.png",
+    "heroMediaMime": "image/png",
+    "pt-BR": {
+      "slug": "monitoramento-de-baleias",
+      "title": "Monitoramento de baleias",
+      "summary": "Estudo de impacto de atividade sísmica em fauna marinha com observabilidade acústica distribuída.",
+      "challenge": "<p>Monitorar atividade acústica marinha em um contexto offshore sujeito a ruído operacional e variação ambiental.</p>",
+      "solution": "<p>Uso de DAS para classificar padrões acústicos e estruturar alertas para o time técnico.</p>",
+      "results": "<p>Maior cobertura observacional e consolidação de referência técnica para aplicações ambientais offshore.</p>",
+      "body": "<p>Projeto com foco em impacto ambiental, catalogação de padrões e suporte a estudos técnicos marinhos.</p>",
+      "seoTitle": "Monitoramento acústico de cetáceos",
+      "seoDescription": "Case ambiental com uso de DAS para fauna marinha."
+    },
+    "en": {
+      "slug": "monitoramento-acustico-de-cetaceos",
+      "title": "Acoustic monitoring of cetaceans",
+      "summary": "Study of seismic activity impact on marine fauna with distributed acoustic observability.",
+      "challenge": "<p>Monitor marine acoustic activity in an offshore context subject to operational noise and environmental variation.</p>",
+      "solution": "<p>Use of DAS to classify acoustic patterns and structure alerts for the technical team.</p>",
+      "results": "<p>Greater observational coverage and a consolidated technical reference for offshore environmental applications.</p>",
+      "body": "<p>Project focused on environmental impact, pattern cataloging and support for marine technical studies.</p>",
+      "seoTitle": "Acoustic monitoring of cetaceans",
+      "seoDescription": "Environmental case using DAS for marine fauna."
+    },
+    "es": {
+      "slug": "monitoramento-acustico-de-cetaceos",
+      "title": "Monitoreo acústico de cetáceos",
+      "summary": "Estudio del impacto de la actividad sísmica en la fauna marina con observabilidad acústica distribuida.",
+      "challenge": "<p>Monitorear la actividad acústica marina en un contexto offshore sujeto a ruido operativo y variación ambiental.</p>",
+      "solution": "<p>Uso de DAS para clasificar patrones acústicos y estructurar alertas para el equipo técnico.</p>",
+      "results": "<p>Mayor cobertura observacional y consolidación de una referencia técnica para aplicaciones ambientales offshore.</p>",
+      "body": "<p>Proyecto enfocado en el impacto ambiental, catalogación de patrones y apoyo a estudios técnicos marinos.</p>",
+      "seoTitle": "Monitoreo acústico de cetáceos",
+      "seoDescription": "Caso ambiental con uso de DAS para fauna marina."
+    }
+  },
+  {
+    "documentId": "ois3vw2g14qaws9oprvegoyu",
+    "slug": "monitoramento-de-linhas-de-transmissao",
+    "sectorCategory": "energia",
+    "coverImageName": "cases-01_1.png",
+    "coverImageMime": "image/png",
+    "heroMediaName": "case-hero-offshore.png",
+    "heroMediaMime": "image/png",
+    "pt-BR": {
+      "slug": "monitoramento-de-linhas-de-transmissao",
+      "title": "Monitoramento de linhas de transmissão",
+      "summary": "Detecção precoce de falhas e intrusões em torres e corredores de transmissão.",
+      "challenge": "<p>Antecipar falhas e intrusões em infraestrutura extensa, exposta e de difícil patrulhamento contínuo.</p>",
+      "solution": "<p>Uso de DAS ao longo da infraestrutura existente com classificação de eventos e correlação espacial.</p>",
+      "results": "<p>Melhor previsibilidade operacional e cobertura permanente sem patrulhamento físico constante.</p>",
+      "body": "<p>Case voltado à infraestrutura energética com forte dependência de detecção de eventos lineares e resposta coordenada.</p>",
+      "seoTitle": "Monitoramento de linhas de transmissão",
+      "seoDescription": "Case de energia com foco em falhas e intrusões."
+    },
+    "en": {
+      "slug": "monitoramento-de-linhas-de-transmissao",
+      "title": "Transmission line monitoring",
+      "summary": "Early detection of failures and intrusions on transmission towers and corridors.",
+      "challenge": "<p>Anticipate failures and intrusions on extensive, exposed infrastructure that is hard to patrol continuously.</p>",
+      "solution": "<p>Use of DAS along the existing infrastructure with event classification and spatial correlation.</p>",
+      "results": "<p>Better operational predictability and permanent coverage without constant physical patrols.</p>",
+      "body": "<p>Case targeting energy infrastructure with strong dependence on linear event detection and coordinated response.</p>",
+      "seoTitle": "Transmission line monitoring",
+      "seoDescription": "Energy case focused on failures and intrusions."
+    },
+    "es": {
+      "slug": "monitoramento-de-linhas-de-transmissao",
+      "title": "Monitoreo de líneas de transmisión",
+      "summary": "Detección temprana de fallas e intrusiones en torres y corredores de transmisión.",
+      "challenge": "<p>Anticipar fallas e intrusiones en infraestructura extensa, expuesta y de difícil patrullaje continuo.</p>",
+      "solution": "<p>Uso de DAS a lo largo de la infraestructura existente con clasificación de eventos y correlación espacial.</p>",
+      "results": "<p>Mejor predictibilidad operativa y cobertura permanente sin patrullaje físico constante.</p>",
+      "body": "<p>Caso orientado a infraestructura energética con fuerte dependencia de la detección de eventos lineales y respuesta coordinada.</p>",
+      "seoTitle": "Monitoreo de líneas de transmisión",
+      "seoDescription": "Caso de energía enfocado en fallas e intrusiones."
+    }
+  },
+  {
+    "documentId": "eszz4duyhuek5spyei5lkqxa",
+    "slug": "monitoramento-de-gasodutos-onshore",
+    "sectorCategory": "oleo-e-gas",
+    "coverImageName": "cases-03.png",
+    "coverImageMime": "image/png",
+    "heroMediaName": "case-hero-offshore.png",
+    "heroMediaMime": "image/png",
+    "pt-BR": {
+      "slug": "monitoramento-de-cabos-submarinos",
+      "title": "Monitoramento de cabos submarinos",
+      "summary": "Detecção de vazamentos e derivação clandestina em gasodutos de longa distância.",
+      "challenge": "<p>Identificar vazamentos e interferências indevidas em ativos lineares de longa extensão com alta criticidade.</p>",
+      "solution": "<p>A plataforma DATS combina leitura distribuída, filtragem de ruído e alertas operacionais com localização precisa.</p>",
+      "results": "<p>Mais rapidez na resposta e base técnica para expandir monitoramento a novos trechos com menor investimento incremental.</p>",
+      "body": "<p>Projeto de observabilidade operacional para dutos terrestres com foco em segurança, integridade e continuidade.</p>",
+      "seoTitle": "Monitoramento de gasodutos onshore",
+      "seoDescription": "Case de vazamentos e derivação clandestina em gasodutos."
+    },
+    "en": {
+      "slug": "monitoramento-de-gasodutos-onshore",
+      "title": "Onshore gas pipeline monitoring",
+      "summary": "Leak detection and illegal tapping detection on long-distance gas pipelines.",
+      "challenge": "<p>Identify leaks and unauthorized interference on long, high-criticality linear assets.</p>",
+      "solution": "<p>The DATS platform combines distributed reading, noise filtering and operational alerts with precise localization.</p>",
+      "results": "<p>Faster response and a technical foundation to extend monitoring to new sections with lower incremental investment.</p>",
+      "body": "<p>Operational observability project for onshore pipelines focused on safety, integrity and continuity.</p>",
+      "seoTitle": "Onshore gas pipeline monitoring",
+      "seoDescription": "Case on leaks and illegal tapping in gas pipelines."
+    },
+    "es": {
+      "slug": "monitoramento-de-gasodutos-onshore",
+      "title": "Monitoreo de gasoductos onshore",
+      "summary": "Detección de fugas y derivación clandestina en gasoductos de larga distancia.",
+      "challenge": "<p>Identificar fugas e interferencias indebidas en activos lineales de gran extensión y alta criticidad.</p>",
+      "solution": "<p>La plataforma DATS combina lectura distribuida, filtrado de ruido y alertas operativas con localización precisa.</p>",
+      "results": "<p>Mayor rapidez en la respuesta y una base técnica para extender el monitoreo a nuevos tramos con menor inversión incremental.</p>",
+      "body": "<p>Proyecto de observabilidad operativa para ductos terrestres enfocado en seguridad, integridad y continuidad.</p>",
+      "seoTitle": "Monitoreo de gasoductos onshore",
+      "seoDescription": "Caso de fugas y derivación clandestina en gasoductos."
+    }
+  }
+]

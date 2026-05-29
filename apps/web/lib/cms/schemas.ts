@@ -253,7 +253,7 @@ export const cmsCaseSchema = z.object({
   locale: cmsLocaleSchema,
   summary: z.string().min(1),
   coverImage: cmsMediaSchema.optional(),
-  heroImage: cmsMediaSchema.optional(),
+  heroMedia: cmsMediaSchema.optional(),
   projectTitle: z.string().optional(),
   projectSubtitle: z.string().optional(),
   details: cmsCaseDetailsSchema.optional(),

@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: CaseDetailPageProps): Promise
   const caseEntry = await getCaseBySlug({ locale: locale as SupportedLocale, slug });
   if (!caseEntry) return {};
   const canonical = `/${locale}/cases/${caseEntry.slug}`;
-  const ogImageUrl = resolveMediaUrl(caseEntry.heroImage?.url ?? caseEntry.coverImage?.url);
+  const ogImageUrl = resolveMediaUrl(caseEntry.heroMedia?.url ?? caseEntry.coverImage?.url);
   const languages: Record<string, string> = {};
   for (const l of supportedLocales) languages[l] = `/${l}/cases/${caseEntry.slug}`;
   languages["x-default"] = `/pt-BR/cases/${caseEntry.slug}`;
@@ -83,7 +83,7 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
   const articleLd = articleJsonLd({
     headline: caseEntry.title,
     description: caseEntry.summary,
-    image: resolveMediaUrl(caseEntry.heroImage?.url ?? caseEntry.coverImage?.url) ?? undefined,
+    image: resolveMediaUrl(caseEntry.heroMedia?.url ?? caseEntry.coverImage?.url) ?? undefined,
     url: `${getSiteUrl()}/${resolvedLocale}/cases/${caseEntry.slug}`,
     datePublished: caseEntry.details?.startDate,
   });
@@ -96,11 +96,11 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
       />
       <section aria-label={caseEntry.title} className="hero hero--short">
         <div className="hero__media">
-          {caseEntry.heroImage ? (
+          {caseEntry.heroMedia ? (
             <img
-              alt={caseEntry.heroImage.alternativeText ?? ""}
+              alt={caseEntry.heroMedia.alternativeText ?? ""}
               aria-hidden="true"
-              src={resolveMediaUrl(caseEntry.heroImage.url) ?? undefined}
+              src={resolveMediaUrl(caseEntry.heroMedia.url) ?? undefined}
             />
           ) : null}
         </div>

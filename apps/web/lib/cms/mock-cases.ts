@@ -22,7 +22,7 @@ const casesPt: CmsCase[] = [
     summary:
       "Sensoriamento distribuido por fibra optica para monitorar integridade e ameacas em cabos submarinos de longa distancia.",
     coverImage: media(201, "https://images.unsplash.com/photo-1505764706515-aa95265c5abc?auto=format&fit=crop&w=1200&q=80", "Cabos submarinos sob monitoramento DAS"),
-    heroImage: media(401, "/assets/img/case-hero-offshore.png", "Hero do case offshore"),
+    heroMedia: media(401, "/assets/img/case-hero-offshore.png", "Hero do case offshore"),
     projectTitle: "Projeto P&D Petrobras",
     projectSubtitle: "Monitoramento de integridade de dutos flexiveis submarinos",
     details: {
@@ -60,7 +60,7 @@ const casesPt: CmsCase[] = [
     summary:
       "Aquisicao acustica distribuida para observacao de cetaceos e mitigacao de impacto em estudos sismicos offshore.",
     coverImage: media(202, "https://images.unsplash.com/photo-1568430462989-44163eb1752f?auto=format&fit=crop&w=1200&q=80", "Baleias em ambiente marinho"),
-    heroImage: media(402, "https://images.unsplash.com/photo-1568430462989-44163eb1752f?auto=format&fit=crop&w=1800&q=80", "Hero baleias"),
+    heroMedia: media(402, "https://images.unsplash.com/photo-1568430462989-44163eb1752f?auto=format&fit=crop&w=1800&q=80", "Hero baleias"),
     projectTitle: "Monitoramento acustico de cetaceos",
     projectSubtitle: "Mitigacao de impacto ambiental em operacoes offshore",
     details: {
@@ -85,7 +85,7 @@ const casesPt: CmsCase[] = [
     summary:
       "Deteccao de eventos e variacoes termicas em corredores de transmissao eletrica usando fibra optica padrao.",
     coverImage: media(203, "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1200&q=80", "Linhas de transmissao de energia"),
-    heroImage: media(403, "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1800&q=80", "Hero linhas de transmissao"),
+    heroMedia: media(403, "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1800&q=80", "Hero linhas de transmissao"),
     projectTitle: "Monitoramento de linhas de alta tensao",
     projectSubtitle: "Deteccao de incendios, vandalismo e variacoes termicas",
     details: {
@@ -110,7 +110,7 @@ const casesPt: CmsCase[] = [
     summary:
       "Deteccao precoce de vazamentos, intrusoes e variacoes operacionais ao longo de gasodutos com DAS e DTS.",
     coverImage: media(204, "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80", "Gasodutos industriais"),
-    heroImage: media(404, "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1800&q=80", "Hero gasodutos"),
+    heroMedia: media(404, "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1800&q=80", "Hero gasodutos"),
     projectTitle: "Vigilancia continua de gasodutos",
     projectSubtitle: "Reducao de risco operacional e perdas",
     details: {
