@@ -243,6 +243,8 @@ export interface PageFeatureGridBlock extends Struct.ComponentSchema {
     cards: Schema.Attribute.Component<'page.feature-card', true> &
       Schema.Attribute.Required;
     heading: Schema.Attribute.String;
+    variant: Schema.Attribute.Enumeration<['grid', 'highlights']> &
+      Schema.Attribute.DefaultTo<'grid'>;
   };
 }
 
@@ -428,6 +430,39 @@ export interface PageRawEmbedBlock extends Struct.ComponentSchema {
   };
 }
 
+export interface PageSpecItem extends Struct.ComponentSchema {
+  collectionName: 'components_page_spec_items';
+  info: {
+    displayName: 'Spec Item';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    label: Schema.Attribute.String;
+    value: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface PageSpecStripBlock extends Struct.ComponentSchema {
+  collectionName: 'components_page_spec_strip_blocks';
+  info: {
+    displayName: 'Spec Strip Block';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    eyebrow: Schema.Attribute.String;
+    items: Schema.Attribute.Component<'page.spec-item', true> &
+      Schema.Attribute.Required;
+  };
+}
+
 export interface PageTextBlock extends Struct.ComponentSchema {
   collectionName: 'components_page_text_blocks';
   info: {
@@ -570,6 +605,8 @@ declare module '@strapi/strapi' {
       'page.page-hero-block': PagePageHeroBlock;
       'page.partners-block': PagePartnersBlock;
       'page.raw-embed-block': PageRawEmbedBlock;
+      'page.spec-item': PageSpecItem;
+      'page.spec-strip-block': PageSpecStripBlock;
       'page.text-block': PageTextBlock;
       'shared.contact-details': SharedContactDetails;
       'shared.link-item': SharedLinkItem;

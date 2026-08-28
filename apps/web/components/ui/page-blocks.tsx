@@ -301,11 +301,54 @@ function TextSection({
   );
 }
 
+function SpecStripSection({
+  block,
+}: {
+  block: Extract<CmsPageBlock, { __component: "page.spec-strip-block" }>;
+}) {
+  if (block.items.length === 0) return null;
+  return (
+    <section className="spec-strip">
+      <div className="container">
+        {block.eyebrow ? <span className="spec-strip__eyebrow">{block.eyebrow}</span> : null}
+        <dl className="spec-strip__grid">
+          {block.items.map((item) => (
+            <div className="spec" key={item.value}>
+              <dt className="spec__value">{item.value}</dt>
+              {item.label ? <dd className="spec__label">{item.label}</dd> : null}
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  );
+}
+
 function FeatureGridSection({
   block,
 }: {
   block: Extract<CmsPageBlock, { __component: "page.feature-grid-block" }>;
 }) {
+  if (block.variant === "highlights") {
+    return (
+      <section className="tech-highlights">
+        <div className="container">
+          {block.heading ? <h2 className="rule-heading">{block.heading}</h2> : null}
+          <div className="tech-highlights__grid">
+            {block.cards.map((card) => (
+              <article className="tech-highlight" key={card.title}>
+                <h3 className="tech-highlight__title">{card.title}</h3>
+                {card.description ? (
+                  <p className="tech-highlight__body">{card.description}</p>
+                ) : null}
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="key-features">
       <div className="container">
@@ -719,6 +762,8 @@ export function PageBlocks({ blocks, locale }: { blocks: CmsPageBlock[]; locale:
             return <MediaTextSection block={block} key={key} />;
           case "page.feature-grid-block":
             return <FeatureGridSection block={block} key={key} />;
+          case "page.spec-strip-block":
+            return <SpecStripSection block={block} key={key} />;
           case "page.accordion-block":
             return <AccordionSection block={block} key={key} />;
           case "page.application-areas-block":

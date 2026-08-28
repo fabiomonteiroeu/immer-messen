@@ -33,7 +33,14 @@
     },
     "pageKey": {
       "type": "enumeration",
-      "enum": ["home", "technology", "solutions", "about", "contact", "lgpd"],
+      "enum": [
+        "home",
+        "technology",
+        "solutions",
+        "about",
+        "contact",
+        "lgpd"
+      ],
       "required": true
     },
     "summary": {
@@ -64,6 +71,7 @@
         "page.media-text-block",
         "page.accordion-block",
         "page.feature-grid-block",
+        "page.spec-strip-block",
         "page.application-areas-block",
         "page.cases-block",
         "page.news-carousel-block",

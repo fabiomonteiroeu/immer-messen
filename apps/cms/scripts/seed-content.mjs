@@ -63,9 +63,16 @@ const accordionBlock = (heading, items, body = "", extra = {}) => ({
   ...extra,
 });
 
-const featureGridBlock = (heading, cards) => ({
+const specStripBlock = (eyebrow, items) => ({
+  __component: "page.spec-strip-block",
+  eyebrow,
+  items,
+});
+
+const featureGridBlock = (heading, cards, variant) => ({
   __component: "page.feature-grid-block",
   heading,
+  ...(variant ? { variant } : {}),
   cards: cards.map((card) => ({
     title: card.title,
     description: card.description,
@@ -1212,6 +1219,13 @@ const pageDefs = [
       seoDescription: "Tecnologia proprietária DATS com DAS e DTS integrados.",
       blocks: () => [
         pageHeroBlock("Tecnologia DAS/DTS Immer Messen", "Plataforma proprietária para aquisição, processamento e inteligência operacional."),
+        specStripBlock("Especificações", [
+          { value: "DAS Rayleigh + DTS Raman", label: "simultâneos na mesma fibra" },
+          { value: "120 km", label: "alcance total com um interrogador" },
+          { value: "0,5 – 100 kHz", label: "amplitude da faixa de frequência" },
+          { value: "3U | 10 kg", label: "design integrado e compacto" },
+          { value: "300 W", label: "consumo máximo" },
+        ]),
         mediaTextBlock(
           "Design compacto e integrado: sensoriamento óptico, eletrônica e edge computing reunidos em uma única unidade.",
           "<p>Sensoriamento óptico, eletrônica e edge computing reunidos em uma única unidade para operação em infraestrutura crítica.</p>",
@@ -1223,13 +1237,24 @@ const pageDefs = [
           }
         ),
         featureGridBlock("Key features", [
-          { title: "Tecnologia DAS baseada em fase", description: "Medições quantitativas de deformação, acústica e temperatura." },
-          { title: "Resposta em frequência ampla", description: "Monitoramento desde frequências ultrabaixas até dezenas de kHz." },
-          { title: "Alcance de até 120 km", description: "Duas fibras de até 60 km em um único interrogador." },
-          { title: "DAS e DTS integrados", description: "Medições simultâneas sobre a mesma fibra óptica." },
-          { title: "Alta sensibilidade", description: "Detecção de estímulos axiais em escala pico-strain e miliKelvin." },
-          { title: "Infraestrutura eficiente", description: "Compatibilidade com fibra padrão e baixo consumo energético." },
+          { title: "Tecnologia DAS baseada em fase para medições quantitativas", description: "Detecção de deformação, acústica e temperatura com alta precisão ao longo de toda a extensão da fibra." },
+          { title: "DAS | DTS integrado: medições simultâneas", description: "Detecção acústica e de temperatura na mesma fibra óptica, sem necessidade de infraestrutura separada." },
+          { title: "Alta sensibilidade: detecção de estímulos em escala micro", description: "Identificação precisa de eventos físicos ao longo de toda a fibra, mesmo em ambientes de alto ruído." },
+          { title: "Resposta em frequência banda larga: 0,5 Hz a 100 kHz", description: "Detecção simultânea de eventos de baixa e alta frequência ao longo de toda a extensão da fibra." },
+          { title: "Alcance de até 120 km com um único interrogador", description: "Monitoramento simultâneo de duas fibras de até 60 km cada, com eficiência de cobertura sem precedentes." },
+          { title: "Infraestrutura eficiente com fibra óptica existente", description: "Baixo consumo de energia e possibilidade de uso da fibra já instalada, reduzindo custo e complexidade de implantação." },
         ]),
+        featureGridBlock("Capacidades", [
+          { title: "Edge Computing", description: "Processamento paralelo embarcado de alto desempenho com GPU." },
+          { title: "Fácil visualização", description: "Display frontal com dados de aquisição em tempo real." },
+          { title: "IA e ML em tempo real", description: "Classificação de eventos e redução de alarmes falsos." },
+        ], "highlights"),
+        mediaTextBlock(
+          "Da fibra ao diagnóstico: uma plataforma completa",
+          "<p>Equipamento que opera em conjunto com um sistema servidor dedicado, configurado e entregue pronto para uso. Algoritmos de IA desenvolvidos pela Immer Messen interpretam os sinais adquiridos e geram diagnósticos preditivos adaptados à operação de cada cliente.</p>",
+          "right",
+          { variant: "tech-band", ctaLabel: "Fale com nossos engenheiros", ctaHref: "/pt-BR#contato" }
+        ),
         mediaTextBlock(
           "Interface operacional",
           "<ul><li>Interface web embarcada.</li><li>Acesso remoto seguro por intranet ou internet.</li><li>Controle de parâmetros de aquisição.</li><li>Alarmes configuráveis para localização de anomalias.</li></ul>",
@@ -1245,6 +1270,13 @@ const pageDefs = [
       seoDescription: "Proprietary DATS technology with integrated DAS and DTS.",
       blocks: () => [
         pageHeroBlock("Immer Messen DAS/DTS technology", "Proprietary platform for acquisition, processing and operational intelligence."),
+        specStripBlock("Specifications", [
+          { value: "DAS Rayleigh + DTS Raman", label: "simultaneous on the same fiber" },
+          { value: "120 km", label: "total reach with a single interrogator" },
+          { value: "0.5 – 100 kHz", label: "frequency response range" },
+          { value: "3U | 10 kg", label: "integrated, compact design" },
+          { value: "300 W", label: "maximum power draw" },
+        ]),
         mediaTextBlock(
           "Compact, integrated design: optical sensing, electronics and edge computing combined in a single unit.",
           "<p>Optical sensing, electronics and edge computing combined in a single unit for operation on critical infrastructure.</p>",
@@ -1263,6 +1295,17 @@ const pageDefs = [
           { title: "High sensitivity", description: "Detection of axial stimuli at pico-strain and milliKelvin scale." },
           { title: "Efficient infrastructure", description: "Compatible with standard fiber and low power consumption." },
         ]),
+        featureGridBlock("Capabilities", [
+          { title: "Edge computing", description: "High-performance embedded parallel processing with GPU." },
+          { title: "At-a-glance readout", description: "Front display with live acquisition data." },
+          { title: "Real-time AI and ML", description: "Event classification and false alarm reduction." },
+        ], "highlights"),
+        mediaTextBlock(
+          "From fiber to diagnosis: a complete platform",
+          "<p>The unit operates alongside a dedicated server system, configured and delivered ready to use. AI algorithms developed by Immer Messen interpret the acquired signals and generate predictive diagnostics adapted to each client operation.</p>",
+          "right",
+          { variant: "tech-band", ctaLabel: "Talk to our engineers", ctaHref: "/en#contato" }
+        ),
         mediaTextBlock(
           "Operational interface",
           "<ul><li>Embedded web interface.</li><li>Secure remote access via intranet or internet.</li><li>Control of acquisition parameters.</li><li>Configurable alarms for anomaly localization.</li></ul>",
@@ -1278,6 +1321,13 @@ const pageDefs = [
       seoDescription: "Tecnología propietaria DATS con DAS y DTS integrados.",
       blocks: () => [
         pageHeroBlock("Tecnología DAS/DTS Immer Messen", "Plataforma propietaria para adquisición, procesamiento e inteligencia operativa."),
+        specStripBlock("Especificaciones", [
+          { value: "DAS Rayleigh + DTS Raman", label: "simultáneos en la misma fibra" },
+          { value: "120 km", label: "alcance total con un interrogador" },
+          { value: "0,5 – 100 kHz", label: "amplitud del rango de frecuencia" },
+          { value: "3U | 10 kg", label: "diseño integrado y compacto" },
+          { value: "300 W", label: "consumo máximo" },
+        ]),
         mediaTextBlock(
           "Diseño compacto e integrado: sensado óptico, electrónica y edge computing reunidos en una sola unidad.",
           "<p>Sensado óptico, electrónica y edge computing reunidos en una sola unidad para operación en infraestructura crítica.</p>",
@@ -1296,6 +1346,17 @@ const pageDefs = [
           { title: "Alta sensibilidad", description: "Detección de estímulos axiales en escala pico-strain y miliKelvin." },
           { title: "Infraestructura eficiente", description: "Compatibilidad con fibra estándar y bajo consumo energético." },
         ]),
+        featureGridBlock("Capacidades", [
+          { title: "Edge computing", description: "Procesamiento paralelo embarcado de alto desempeño con GPU." },
+          { title: "Visualización inmediata", description: "Display frontal con datos de adquisición en tiempo real." },
+          { title: "IA y ML en tiempo real", description: "Clasificación de eventos y reducción de alarmas falsas." },
+        ], "highlights"),
+        mediaTextBlock(
+          "De la fibra al diagnóstico: una plataforma completa",
+          "<p>Equipo que opera junto a un sistema servidor dedicado, configurado y entregado listo para usar. Algoritmos de IA desarrollados por Immer Messen interpretan las señales adquiridas y generan diagnósticos predictivos adaptados a la operación de cada cliente.</p>",
+          "right",
+          { variant: "tech-band", ctaLabel: "Hable con nuestros ingenieros", ctaHref: "/es#contato" }
+        ),
         mediaTextBlock(
           "Interfaz operativa",
           "<ul><li>Interfaz web embebida.</li><li>Acceso remoto seguro por intranet o internet.</li><li>Control de parámetros de adquisición.</li><li>Alarmas configurables para localización de anomalías.</li></ul>",

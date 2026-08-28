@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_page_spec_strip_blocks",
+  "info": {
+    "displayName": "Spec Strip Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "page.spec-item",
+      "required": true
+    }
+  }
+}

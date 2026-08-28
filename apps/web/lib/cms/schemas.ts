@@ -103,7 +103,20 @@ export const cmsFeatureGridBlockSchema = z.object({
   __component: z.literal("page.feature-grid-block"),
   id: z.number().int().nonnegative().optional(),
   heading: z.string().optional().default(""),
+  variant: z.enum(["grid", "highlights"]).nullable().optional(),
   cards: z.array(cmsFeatureCardSchema).default([]),
+});
+
+export const cmsSpecItemSchema = z.object({
+  value: z.string().min(1),
+  label: z.string().nullable().optional(),
+});
+
+export const cmsSpecStripBlockSchema = z.object({
+  __component: z.literal("page.spec-strip-block"),
+  id: z.number().int().nonnegative().optional(),
+  eyebrow: z.string().nullable().optional(),
+  items: z.array(cmsSpecItemSchema).default([]),
 });
 
 export const cmsApplicationAreaItemSchema = z.object({
@@ -271,6 +284,7 @@ export const cmsPageBlockSchema = z.discriminatedUnion("__component", [
   cmsMediaTextBlockSchema,
   cmsAccordionBlockSchema,
   cmsFeatureGridBlockSchema,
+  cmsSpecStripBlockSchema,
   cmsApplicationAreasBlockSchema,
   cmsContactFormBlockSchema,
   cmsLgpdContentBlockSchema,

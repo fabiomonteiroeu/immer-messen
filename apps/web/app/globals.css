@@ -1541,6 +1541,94 @@ body.menu-open {
 }
 
 /* ===========================================================
+   TECNOLOGIA — faixa de specs e destaques de capacidade
+   =========================================================== */
+.spec-strip {
+  background: var(--c-navy-deep);
+  color: #fff;
+  padding: clamp(2.5rem, 4vw, 3.5rem) 0;
+}
+
+.spec-strip__eyebrow {
+  display: block;
+  font-size: .82rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--c-blue-pale);
+  margin-bottom: 1.75rem;
+}
+
+.spec-strip__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+}
+
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+
+.spec__value {
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem);
+  font-weight: 600;
+  line-height: 1.05;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.spec__label {
+  margin: 0;
+  font-size: .78rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, .72);
+  max-width: 22ch;
+}
+
+.tech-highlights {
+  background: #fff;
+  padding: clamp(3rem, 5vw, 4.5rem) 0;
+}
+
+.tech-highlights__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.tech-highlight {
+  border-top: 2px solid var(--c-blue-soft);
+  padding-top: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.tech-highlight__title {
+  font-size: clamp(1.05rem, .95rem + .4vw, 1.25rem);
+  font-weight: 600;
+  color: var(--c-navy);
+  margin: 0;
+}
+
+.tech-highlight__body {
+  margin: 0;
+  font-size: .9rem;
+  line-height: 1.55;
+  color: var(--c-gray-700);
+}
+
+@media (max-width: 800px) {
+  .tech-highlights__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================================================
    HOME — Quem somos (redesign 2026): faixa escura com foto de
    fibra ao fundo, título e intro em duas colunas, três cards.
    =========================================================== */

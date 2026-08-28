@@ -25,6 +25,7 @@ const pagePopulate = {
   "populate[blocks][on][page.text-block][populate]": "*",
   "populate[blocks][on][page.accordion-block][populate]": "*",
   "populate[blocks][on][page.feature-grid-block][populate][cards][populate]": "*",
+  "populate[blocks][on][page.spec-strip-block][populate][items][populate]": "*",
   "populate[blocks][on][page.application-areas-block][populate][areas][populate]": "*",
   "populate[blocks][on][page.cases-block][populate][cases][populate]": "*",
   "populate[blocks][on][page.news-carousel-block][populate][articles][populate]": "*",

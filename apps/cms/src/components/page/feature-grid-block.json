@@ -13,6 +13,14 @@
     "heading": {
       "type": "string"
     },
+    "variant": {
+      "type": "enumeration",
+      "enum": [
+        "grid",
+        "highlights"
+      ],
+      "default": "grid"
+    },
     "cards": {
       "type": "component",
       "repeatable": true,
