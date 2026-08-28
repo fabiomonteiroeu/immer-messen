@@ -35,11 +35,36 @@ export function SiteShellEffects({ homeHref }: SiteShellEffectsProps) {
     const header = document.querySelector(".site-header");
     if (!header) return;
 
-    const onScroll = () => {
-      header.classList.toggle("scrolled", window.scrollY > 30);
+    // esconde a barra ao descer, revela ao subir — só depois de passar do hero
+    const HIDE_AFTER = 140;
+    const DELTA = 6;
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const apply = () => {
+      ticking = false;
+      const y = Math.max(window.scrollY, 0);
+      header.classList.toggle("scrolled", y > 30);
+
+      const movedDown = y > lastY + DELTA;
+      const movedUp = y < lastY - DELTA;
+
+      if (movedDown && y > HIDE_AFTER) {
+        header.classList.add("header--hidden");
+      } else if (movedUp || y <= HIDE_AFTER) {
+        header.classList.remove("header--hidden");
+      }
+
+      if (movedDown || movedUp) lastY = y;
     };
 
-    onScroll();
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(apply);
+    };
+
+    apply();
     window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
