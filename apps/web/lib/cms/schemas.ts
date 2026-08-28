@@ -139,6 +139,7 @@ export const cmsContactFormBlockSchema = z.object({
   heading: z.string().min(1),
   body: z.string().optional().default(""),
   submitLabel: z.string().optional(),
+  backgroundImage: cmsMediaSchema.nullable().optional(),
 });
 
 export const cmsLgpdSectionSchema = z.object({

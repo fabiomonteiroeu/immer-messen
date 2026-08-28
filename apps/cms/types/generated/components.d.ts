@@ -288,6 +288,12 @@ export interface PageContactFormBlock extends Struct.ComponentSchema {
     };
   };
   attributes: {
+    backgroundImage: Schema.Attribute.Media<'images'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     body: Schema.Attribute.RichText;
     heading: Schema.Attribute.String &
       Schema.Attribute.Required &

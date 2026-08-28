@@ -330,7 +330,7 @@ const applicationAreaDefs = [
     key: "cabos-submarinos",
     sortOrder: 10,
     slug: "cabos-submarinos",
-    assetKey: "case-cover-gasodutos",
+    assetKey: "application-cabos-submarinos",
     tileSpan: "wide",
     "pt-BR": {
       title: "Integridade de cabos submarinos",
@@ -352,7 +352,7 @@ const applicationAreaDefs = [
     key: "linhas-transmissao",
     sortOrder: 20,
     slug: "linhas-transmissao",
-    assetKey: "case-cover-transmissao",
+    assetKey: "application-linhas-transmissao",
     tileSpan: "small",
     "pt-BR": {
       title: "Linhas de transmissão",
@@ -396,7 +396,7 @@ const applicationAreaDefs = [
     key: "geofisica",
     sortOrder: 40,
     slug: "geofisica",
-    assetKey: "application-sismica",
+    assetKey: "application-geofisica",
     tileSpan: "small",
     "pt-BR": {
       title: "Geofísica",
@@ -418,7 +418,7 @@ const applicationAreaDefs = [
     key: "embarcacoes",
     sortOrder: 50,
     slug: "embarcacoes",
-    assetKey: "case-hero-offshore",
+    assetKey: "application-embarcacoes",
     tileSpan: "small",
     "pt-BR": {
       title: "Embarcações",
@@ -484,7 +484,7 @@ const applicationAreaDefs = [
     key: "pocos-submarinos",
     sortOrder: 80,
     slug: "pocos-submarinos",
-    assetKey: "application-escoamento",
+    assetKey: "application-pocos-submarinos",
     tileSpan: "small",
     "pt-BR": {
       title: "Poços submarinos",
@@ -978,6 +978,7 @@ const pageDefs = [
       { assetKey: "tec-icon-shield", usage: "page.feature-card.icon" },
       { assetKey: "tec-icon-alarm", usage: "page.feature-card.icon" },
       { assetKey: "about-fiber-bg", usage: "page.about-content-block.background" },
+      { assetKey: "contact-fiber-bg", usage: "page.contact-form-block.background" },
     ],
     "pt-BR": {
       title: "Home",
@@ -1677,6 +1678,12 @@ export const assetManifest = {
     { assetKey: "about-lab-data-center", sourcePath: "resources/quem-somos.png", kind: "image" },
     { assetKey: "about-interrogador-rack", sourcePath: "resources/quem-somos-02.png", kind: "image" },
     { assetKey: "about-fiber-bg", sourcePath: "layout-aprovado/assets/img/fiber-bg.png", kind: "image" },
+    { assetKey: "application-cabos-submarinos", sourcePath: "layout-aprovado/assets/img/areas/cabos-submarinos.jpg", kind: "image" },
+    { assetKey: "application-linhas-transmissao", sourcePath: "layout-aprovado/assets/img/areas/linhas-transmissao.jpg", kind: "image" },
+    { assetKey: "application-geofisica", sourcePath: "layout-aprovado/assets/img/areas/geofisica.jpg", kind: "image" },
+    { assetKey: "application-embarcacoes", sourcePath: "layout-aprovado/assets/img/areas/embarcacoes.jpg", kind: "image" },
+    { assetKey: "application-pocos-submarinos", sourcePath: "layout-aprovado/assets/img/areas/pocos-submarinos.jpg", kind: "image" },
+    { assetKey: "contact-fiber-bg", sourcePath: "layout-aprovado/assets/img/contact-fiber-bg.jpg", kind: "image" },
   ],
   placeholderAssetsToReplace: [
     { assetKey: "contact-placeholder-hero", location: "layout-aprovado/contato.html", purpose: "page hero", currentSource: "external-unsplash" },

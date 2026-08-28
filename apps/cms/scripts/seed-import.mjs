@@ -225,6 +225,11 @@ function applyAssetsToBlocks(blocks, consumer) {
         }
         break;
       }
+      case "page.contact-form-block": {
+        const bg = consumer.take("page.contact-form-block.background");
+        if (bg) next.backgroundImage = bg;
+        break;
+      }
       default:
         break;
     }

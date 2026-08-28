@@ -473,6 +473,7 @@ function ContactFormSection({
 }) {
   return (
     <ContactCard
+      backgroundUrl={resolveMediaUrl(block.backgroundImage?.url) ?? undefined}
       bodyHtml={block.body}
       formId="contact-title"
       heading={block.heading}

@@ -8,6 +8,7 @@ type ContactCardProps = {
   submitLabel?: string;
   formId?: string;
   locale?: "pt-BR" | "en" | "es";
+  backgroundUrl?: string;
 };
 
 type SubmissionStatus = "idle" | "sending" | "ok" | "error";
@@ -48,6 +49,7 @@ export function ContactCard({
   submitLabel = "enviar",
   formId = "contact-title",
   locale = "pt-BR",
+  backgroundUrl,
 }: ContactCardProps) {
   const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [message, setMessage] = useState<string>("");
@@ -97,6 +99,9 @@ export function ContactCard({
 
   return (
     <section aria-labelledby={formId} className="contact-card-wrap" id="contato">
+      {backgroundUrl ? (
+        <img alt="" aria-hidden="true" className="contact-card-wrap__bg" src={backgroundUrl} />
+      ) : null}
       <div className="contact-card">
         <div className="contact-card__grid">
           <div>
