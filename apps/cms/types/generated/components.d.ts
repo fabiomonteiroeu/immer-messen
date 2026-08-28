@@ -150,7 +150,9 @@ export interface PageCasesBlock extends Struct.ComponentSchema {
     cases: Schema.Attribute.Relation<'oneToMany', 'api::case-study.case-study'>;
     displayMode: Schema.Attribute.Enumeration<['manual', 'latest']> &
       Schema.Attribute.DefaultTo<'latest'>;
+    eyebrow: Schema.Attribute.String;
     heading: Schema.Attribute.String;
+    subheading: Schema.Attribute.Text;
   };
 }
 

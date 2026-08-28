@@ -107,7 +107,7 @@ export function NewsBlock({ heading, placeholderText, articles = [] }: NewsBlock
   return (
     <section aria-label={heading ?? "Noticias"} className="news-block" id="noticias">
       <div className="container">
-        {heading ? <h2 className="news-block__title">{heading}</h2> : null}
+        {heading ? <h2 className="rule-heading news-block__title">{heading}</h2> : null}
 
         {articles.length > 0 ? (
           <div className="carousel">

@@ -170,7 +170,9 @@ const cmsPartnerSummarySchema = z.object({
 export const cmsCasesBlockSchema = z.object({
   __component: z.literal("page.cases-block"),
   id: z.number().int().nonnegative().optional(),
+  eyebrow: z.string().nullable().optional(),
   heading: z.string().optional().default("CASES"),
+  subheading: z.string().nullable().optional(),
   displayMode: z.enum(["manual", "latest"]).optional().default("latest"),
   limit: z.number().int().positive().optional(),
   cases: z.array(cmsCaseSummarySchema).optional().default([]),

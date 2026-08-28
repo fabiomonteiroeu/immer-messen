@@ -10,12 +10,21 @@
     }
   },
   "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
     "heading": {
       "type": "string"
     },
+    "subheading": {
+      "type": "text"
+    },
     "displayMode": {
       "type": "enumeration",
-      "enum": ["manual", "latest"],
+      "enum": [
+        "manual",
+        "latest"
+      ],
       "default": "latest"
     },
     "cases": {

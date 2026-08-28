@@ -77,11 +77,12 @@ const applicationAreasBlock = (heading, areaKeys) => ({
   areaKeys,
 });
 
-const casesBlock = (heading, displayMode, caseKeys = []) => ({
+const casesBlock = (heading, displayMode, caseKeys = [], extra = {}) => ({
   __component: "page.cases-block",
   heading,
   displayMode,
   caseKeys,
+  ...extra,
 });
 
 const newsBlock = (heading, displayMode, articleKeys = []) => ({
@@ -929,9 +930,9 @@ const pageDefs = [
       seoDescription: "Transformamos fibra óptica em sistemas inteligentes para infraestrutura crítica.",
       blocks: (locale) => [
         heroBlock(
-          "Transformamos fibra óptica em sistemas inteligentes",
-          "Tecnologia proprietária para monitoramento distribuído, leitura acústica e resposta operacional em infraestrutura crítica.",
-          "Fale com nossa equipe",
+          "Transformamos fibras ópticas em sistemas inteligentes",
+          "Soluções para monitorar ativos e processos críticos através da tecnologia de sensoriamento distribuído a fibra óptica",
+          "Fale com nossos engenheiros",
           contactHrefByLocale[locale]
         ),
         mediaTextBlock(
@@ -939,7 +940,7 @@ const pageDefs = [
           "<p>A tecnologia DFOS (Distributed Fiber Optic Sensing) transforma qualquer cabo de fibra óptica padrão em um sistema de sensoriamento contínuo com milhares de pontos de medição simultâneos, sem a necessidade de sensores extra ao longo da infraestrutura.</p>",
           "left",
           {
-            eyebrow: "TECNOLOGIA",
+            eyebrow: "DISTRIBUTED ACOUSTIC AND TEMPERATURE SENSING",
             variant: "home-tech",
             ctaLabel: "Saiba mais",
             ctaHref: "/pt-BR/tecnologia",
@@ -1002,8 +1003,12 @@ const pageDefs = [
             rightBody: "<p>Somos o único desenvolvedor brasileiro de tecnologia DFOS com hardware proprietário, algoritmos de IA treinados com dados de campo nacionais e capacidade de entrega de solução completa — do interrogador óptico à plataforma de monitoramento contínuo. Nossa estrutura local permite suporte ágil, precificação competitiva e integração nativa aos requisitos regulatórios do mercado brasileiro.</p>",
           }
         ),
-        partnersBlock("Nossos parceiros", allPartnerKeys),
-        casesBlock("Cases", "latest"),
+        partnersBlock("Parceiros", allPartnerKeys),
+        casesBlock("Tecnologia validada em campo.", "latest", [], {
+          eyebrow: "Cases",
+          subheading:
+            "Confira em detalhes projetos realizados com as maiores operadoras de infraestrutura crítica do Brasil.",
+        }),
         newsBlock("Notícias", "latest"),
         contactFormBlock(
           "Fale com a nossa equipe",
@@ -1019,9 +1024,9 @@ const pageDefs = [
       seoDescription: "We turn optical fiber into intelligent systems for critical infrastructure.",
       blocks: (locale) => [
         heroBlock(
-          "We turn optical fiber into intelligent systems",
-          "Proprietary technology for distributed monitoring, acoustic sensing and operational response on critical infrastructure.",
-          "Talk to our team",
+          "We turn optical fibers into intelligent systems",
+          "Solutions to monitor critical assets and processes through distributed fiber optic sensing technology",
+          "Talk to our engineers",
           contactHrefByLocale[locale]
         ),
         mediaTextBlock(
@@ -1029,7 +1034,7 @@ const pageDefs = [
           "<p>DFOS (Distributed Fiber Optic Sensing) turns any standard optical fiber cable into a continuous sensing system with thousands of simultaneous measurement points, with no extra sensors along the infrastructure.</p>",
           "left",
           {
-            eyebrow: "TECHNOLOGY",
+            eyebrow: "DISTRIBUTED ACOUSTIC AND TEMPERATURE SENSING",
             variant: "home-tech",
             ctaLabel: "Learn more",
             ctaHref: "/en/technology",
@@ -1092,8 +1097,12 @@ const pageDefs = [
             rightBody: "<p>We are the only Brazilian developer of DFOS technology with proprietary hardware, AI algorithms trained on national field data, and the capability to deliver a full solution — from optical interrogator to continuous monitoring platform. Our local structure enables agile support, competitive pricing and native compliance with Brazilian regulatory requirements.</p>",
           }
         ),
-        partnersBlock("Our partners", allPartnerKeys),
-        casesBlock("Cases", "latest"),
+        partnersBlock("Partners", allPartnerKeys),
+        casesBlock("Technology proven in the field.", "latest", [], {
+          eyebrow: "Cases",
+          subheading:
+            "Explore in detail projects delivered with the largest critical infrastructure operators in Brazil.",
+        }),
         newsBlock("News", "latest"),
         contactFormBlock(
           "Talk to our team",
@@ -1109,9 +1118,9 @@ const pageDefs = [
       seoDescription: "Transformamos la fibra óptica en sistemas inteligentes para infraestructura crítica.",
       blocks: (locale) => [
         heroBlock(
-          "Transformamos la fibra óptica en sistemas inteligentes",
-          "Tecnología propietaria para monitoreo distribuido, lectura acústica y respuesta operativa en infraestructura crítica.",
-          "Hable con nuestro equipo",
+          "Transformamos las fibras ópticas en sistemas inteligentes",
+          "Soluciones para monitorear activos y procesos críticos mediante la tecnología de sensado distribuido por fibra óptica",
+          "Hable con nuestros ingenieros",
           contactHrefByLocale[locale]
         ),
         mediaTextBlock(
@@ -1119,7 +1128,7 @@ const pageDefs = [
           "<p>La tecnología DFOS (Distributed Fiber Optic Sensing) transforma cualquier cable de fibra óptica estándar en un sistema de sensado continuo con miles de puntos de medición simultáneos, sin necesidad de sensores adicionales a lo largo de la infraestructura.</p>",
           "left",
           {
-            eyebrow: "TECNOLOGÍA",
+            eyebrow: "DISTRIBUTED ACOUSTIC AND TEMPERATURE SENSING",
             variant: "home-tech",
             ctaLabel: "Saber más",
             ctaHref: "/es/tecnologia",
@@ -1182,8 +1191,12 @@ const pageDefs = [
             rightBody: "<p>Somos el único desarrollador brasileño de tecnología DFOS con hardware propietario, algoritmos de IA entrenados con datos de campo nacionales y capacidad de entrega de solución completa — del interrogador óptico a la plataforma de monitoreo continuo. Nuestra estructura local permite soporte ágil, precificación competitiva e integración nativa a los requisitos regulatorios del mercado brasileño.</p>",
           }
         ),
-        partnersBlock("Nuestros aliados", allPartnerKeys),
-        casesBlock("Casos", "latest"),
+        partnersBlock("Aliados", allPartnerKeys),
+        casesBlock("Tecnología validada en campo.", "latest", [], {
+          eyebrow: "Casos",
+          subheading:
+            "Conozca en detalle proyectos realizados con los mayores operadores de infraestructura crítica de Brasil.",
+        }),
         newsBlock("Noticias", "latest"),
         contactFormBlock(
           "Hable con nuestro equipo",

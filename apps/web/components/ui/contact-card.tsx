@@ -18,7 +18,7 @@ const fieldLabels: Record<"pt-BR" | "en" | "es", { name: string; email: string; 
     email: "E-mail",
     company: "Empresa",
     role: "Cargo",
-    message: "Mensagem (opcional)",
+    message: "Mensagem",
     sending: "Enviando...",
     error: "Nao foi possivel enviar agora.",
   },
@@ -27,7 +27,7 @@ const fieldLabels: Record<"pt-BR" | "en" | "es", { name: string; email: string; 
     email: "Email",
     company: "Company",
     role: "Role",
-    message: "Message (optional)",
+    message: "Message",
     sending: "Sending...",
     error: "We could not send your message.",
   },
@@ -36,7 +36,7 @@ const fieldLabels: Record<"pt-BR" | "en" | "es", { name: string; email: string; 
     email: "Correo",
     company: "Empresa",
     role: "Cargo",
-    message: "Mensaje (opcional)",
+    message: "Mensaje",
     sending: "Enviando...",
     error: "No fue posible enviar ahora.",
   },
@@ -119,6 +119,10 @@ export function ContactCard({
             <div className="contact-form__field">
               <label htmlFor={`${formId}-role`}>{labels.role}</label>
               <input id={`${formId}-role`} name="role" type="text" />
+            </div>
+            <div className="contact-form__field contact-form__field--wide">
+              <label htmlFor={`${formId}-message`}>{labels.message}</label>
+              <textarea id={`${formId}-message`} maxLength={1000} name="message" rows={4} />
             </div>
             <label aria-hidden="true" className="contact-form__honeypot">
               <input autoComplete="off" name="_hp" tabIndex={-1} type="text" />

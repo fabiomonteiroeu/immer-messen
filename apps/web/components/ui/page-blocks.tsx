@@ -72,7 +72,7 @@ function HeroSection({ block }: { block: Extract<CmsPageBlock, { __component: "p
         <h1 className="hero__title">{block.title}</h1>
         {block.subtitle ? <p className="hero__subtitle">{block.subtitle}</p> : null}
         {block.ctaLabel && block.ctaHref ? (
-          <Link className="btn btn-light" href={block.ctaHref} style={{ marginTop: "1.5rem" }}>
+          <Link className="btn btn-outline-light" href={block.ctaHref} style={{ marginTop: "1.5rem" }}>
             {block.ctaLabel}
           </Link>
         ) : null}
@@ -449,27 +449,41 @@ async function CasesBlockSection({
   if (cases.length === 0) return null;
 
   return (
-    <section className="cases-block cases-block--v2" id="cases">
-      <div className="container">
-        {block.heading ? <h2 className="cases-block__title">{block.heading}</h2> : null}
-        <div className="cases-rects">
-          {cases.map((caseEntry) => (
-            <Link
-              aria-label={caseEntry.title}
-              className="case-rect"
-              href={`/${locale}/cases/${caseEntry.slug}`}
-              key={caseEntry.slug}
-            >
-              {caseEntry.coverImage ? (
-                <img
-                  alt={caseEntry.coverImage.alternativeText ?? ""}
-                  loading="lazy"
-                  src={resolveMediaUrl(caseEntry.coverImage.url) ?? undefined}
-                />
-              ) : null}
-              <span className="case-rect__title">{caseEntry.title}</span>
-            </Link>
-          ))}
+    <section className="cases-block cases-block--v3" id="cases">
+      <div className="cases-block__head">
+        <div className="container">
+          {block.eyebrow ? <span className="boxed-eyebrow">{block.eyebrow}</span> : null}
+          {block.heading ? <h2 className="cases-block__title">{block.heading}</h2> : null}
+          {block.subheading ? <p className="cases-block__sub">{block.subheading}</p> : null}
+        </div>
+      </div>
+      <div className="cases-block__body">
+        <div className="container">
+          <div className="cases-rects">
+            {cases.map((caseEntry) => (
+              <Link
+                className="case-card"
+                href={`/${locale}/cases/${caseEntry.slug}`}
+                key={caseEntry.slug}
+              >
+                <span className="case-card__media">
+                  {caseEntry.coverImage ? (
+                    <img
+                      alt={caseEntry.coverImage.alternativeText ?? ""}
+                      loading="lazy"
+                      src={resolveMediaUrl(caseEntry.coverImage.url) ?? undefined}
+                    />
+                  ) : null}
+                </span>
+                <span className="case-card__foot">
+                  <span className="case-card__title">{caseEntry.title}</span>
+                  <span aria-hidden="true" className="case-card__arrow">
+                    →
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -511,7 +525,7 @@ async function PartnersSection({
   return (
     <section className="qs-partners" aria-label={block.heading}>
       <div className="container">
-        {block.heading ? <h2 className="qs-partners__title">{block.heading}</h2> : null}
+        {block.heading ? <h2 className="rule-heading">{block.heading}</h2> : null}
         <div className="qs-partners__grid">
           {partners.map((partner) => {
             const logo = partner.logo;
