@@ -1490,16 +1490,21 @@ body.menu-open {
 }
 
 .home-tech__copy {
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: .94rem;
+  line-height: 1.35;
   color: #424445;
   max-width: 60ch;
+}
+
+/* o gap do col-right ja separa do grid de features */
+.home-tech__copy> :last-child {
+  margin-bottom: 0;
 }
 
 .home-tech__features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: clamp(2rem, 3vw, 3.25rem) 1.5rem;
+  gap: clamp(1.9rem, 2.7vw, 3rem) .5rem;
 }
 
 .home-tech__feature {
@@ -1509,8 +1514,8 @@ body.menu-open {
 }
 
 .home-tech__feature .ico {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: var(--c-blue-pale);
   color: var(--c-navy);
@@ -1532,17 +1537,17 @@ body.menu-open {
 }
 
 .home-tech__feature .ico svg {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
 }
 
 .home-tech__feature p {
-  font-size: .78rem;
-  font-weight: 600;
-  line-height: 1.45;
+  font-size: .8rem;
+  font-weight: 500;
+  line-height: 1.1;
   color: #111;
   margin: 0;
-  max-width: 24ch;
+  max-width: 30ch;
 }
 
 /* ===========================================================
