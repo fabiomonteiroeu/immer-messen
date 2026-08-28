@@ -1387,7 +1387,7 @@ body.menu-open {
 
 .home-tech__eyebrow {
   display: block;
-  font-size: clamp(1.15rem, .95rem + .6vw, 1.5rem);
+  font-size: clamp(1.2rem, .95rem + .6vw, 1.5rem);
   font-weight: 700;
   color: #8094b2;
   letter-spacing: .01em;
