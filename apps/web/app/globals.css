@@ -1389,7 +1389,7 @@ body.menu-open {
   display: block;
   font-size: clamp(1.15rem, .95rem + .6vw, 1.5rem);
   font-weight: 700;
-  color: var(--c-blue-soft);
+  color: #8094b2;
   letter-spacing: .01em;
   text-transform: uppercase;
   margin-bottom: 1.25rem;
@@ -1398,8 +1398,8 @@ body.menu-open {
 .home-tech__lead {
   font-size: clamp(1.3rem, 1rem + .9vw, 1.85rem);
   line-height: 1.25;
-  font-weight: 400;
-  color: var(--c-gray-700);
+  font-weight: 600;
+  color: #424445;
   max-width: 70%;
   margin-bottom: 3rem;
 }
@@ -1407,7 +1407,7 @@ body.menu-open {
 /* corpo e legendas em peso normal, como nos prints */
 .home-tech__copy {
   font-weight: 400;
-  color: var(--c-gray-700);
+  color: #424445;
 }
 
 .home-tech__feature p {
@@ -1422,14 +1422,15 @@ body.menu-open {
 
 .home-tech__grid {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 3rem;
-  align-items: center;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
 }
 
 .home-tech__media {
   position: relative;
-  aspect-ratio: 5/3.6;
+  align-self: start;
+  aspect-ratio: 5/3.2;
   overflow: hidden;
   -webkit-clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
   clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
@@ -1447,13 +1448,13 @@ body.menu-open {
   right: 5px;
   display: inline-flex;
   align-items: center;
-  gap: .65rem;
-  padding: .85rem 2.2rem .85rem 1.4rem;
+  gap: .9rem;
+  padding: 1rem 3rem 1rem 2rem;
   border-radius: 0;
   background: #849ebc;
   color: #fff;
   font-weight: 500;
-  font-size: .98rem;
+  font-size: clamp(1.05rem, .85rem + .55vw, 1.35rem);
   -webkit-clip-path: polygon(0 0, 96% 0, 100% 100%, 0 100%);
   clip-path: polygon(0 0, 96% 0, 100% 100%, 0 100%);
   transition: filter .2s, transform .15s;
@@ -1466,8 +1467,8 @@ body.menu-open {
 }
 
 .home-tech__cta .ico {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: transparent;
   border: 1px solid #fff;
@@ -1478,8 +1479,8 @@ body.menu-open {
 }
 
 .home-tech__cta .ico svg {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
 }
 
 .home-tech__col-right {
@@ -1491,14 +1492,14 @@ body.menu-open {
 .home-tech__copy {
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--c-gray-700);
+  color: #424445;
   max-width: 60ch;
 }
 
 .home-tech__features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: clamp(2rem, 3vw, 3.25rem) 1.5rem;
 }
 
 .home-tech__feature {
@@ -1536,12 +1537,12 @@ body.menu-open {
 }
 
 .home-tech__feature p {
-  font-size: .75rem;
+  font-size: .78rem;
   font-weight: 600;
-  line-height: 1.4;
-  color: var(--c-text);
+  line-height: 1.45;
+  color: #111;
   margin: 0;
-  max-width: 22ch;
+  max-width: 24ch;
 }
 
 /* ===========================================================
