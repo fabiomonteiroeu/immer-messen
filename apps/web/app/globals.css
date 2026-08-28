@@ -1839,7 +1839,7 @@ body.menu-open {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, rgba(8, 24, 52, .82) 0%, rgba(8, 20, 44, .62) 100%);
+  background: linear-gradient(120deg, rgba(8, 24, 52, .45) 0%, rgba(8, 20, 44, .28) 100%);
   z-index: -1;
 }
 
