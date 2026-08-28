@@ -144,7 +144,7 @@ const shell = {
       contactDetails: {
         email: "contato@immermessen.com",
         phone: "+55 41 00000-0000",
-        address: "Curitiba – Paraná, Brasil",
+        address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       socialLinks: [
         { platform: "linkedin", url: "https://www.linkedin.com/company/immer-messen" },
@@ -170,7 +170,7 @@ const shell = {
       contactDetails: {
         email: "contato@immermessen.com",
         phone: "+55 41 00000-0000",
-        address: "Curitiba – Paraná, Brasil",
+        address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       copyrightText: "© 2026 Immer Messen. Todos os direitos reservados.",
       privacyLink: {
@@ -201,7 +201,7 @@ const shell = {
       contactDetails: {
         email: "contato@immermessen.com",
         phone: "+55 41 00000-0000",
-        address: "Curitiba – Paraná, Brazil",
+        address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       socialLinks: [
         { platform: "linkedin", url: "https://www.linkedin.com/company/immer-messen" },
@@ -227,7 +227,7 @@ const shell = {
       contactDetails: {
         email: "contato@immermessen.com",
         phone: "+55 41 00000-0000",
-        address: "Curitiba – Paraná, Brazil",
+        address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       copyrightText: "© 2026 Immer Messen. All rights reserved.",
       privacyLink: {
@@ -258,7 +258,7 @@ const shell = {
       contactDetails: {
         email: "contato@immermessen.com",
         phone: "+55 41 00000-0000",
-        address: "Curitiba – Paraná, Brasil",
+        address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       socialLinks: [
         { platform: "linkedin", url: "https://www.linkedin.com/company/immer-messen" },
@@ -284,7 +284,7 @@ const shell = {
       contactDetails: {
         email: "contato@immermessen.com",
         phone: "+55 41 00000-0000",
-        address: "Curitiba – Paraná, Brasil",
+        address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       copyrightText: "© 2026 Immer Messen. Todos los derechos reservados.",
       privacyLink: {

@@ -76,6 +76,31 @@ function normalizeNavHref(href: string): string {
   return href;
 }
 
+const SOCIAL_ICONS: Record<string, { label: string; path: string }> = {
+  linkedin: {
+    label: "LinkedIn",
+    path: "M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.71h.05c.53-.95 1.83-1.96 3.76-1.96C21.6 8.75 22 11.06 22 14.06V21h-4v-6.15c0-1.47-.03-3.36-2.1-3.36-2.1 0-2.42 1.6-2.42 3.25V21h-4V9Z",
+  },
+  youtube: {
+    label: "YouTube",
+    path: "M21.58 7.19c-.23-.86-.9-1.54-1.76-1.77C18.25 5 12 5 12 5s-6.25 0-7.82.42c-.86.23-1.53.91-1.76 1.77C2 8.77 2 12 2 12s0 3.23.42 4.81c.23.86.9 1.54 1.76 1.77C5.75 19 12 19 12 19s6.25 0 7.82-.42c.86-.23 1.53-.91 1.76-1.77C22 15.23 22 12 22 12s0-3.23-.42-4.81ZM10 15.5v-7l6 3.5-6 3.5Z",
+  },
+};
+
+function socialLabel(platform: string) {
+  return SOCIAL_ICONS[platform.toLowerCase()]?.label ?? platform;
+}
+
+function SocialIcon({ platform }: { platform: string }) {
+  const icon = SOCIAL_ICONS[platform.toLowerCase()];
+  if (!icon) return null;
+  return (
+    <svg aria-hidden="true" focusable="false" height="18" viewBox="0 0 24 24" width="18">
+      <path d={icon.path} fill="currentColor" />
+    </svg>
+  );
+}
+
 function NavLinks({
   links,
   pathname,
@@ -118,7 +143,6 @@ export function SiteShell({
 
   const footerLogoUrl = resolveMediaUrl(footer?.logo?.url) ?? headerLogoUrl;
   const footerLogoAlt = footer?.logo?.alternativeText ?? headerLogoAlt;
-  const tagline = footer?.tagline ?? dictionary.defaultFooterTagline;
   const copyright = footer?.copyrightText ?? dictionary.defaultFooterRights;
   const privacyLink = footer?.privacyLink;
   const privacyHref = privacyLink?.href ?? `${homeHref}/lgpd`;
@@ -129,6 +153,11 @@ export function SiteShell({
   const contactPhone =
     footer?.contactDetails?.phone ?? global?.contactDetails?.phone ?? FALLBACK_CONTACT_PHONE;
   const contactPhoneHref = `tel:${contactPhone.replace(/\D+/g, "")}`;
+  const contactAddress =
+    footer?.contactDetails?.address ?? global?.contactDetails?.address ?? null;
+  const socialLinks = (global?.socialLinks ?? []).filter((social) =>
+    SOCIAL_ICONS[social.platform.toLowerCase()],
+  );
 
   const lgpdText = cookieBanner?.text ?? dictionary.defaultLgpdText;
   const lgpdAccept = cookieBanner?.acceptLabel ?? dictionary.defaultLgpdAccept;
@@ -167,13 +196,7 @@ export function SiteShell({
       <footer className="site-footer">
         <div className="container">
           <div className="footer-grid">
-            <div className="footer-tag">
-              <div className="logo">
-                <img alt={footerLogoAlt} src={footerLogoUrl} />
-              </div>
-              <p className="tagline">{tagline}</p>
-            </div>
-            <div className="footer-col">
+            <div className="footer-col footer-menu">
               <h4>{dictionary.footerMenuTitle}</h4>
               <ul>
                 {navLinks.map((link) => (
@@ -186,8 +209,34 @@ export function SiteShell({
               </ul>
             </div>
             <div className="footer-col footer-contact">
-              <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
-              <a href={contactPhoneHref}>{contactPhone}</a>
+              {contactAddress ? (
+                <address className="footer-address">{contactAddress}</address>
+              ) : null}
+              <div className="footer-contact__links">
+                <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+                <a href={contactPhoneHref}>{contactPhone}</a>
+              </div>
+              {socialLinks.length > 0 ? (
+                <ul className="footer-social">
+                  {socialLinks.map((social) => (
+                    <li key={social.url}>
+                      <a
+                        aria-label={socialLabel(social.platform)}
+                        href={social.url}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        <SocialIcon platform={social.platform} />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+            <div className="footer-brand">
+              <div className="logo">
+                <img alt={footerLogoAlt} src={footerLogoUrl} />
+              </div>
             </div>
           </div>
           <div className="footer-bottom">

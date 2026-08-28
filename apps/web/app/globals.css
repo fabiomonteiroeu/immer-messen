@@ -1975,28 +1975,27 @@ body.menu-open {
 }
 
 .site-footer {
-  background: var(--grad-navy-black);
+  background: var(--c-graphite);
   color: rgba(255, 255, 255, .92);
-  padding: 180px 0 2.5rem;
+  padding: 180px 0 3.5rem;
   /* extra top padding to clear the overlapping card */
   position: relative;
 }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
+  grid-template-columns: 1fr 1.4fr 1fr;
   gap: 2.5rem;
+  align-items: start;
 }
 
-.footer-tag {
+.footer-brand {
   display: flex;
-  flex-direction: column;
-  gap: .9rem;
+  justify-content: flex-end;
 }
 
-.footer-tag .tagline {
-  font-size: .92rem;
-  opacity: .75;
+.site-footer .footer-brand .logo img {
+  height: 34px;
 }
 
 .footer-col h4 {
@@ -2030,15 +2029,52 @@ body.menu-open {
   font-size: .94rem;
   display: flex;
   flex-direction: column;
-  gap: .35rem;
+  gap: 1.6rem;
 }
 
 .footer-contact a {
   display: block;
 }
 
-.footer-grid>*:not(:first-child) {
-  border-left: 1px solid rgba(255, 255, 255, .12);
+.footer-address {
+  font-style: normal;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.footer-contact__links {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.footer-social {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: .6rem;
+}
+
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--c-graphite);
+  transition: opacity .2s;
+}
+
+.footer-social a:hover {
+  opacity: .8;
+}
+
+/* divisor apenas entre o menu e o bloco de contato */
+.footer-grid>.footer-contact {
+  border-left: 1px solid rgba(255, 255, 255, .18);
   padding-left: 2.5rem;
 }
 
@@ -3073,11 +3109,15 @@ body.menu-open {
     grid-template-columns: 1fr;
   }
 
-  .footer-grid>*:not(:first-child) {
+  .footer-grid>.footer-contact {
     border-left: 0;
     padding-left: 0;
     border-top: 1px solid rgba(255, 255, 255, .1);
     padding-top: 1.75rem;
+  }
+
+  .footer-brand {
+    justify-content: flex-start;
   }
 
   .news-card {
