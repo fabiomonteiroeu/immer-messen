@@ -1940,6 +1940,8 @@ body.menu-open {
 .applied-mosaic__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  /* no design aprovado a 1a linha tem o dobro da altura das demais (731px x 362px em 2560) */
+  grid-template-rows: clamp(22rem, 34vw, 32rem);
   grid-auto-rows: clamp(11rem, 17vw, 16rem);
   grid-auto-flow: row dense;
   gap: 0;
@@ -2007,6 +2009,8 @@ body.menu-open {
 @media (max-width: 900px) {
   .applied-mosaic__grid {
     grid-template-columns: repeat(2, 1fr);
+    /* em 2 colunas a 1a linha deixa de ser o trio do design — volta a altura uniforme */
+    grid-template-rows: none;
     grid-auto-rows: clamp(9rem, 30vw, 13rem);
   }
 
