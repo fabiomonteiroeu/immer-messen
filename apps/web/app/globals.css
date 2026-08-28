@@ -1868,7 +1868,7 @@ body.menu-open {
 .home-about__title {
   font-size: clamp(1.5rem, 1.15rem + 1.25vw, 2.3rem);
   line-height: 1.15;
-  font-weight: 700;
+  font-weight: 600;
   margin: 0;
   max-width: 27ch;
 }
@@ -2062,7 +2062,7 @@ body.menu-open {
 .solucoes-cards__title {
   font-size: clamp(1.4rem, 1.1rem + .95vw, 1.95rem);
   line-height: 1.2;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--c-navy);
   margin: 0;
 }
@@ -2188,7 +2188,7 @@ body.menu-open {
 .cases-block--v3 .cases-block__title {
   font-size: clamp(1.9rem, 1.4rem + 1.7vw, 2.95rem);
   line-height: 1.18;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -.01em;
   color: var(--c-navy);
   text-align: left;
@@ -2596,10 +2596,14 @@ body.menu-open {
 .contact-card h2 {
   /* mesma escala do lead das outras secoes (.home-tech__lead) */
   font-size: clamp(1.3rem, 1rem + .9vw, 1.85rem);
-  margin-bottom: .9rem;
   line-height: 1.2;
-  /* mantem a quebra em 2 linhas do design mesmo com a coluna mais larga */
-  max-width: 14ch;
+  /* largura medida no design (373px em 2560 = 210px na nossa escala);
+     tambem mantem a quebra em 2 linhas */
+  max-width: 13.1rem;
+  /* divisoria entre titulo e texto, como no design aprovado */
+  border-bottom: 1px solid rgba(255, 255, 255, .6);
+  padding-bottom: .55rem;
+  margin-bottom: 1rem;
 }
 
 .contact-card p {
