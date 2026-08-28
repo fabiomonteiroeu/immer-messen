@@ -2035,23 +2035,24 @@ body.menu-open {
 }
 
 .solucoes-cards__head {
-  background: var(--c-blue-mute);
-  padding: clamp(3rem, 5vw, 4.5rem) 0 clamp(4.5rem, 7vw, 7rem);
-  clip-path: polygon(0 0, 100% 0, 100% 86%, 0 100%);
-  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  background: #dee9f2;
+  padding: clamp(3rem, 5vw, 4.5rem) 0 clamp(2.75rem, 4.5vw, 3.75rem);
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2rem), 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2rem), 0 100%);
+  margin-bottom: clamp(3.5rem, 7vw, 7.5rem);
 }
 
 .solucoes-cards__head-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: clamp(2rem, 5vw, 4rem);
+  grid-template-columns: 1.45fr 1fr;
+  gap: clamp(2rem, 5.5vw, 5.5rem);
   align-items: start;
 }
 
 .solucoes-cards__title {
-  font-size: clamp(1.5rem, 1.15rem + 1.2vw, 2.25rem);
+  font-size: clamp(1.4rem, 1.1rem + .95vw, 1.95rem);
   line-height: 1.2;
-  font-weight: 400;
+  font-weight: 700;
   color: var(--c-navy);
   margin: 0;
 }
@@ -2061,7 +2062,7 @@ body.menu-open {
   color: var(--c-gray-700);
   font-size: .98rem;
   line-height: 1.5;
-  padding-top: .35rem;
+  padding-top: 5rem;
 }
 
 .solucoes-cards__intro p {
@@ -2088,11 +2089,12 @@ body.menu-open {
 }
 
 .solucao-card__num {
-  font-size: 1.75rem;
+  font-size: 2.05rem;
   font-weight: 400;
   line-height: 1;
   color: var(--c-navy);
   font-variant-numeric: tabular-nums;
+  margin-bottom: .35rem;
 }
 
 .solucao-card__title {
@@ -2127,6 +2129,10 @@ body.menu-open {
 @media (max-width: 768px) {
   .solucoes-cards__head-grid {
     grid-template-columns: 1fr;
+  }
+
+  .solucoes-cards__intro {
+    padding-top: 0;
   }
 
   .solucoes-cards__grid {
