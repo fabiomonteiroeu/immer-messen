@@ -25,6 +25,10 @@ export async function getApplicationAreas(locale: SupportedLocale): Promise<Appl
         sort: "sortOrder:asc",
         "pagination[pageSize]": 50,
         "populate[image]": true,
+        "fields[0]": "title",
+        "fields[1]": "summary",
+        "fields[2]": "sortOrder",
+        "fields[3]": "tileSpan",
       },
       schema: applicationAreasCollectionSchema,
       init: {

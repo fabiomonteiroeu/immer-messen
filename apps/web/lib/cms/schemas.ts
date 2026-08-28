@@ -92,8 +92,10 @@ export const cmsAccordionItemSchema = z.object({
 export const cmsAccordionBlockSchema = z.object({
   __component: z.literal("page.accordion-block"),
   id: z.number().int().nonnegative().optional(),
+  eyebrow: z.string().nullable().optional(),
   heading: z.string().optional().default(""),
   body: z.string().optional(),
+  variant: z.enum(["accordion", "numbered-cards"]).nullable().optional(),
   items: z.array(cmsAccordionItemSchema).default([]),
 });
 
@@ -108,6 +110,7 @@ export const cmsApplicationAreaItemSchema = z.object({
   title: z.string().min(1),
   summary: z.string().min(1),
   image: cmsMediaSchema.optional(),
+  tileSpan: z.enum(["small", "wide", "large"]).nullable().optional(),
 });
 
 export const cmsApplicationAreasBlockSchema = z.object({

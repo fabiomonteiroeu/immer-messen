@@ -90,9 +90,12 @@ export interface PageAccordionBlock extends Struct.ComponentSchema {
   };
   attributes: {
     body: Schema.Attribute.RichText;
+    eyebrow: Schema.Attribute.String;
     heading: Schema.Attribute.String;
     items: Schema.Attribute.Component<'page.accordion-item', true> &
       Schema.Attribute.Required;
+    variant: Schema.Attribute.Enumeration<['accordion', 'numbered-cards']> &
+      Schema.Attribute.DefaultTo<'accordion'>;
   };
 }
 

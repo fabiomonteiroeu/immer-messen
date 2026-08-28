@@ -10,11 +10,22 @@
     }
   },
   "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
     "heading": {
       "type": "string"
     },
     "body": {
       "type": "richtext"
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": [
+        "accordion",
+        "numbered-cards"
+      ],
+      "default": "accordion"
     },
     "items": {
       "type": "component",

@@ -52,7 +52,7 @@ const mediaTextBlock = (heading, body, mediaPosition = "left", options = {}) => 
   return block;
 };
 
-const accordionBlock = (heading, items, body = "") => ({
+const accordionBlock = (heading, items, body = "", extra = {}) => ({
   __component: "page.accordion-block",
   heading,
   body,
@@ -60,6 +60,7 @@ const accordionBlock = (heading, items, body = "") => ({
     title: item.title,
     content: item.content,
   })),
+  ...extra,
 });
 
 const featureGridBlock = (heading, cards) => ({
@@ -309,171 +310,179 @@ const shell = {
 
 const applicationAreaDefs = [
   {
-    key: "integridade-estrutural",
+    key: "cabos-submarinos",
     sortOrder: 10,
-    slug: "integridade-estrutural",
-    assetKey: "application-integridade-estrutural",
+    slug: "cabos-submarinos",
+    assetKey: "case-cover-gasodutos",
+    tileSpan: "wide",
     "pt-BR": {
-      title: "Integridade estrutural",
-      summary: "Monitoramento contínuo de pontes, túneis, barragens e ativos civis com detecção precoce de anomalias.",
-      body: "<p>Aplicação voltada a ativos civis e estruturas críticas que exigem observabilidade contínua e localização precisa de eventos.</p>",
+      title: "Integridade de cabos submarinos",
+      summary: "Detecção de intrusão, âncoras e danos em cabos submarinos ao longo de centenas de quilômetros.",
+      body: "<p>Monitoramento contínuo de cabos submarinos de telecomunicações e energia, com localização precisa de eventos ao longo de toda a rota.</p>",
     },
     en: {
-      title: "Structural integrity",
-      summary: "Continuous monitoring of bridges, tunnels, dams and civil assets with early anomaly detection.",
-      body: "<p>Application focused on civil assets and critical structures that demand continuous observability and precise event localization.</p>",
+      title: "Submarine cable integrity",
+      summary: "Detection of intrusion, anchoring and damage on submarine cables across hundreds of kilometres.",
+      body: "<p>Continuous monitoring of submarine telecom and power cables, with precise event localisation along the whole route.</p>",
     },
     es: {
-      title: "Integridad estructural",
-      summary: "Monitoreo continuo de puentes, túneles, presas y activos civiles con detección temprana de anomalías.",
-      body: "<p>Aplicación orientada a activos civiles y estructuras críticas que exigen observabilidad continua y localización precisa de eventos.</p>",
+      title: "Integridad de cables submarinos",
+      summary: "Detección de intrusión, anclas y daños en cables submarinos a lo largo de cientos de kilómetros.",
+      body: "<p>Monitoreo continuo de cables submarinos de telecomunicaciones y energía, con localización precisa de eventos en toda la ruta.</p>",
     },
   },
   {
-    key: "vazamentos",
+    key: "linhas-transmissao",
     sortOrder: 20,
-    slug: "vazamentos",
-    assetKey: "application-vazamentos",
+    slug: "linhas-transmissao",
+    assetKey: "case-cover-transmissao",
+    tileSpan: "small",
     "pt-BR": {
-      title: "Vazamentos",
-      summary: "Detecção de vazamentos em dutos e sistemas lineares com resposta operacional acelerada.",
-      body: "<p>Uso de DAS e DTS para localizar anomalias térmicas e acústicas ao longo de oleodutos, gasodutos e redes críticas.</p>",
+      title: "Linhas de transmissão",
+      summary: "Monitoramento de linhas de transmissão pelo cabo OPGW já instalado, sem sensores adicionais.",
+      body: "<p>Uso da fibra óptica embarcada no cabo para-raios para detectar falhas, vibração e interferências ao longo da linha.</p>",
     },
     en: {
-      title: "Leak detection",
-      summary: "Detection of leaks in pipelines and linear systems with accelerated operational response.",
-      body: "<p>Use of DAS and DTS to locate thermal and acoustic anomalies along oil pipelines, gas pipelines and critical networks.</p>",
+      title: "Transmission lines",
+      summary: "Monitoring of transmission lines through the existing OPGW cable, with no extra sensors.",
+      body: "<p>Uses the fiber embedded in the earth wire to detect faults, vibration and interference along the line.</p>",
     },
     es: {
-      title: "Detección de fugas",
-      summary: "Detección de fugas en ductos y sistemas lineales con respuesta operativa acelerada.",
-      body: "<p>Uso de DAS y DTS para localizar anomalías térmicas y acústicas a lo largo de oleoductos, gasoductos y redes críticas.</p>",
-    },
-  },
-  {
-    key: "seguranca-patrimonial",
-    sortOrder: 30,
-    slug: "seguranca-patrimonial",
-    assetKey: "application-seguranca-patrimonial",
-    "pt-BR": {
-      title: "Segurança patrimonial",
-      summary: "Proteção perimetral e detecção de intrusões em infraestruturas industriais e energéticas.",
-      body: "<p>Classificação de eventos e correlação espacial para reduzir falso positivo e aumentar a confiança dos operadores.</p>",
-    },
-    en: {
-      title: "Asset security",
-      summary: "Perimeter protection and intrusion detection in industrial and energy infrastructures.",
-      body: "<p>Event classification and spatial correlation to reduce false positives and increase operator confidence.</p>",
-    },
-    es: {
-      title: "Seguridad patrimonial",
-      summary: "Protección perimetral y detección de intrusiones en infraestructuras industriales y energéticas.",
-      body: "<p>Clasificación de eventos y correlación espacial para reducir falsos positivos y aumentar la confianza de los operadores.</p>",
-    },
-  },
-  {
-    key: "meio-ambiente",
-    sortOrder: 40,
-    slug: "meio-ambiente",
-    assetKey: "application-meio-ambiente",
-    "pt-BR": {
-      title: "Meio ambiente",
-      summary: "Monitoramento acústico e térmico aplicado a fauna marinha, offshore e estudos ambientais.",
-      body: "<p>Projetos com foco em mitigação de impacto ambiental e observação distribuída de fenômenos naturais.</p>",
-    },
-    en: {
-      title: "Environment",
-      summary: "Acoustic and thermal monitoring applied to marine fauna, offshore and environmental studies.",
-      body: "<p>Projects focused on environmental impact mitigation and distributed observation of natural phenomena.</p>",
-    },
-    es: {
-      title: "Medio ambiente",
-      summary: "Monitoreo acústico y térmico aplicado a fauna marina, offshore y estudios ambientales.",
-      body: "<p>Proyectos enfocados en la mitigación del impacto ambiental y la observación distribuida de fenómenos naturales.</p>",
-    },
-  },
-  {
-    key: "sismica",
-    sortOrder: 50,
-    slug: "sismica",
-    assetKey: "application-sismica",
-    "pt-BR": {
-      title: "Sísmica",
-      summary: "Aquisição e análise de sinais distribuídos para campanhas sísmicas e interpretação geofísica.",
-      body: "<p>Capacidade de registrar eventos e assinaturas distribuídas com alta sensibilidade ao longo da fibra.</p>",
-    },
-    en: {
-      title: "Seismic",
-      summary: "Acquisition and analysis of distributed signals for seismic campaigns and geophysical interpretation.",
-      body: "<p>Ability to record events and distributed signatures with high sensitivity along the fiber.</p>",
-    },
-    es: {
-      title: "Sísmica",
-      summary: "Adquisición y análisis de señales distribuidas para campañas sísmicas e interpretación geofísica.",
-      body: "<p>Capacidad para registrar eventos y firmas distribuidas con alta sensibilidad a lo largo de la fibra.</p>",
-    },
-  },
-  {
-    key: "incendios",
-    sortOrder: 60,
-    slug: "incendios",
-    assetKey: "application-incendios",
-    "pt-BR": {
-      title: "Incêndios",
-      summary: "Detecção precoce de variações térmicas para corredores de energia e ativos expostos a incêndio.",
-      body: "<p>Monitoramento térmico distribuído para reduzir tempo de resposta em eventos com potencial de escalada rápida.</p>",
-    },
-    en: {
-      title: "Fire detection",
-      summary: "Early detection of thermal variations for energy corridors and assets exposed to fire.",
-      body: "<p>Distributed thermal monitoring to reduce response time in events with fast escalation potential.</p>",
-    },
-    es: {
-      title: "Incendios",
-      summary: "Detección temprana de variaciones térmicas para corredores de energía y activos expuestos a incendios.",
-      body: "<p>Monitoreo térmico distribuido para reducir el tiempo de respuesta en eventos con potencial de escalada rápida.</p>",
-    },
-  },
-  {
-    key: "escoamento",
-    sortOrder: 70,
-    slug: "escoamento",
-    assetKey: "application-escoamento",
-    "pt-BR": {
-      title: "Escoamento",
-      summary: "Observabilidade operacional para padrões de escoamento em dutos e processos industriais.",
-      body: "<p>Uso de sensoriamento distribuído para inferir comportamento dinâmico do fluido e desvios operacionais.</p>",
-    },
-    en: {
-      title: "Flow monitoring",
-      summary: "Operational observability for flow patterns in pipelines and industrial processes.",
-      body: "<p>Use of distributed sensing to infer dynamic fluid behavior and operational deviations.</p>",
-    },
-    es: {
-      title: "Monitoreo de flujo",
-      summary: "Observabilidad operativa para patrones de flujo en ductos y procesos industriales.",
-      body: "<p>Uso de sensado distribuido para inferir comportamiento dinámico del fluido y desviaciones operativas.</p>",
+      title: "Líneas de transmisión",
+      summary: "Monitoreo de líneas de transmisión por el cable OPGW ya instalado, sin sensores adicionales.",
+      body: "<p>Uso de la fibra óptica embarcada en el cable de guarda para detectar fallas, vibración e interferencias a lo largo de la línea.</p>",
     },
   },
   {
     key: "derivacao-clandestina",
-    sortOrder: 80,
+    sortOrder: 30,
     slug: "derivacao-clandestina",
     assetKey: "application-derivacao-clandestina",
+    tileSpan: "small",
     "pt-BR": {
       title: "Derivação clandestina",
       summary: "Detecção de interferências indevidas em ativos lineares com localização precisa.",
-      body: "<p>Projetos para identificar tentativas de derivação e acionar protocolos de segurança com maior rapidez.</p>",
+      body: "<p>Identificação de escavação, perfuração e derivação não autorizada em dutos e cabos, com alerta em tempo real.</p>",
     },
     en: {
       title: "Illegal tapping",
-      summary: "Detection of unauthorized interference in linear assets with precise localization.",
-      body: "<p>Projects to identify tapping attempts and trigger security protocols faster.</p>",
+      summary: "Detection of unauthorised interference on linear assets with precise localisation.",
+      body: "<p>Identifies digging, drilling and unauthorised tapping on pipelines and cables, with real-time alerts.</p>",
     },
     es: {
       title: "Derivación clandestina",
-      summary: "Detección de interferencias no autorizadas en activos lineales con localización precisa.",
-      body: "<p>Proyectos para identificar intentos de derivación y activar protocolos de seguridad con mayor rapidez.</p>",
+      summary: "Detección de interferencias indebidas en activos lineales con localización precisa.",
+      body: "<p>Identificación de excavación, perforación y derivación no autorizada en ductos y cables, con alerta en tiempo real.</p>",
+    },
+  },
+  {
+    key: "geofisica",
+    sortOrder: 40,
+    slug: "geofisica",
+    assetKey: "application-sismica",
+    tileSpan: "small",
+    "pt-BR": {
+      title: "Geofísica",
+      summary: "Aquisição sísmica distribuída com milhares de canais sobre a fibra já instalada.",
+      body: "<p>Levantamentos geofísicos e monitoramento de reservatório usando a fibra como arranjo sísmico contínuo.</p>",
+    },
+    en: {
+      title: "Geophysics",
+      summary: "Distributed seismic acquisition with thousands of channels over the installed fiber.",
+      body: "<p>Geophysical surveys and reservoir monitoring using the fiber as a continuous seismic array.</p>",
+    },
+    es: {
+      title: "Geofísica",
+      summary: "Adquisición sísmica distribuida con miles de canales sobre la fibra ya instalada.",
+      body: "<p>Levantamientos geofísicos y monitoreo de reservorio usando la fibra como arreglo sísmico continuo.</p>",
+    },
+  },
+  {
+    key: "embarcacoes",
+    sortOrder: 50,
+    slug: "embarcacoes",
+    assetKey: "case-hero-offshore",
+    tileSpan: "small",
+    "pt-BR": {
+      title: "Embarcações",
+      summary: "Identificação e rastreamento acústico de embarcações próximas a ativos submarinos.",
+      body: "<p>Detecção da assinatura acústica de motores para estimar trajetória e distância de embarcações sobre a rota do cabo.</p>",
+    },
+    en: {
+      title: "Vessels",
+      summary: "Acoustic identification and tracking of vessels near submarine assets.",
+      body: "<p>Detects engine acoustic signatures to estimate the trajectory and distance of vessels over the cable route.</p>",
+    },
+    es: {
+      title: "Embarcaciones",
+      summary: "Identificación y rastreo acústico de embarcaciones cercanas a activos submarinos.",
+      body: "<p>Detección de la firma acústica de motores para estimar trayectoria y distancia de embarcaciones sobre la ruta del cable.</p>",
+    },
+  },
+  {
+    key: "meio-ambiente",
+    sortOrder: 60,
+    slug: "meio-ambiente",
+    assetKey: "application-meio-ambiente",
+    tileSpan: "large",
+    "pt-BR": {
+      title: "Meio ambiente",
+      summary: "Bioacústica marinha e monitoramento ambiental contínuo sem embarcações em campo.",
+      body: "<p>Detecção e localização de vocalizações de cetáceos a partir de cabos submarinos, com acompanhamento remoto.</p>",
+    },
+    en: {
+      title: "Environment",
+      summary: "Marine bioacoustics and continuous environmental monitoring with no vessels in the field.",
+      body: "<p>Detection and localisation of cetacean vocalisations from submarine cables, monitored remotely.</p>",
+    },
+    es: {
+      title: "Medio ambiente",
+      summary: "Bioacústica marina y monitoreo ambiental continuo sin embarcaciones en campo.",
+      body: "<p>Detección y localización de vocalizaciones de cetáceos a partir de cables submarinos, con seguimiento remoto.</p>",
+    },
+  },
+  {
+    key: "seguranca-patrimonial",
+    sortOrder: 70,
+    slug: "seguranca-patrimonial",
+    assetKey: "application-seguranca-patrimonial",
+    tileSpan: "small",
+    "pt-BR": {
+      title: "Segurança patrimonial",
+      summary: "Perímetros e faixas de servidão monitorados de forma contínua por fibra óptica.",
+      body: "<p>Detecção de invasão, escavação e circulação indevida em perímetros de plantas e faixas de dutos.</p>",
+    },
+    en: {
+      title: "Site security",
+      summary: "Perimeters and rights of way continuously monitored by optical fiber.",
+      body: "<p>Detection of intrusion, digging and unauthorised movement on plant perimeters and pipeline corridors.</p>",
+    },
+    es: {
+      title: "Seguridad patrimonial",
+      summary: "Perímetros y franjas de servidumbre monitoreados de forma continua por fibra óptica.",
+      body: "<p>Detección de invasión, excavación y circulación indebida en perímetros de plantas y franjas de ductos.</p>",
+    },
+  },
+  {
+    key: "pocos-submarinos",
+    sortOrder: 80,
+    slug: "pocos-submarinos",
+    assetKey: "application-escoamento",
+    tileSpan: "small",
+    "pt-BR": {
+      title: "Poços submarinos",
+      summary: "Sensoriamento distribuído em poços e linhas submarinas de produção.",
+      body: "<p>Perfis contínuos de temperatura e acústica ao longo do poço, para acompanhamento de produção e integridade.</p>",
+    },
+    en: {
+      title: "Subsea wells",
+      summary: "Distributed sensing in subsea wells and production flowlines.",
+      body: "<p>Continuous temperature and acoustic profiles along the well, for production and integrity monitoring.</p>",
+    },
+    es: {
+      title: "Pozos submarinos",
+      summary: "Sensado distribuido en pozos y líneas submarinas de producción.",
+      body: "<p>Perfiles continuos de temperatura y acústica a lo largo del pozo, para seguimiento de producción e integridad.</p>",
     },
   },
 ];
@@ -488,6 +497,7 @@ const applicationAreas = applicationAreaDefs.flatMap((def) =>
       summary: def[locale].summary,
       body: def[locale].body,
       sortOrder: def.sortOrder,
+      tileSpan: def.tileSpan,
     },
     assetRefs: [{ assetKey: def.assetKey, usage: "application-area.image" }],
   }))
@@ -955,30 +965,31 @@ const pageDefs = [
           }
         ),
         accordionBlock(
-          "Soluções",
+          "Da fibra ao diagnóstico temos soluções completas para infraestrutura crítica",
           [
             {
               title: "Interrogador DATS: DAS e DTS na mesma fibra",
-              content: "<p>O DATS é o interrogador óptico proprietário da Immer Messen, desenvolvido para operar simultaneamente nas modalidades DAS e DTS sobre o mesmo cabo de fibra, com um único equipamento. Essa arquitetura co-localizada elimina a necessidade de infraestrutura de fibra dedicada por modalidade, reduzindo custo de implantação e simplificando a operação.</p><p>Com alcance de até 60 km por canal DAS e 30 km por canal DTS, frequência de amostragem de 0,5 a 100 kHz e resolução espacial de 5 a 50 m, o DATS é compatível com fibra monomodo padrão já instalada na infraestrutura do cliente — sem necessidade de substituição ou instalação de novos cabos.</p>",
+              content: "<p>Um único equipamento opera DAS e DTS simultaneamente sobre a mesma fibra já instalada, com alcance de até 60 km (DAS) e 30 km (DTS), sem necessidade de novos cabos.</p>",
             },
             {
               title: "Algoritmos de IA e software embarcado",
-              content: "<p>Os dados brutos gerados pelo interrogador são processados por algoritmos proprietários de machine learning, desenvolvidos e treinados pela Immer Messen com dados de campo de infraestrutura crítica brasileira. Essa camada de inteligência é responsável por classificar eventos acústicos e térmicos, filtrar ruído ambiental e gerar alertas acionáveis com localização geográfica precisa — reduzindo falsos positivos e entregando ao operador informação, não apenas dados.</p>",
+              content: "<p>Algoritmos proprietários treinados com dados de campo brasileiros classificam eventos acústicos e térmicos, filtram ruído e geram alertas com localização precisa — informação acionável, não apenas dados brutos.</p>",
             },
             {
               title: "Soluções customizadas por aplicação",
-              content: "<p>Cada infraestrutura tem seu perfil de ameaças, seu contexto regulatório e suas restrições operacionais. A Immer Messen desenvolve soluções sob medida para gasodutos e oleodutos, linhas de transmissão elétrica, cabos submarinos, poços, infraestrutura civil, dentre outros.</p>",
+              content: "<p>Cada projeto é desenvolvido sob medida para o perfil de ameaças e contexto regulatório específico — gasodutos, oleodutos, linhas de transmissão, cabos submarinos, poços e infraestrutura civil.</p>",
             },
             {
               title: "Serviços de engenharia e implantação",
-              content: "<p>Nossa equipe técnica atua desde a fase de concepção do projeto até o comissionamento em campo — incluindo levantamento de infraestrutura de fibra existente, definição de arquitetura do sistema, instalação do interrogador, calibração, integração com sistemas existentes.</p>",
+              content: "<p>Atuação completa desde a concepção até o comissionamento: levantamento de fibra existente, arquitetura do sistema, instalação, calibração e integração com sistemas do cliente.</p>",
             },
             {
               title: "Monitoramento contínuo",
-              content: "<p>Nossa equipe técnica atua desde a fase de concepção do projeto até o comissionamento em campo — incluindo levantamento de infraestrutura de fibra existente, definição de arquitetura do sistema, instalação do interrogador, calibração, integração com sistemas existentes.</p>",
+              content: "<p>Plataforma por assinatura com acesso remoto seguro, gestão de alarmes configuráveis e relatórios automáticos de conformidade — modelos de IA atualizados continuamente com dados de campo acumulados.</p>",
             },
           ],
-          "<h3>Da fibra ao diagnóstico temos soluções completas para infraestrutura crítica</h3><p>A Immer Messen não fornece apenas hardware. Entregamos sistemas completos de monitoramento distribuído, do interrogador óptico à plataforma de inteligência operacional, todos adaptados aos requisitos técnicos, regulatórios e operacionais de cada cliente.</p>"
+          "<p>A Immer Messen não fornece apenas hardware. Entregamos sistemas completos de monitoramento distribuído, do interrogador óptico à plataforma de inteligência operacional, adaptados aos requisitos técnicos, regulatórios e operacionais de cada cliente.</p>",
+          { eyebrow: "Soluções:", variant: "numbered-cards" }
         ),
         applicationAreasBlock("Áreas de aplicação", allAreaKeys),
         aboutContentBlock(
@@ -1049,30 +1060,31 @@ const pageDefs = [
           }
         ),
         accordionBlock(
-          "Solutions",
+          "From fiber to diagnosis, complete solutions for critical infrastructure",
           [
             {
               title: "DATS interrogator: DAS and DTS on the same fiber",
-              content: "<p>DATS is Immer Messen's proprietary optical interrogator, designed to operate simultaneously in DAS and DTS modes over the same fiber cable with a single device. The co-located architecture removes the need for dedicated fiber per modality, reducing deployment cost and simplifying operations.</p><p>With a reach of up to 60 km per DAS channel and 30 km per DTS channel, sampling frequency from 0.5 to 100 kHz and spatial resolution from 5 to 50 m, DATS is compatible with the standard single-mode fiber already installed in the client's infrastructure — with no need to replace or install new cables.</p>",
+              content: "<p>A single device runs DAS and DTS simultaneously over the same installed fiber, reaching up to 60 km (DAS) and 30 km (DTS), with no new cables required.</p>",
             },
             {
               title: "AI algorithms and embedded software",
-              content: "<p>Raw data generated by the interrogator is processed by proprietary machine-learning algorithms, developed and trained by Immer Messen on field data from Brazilian critical infrastructure. This intelligence layer classifies acoustic and thermal events, filters environmental noise and generates actionable alerts with precise geolocation — reducing false positives and delivering information to the operator, not just data.</p>",
+              content: "<p>Proprietary algorithms trained on Brazilian field data classify acoustic and thermal events, filter out noise and raise alerts with precise localisation — actionable information, not raw data.</p>",
             },
             {
               title: "Application-tailored solutions",
-              content: "<p>Each infrastructure has its own threat profile, regulatory context and operational constraints. Immer Messen builds custom solutions for gas and oil pipelines, electrical transmission lines, submarine cables, wells, civil infrastructure and more.</p>",
+              content: "<p>Every project is tailored to the specific threat profile and regulatory context — gas and oil pipelines, transmission lines, submarine cables, wells and civil infrastructure.</p>",
             },
             {
               title: "Engineering and deployment services",
-              content: "<p>Our technical team works from project conception to field commissioning — including surveying existing fiber infrastructure, defining system architecture, installing the interrogator, calibration and integration with existing systems.</p>",
+              content: "<p>Full coverage from design to commissioning: survey of existing fiber, system architecture, installation, calibration and integration with the client's systems.</p>",
             },
             {
               title: "Continuous monitoring",
-              content: "<p>Our technical team works from project conception to field commissioning — including surveying existing fiber infrastructure, defining system architecture, installing the interrogator, calibration and integration with existing systems.</p>",
+              content: "<p>Subscription platform with secure remote access, configurable alarm management and automatic compliance reports — AI models continuously updated with accumulated field data.</p>",
             },
           ],
-          "<h3>From fiber to diagnostics: complete solutions for critical infrastructure</h3><p>Immer Messen does not provide hardware alone. We deliver complete distributed monitoring systems, from the optical interrogator to the operational intelligence platform, all tailored to each client's technical, regulatory and operational requirements.</p>"
+          "<p>Immer Messen does not supply hardware alone. We deliver complete distributed monitoring systems, from the optical interrogator to the operational intelligence platform, adapted to each client's technical, regulatory and operational requirements.</p>",
+          { eyebrow: "Solutions:", variant: "numbered-cards" }
         ),
         applicationAreasBlock("Application areas", allAreaKeys),
         aboutContentBlock(
@@ -1143,30 +1155,31 @@ const pageDefs = [
           }
         ),
         accordionBlock(
-          "Soluciones",
+          "De la fibra al diagnóstico, soluciones completas para infraestructura crítica",
           [
             {
               title: "Interrogador DATS: DAS y DTS en la misma fibra",
-              content: "<p>DATS es el interrogador óptico propietario de Immer Messen, desarrollado para operar simultáneamente en modos DAS y DTS sobre el mismo cable de fibra, con un único equipo. La arquitectura colocalizada elimina la necesidad de infraestructura de fibra dedicada por modalidad, reduciendo el costo de despliegue y simplificando la operación.</p><p>Con un alcance de hasta 60 km por canal DAS y 30 km por canal DTS, frecuencia de muestreo de 0,5 a 100 kHz y resolución espacial de 5 a 50 m, DATS es compatible con la fibra monomodo estándar ya instalada en la infraestructura del cliente — sin necesidad de sustituir ni instalar nuevos cables.</p>",
+              content: "<p>Un único equipo opera DAS y DTS simultáneamente sobre la misma fibra ya instalada, con alcance de hasta 60 km (DAS) y 30 km (DTS), sin necesidad de nuevos cables.</p>",
             },
             {
               title: "Algoritmos de IA y software embebido",
-              content: "<p>Los datos brutos generados por el interrogador son procesados por algoritmos propietarios de machine learning, desarrollados y entrenados por Immer Messen con datos de campo de infraestructura crítica brasileña. Esta capa de inteligencia clasifica eventos acústicos y térmicos, filtra ruido ambiental y genera alertas accionables con geolocalización precisa — reduciendo falsos positivos y entregando información, no solo datos.</p>",
+              content: "<p>Algoritmos propietarios entrenados con datos de campo brasileños clasifican eventos acústicos y térmicos, filtran ruido y generan alertas con localización precisa — información accionable, no solo datos brutos.</p>",
             },
             {
               title: "Soluciones personalizadas por aplicación",
-              content: "<p>Cada infraestructura tiene su perfil de amenazas, su contexto regulatorio y sus restricciones operativas. Immer Messen desarrolla soluciones a medida para gasoductos y oleoductos, líneas de transmisión eléctrica, cables submarinos, pozos, infraestructura civil, entre otros.</p>",
+              content: "<p>Cada proyecto se desarrolla a medida del perfil de amenazas y del contexto regulatorio específico — gasoductos, oleoductos, líneas de transmisión, cables submarinos, pozos e infraestructura civil.</p>",
             },
             {
               title: "Servicios de ingeniería e implementación",
-              content: "<p>Nuestro equipo técnico actúa desde la concepción del proyecto hasta la puesta en marcha en campo — incluyendo relevamiento de infraestructura de fibra existente, definición de arquitectura del sistema, instalación del interrogador, calibración e integración con sistemas existentes.</p>",
+              content: "<p>Actuación completa desde la concepción hasta la puesta en marcha: relevamiento de fibra existente, arquitectura del sistema, instalación, calibración e integración con los sistemas del cliente.</p>",
             },
             {
               title: "Monitoreo continuo",
-              content: "<p>Nuestro equipo técnico actúa desde la concepción del proyecto hasta la puesta en marcha en campo — incluyendo relevamiento de infraestructura de fibra existente, definición de arquitectura del sistema, instalación del interrogador, calibración e integración con sistemas existentes.</p>",
+              content: "<p>Plataforma por suscripción con acceso remoto seguro, gestión de alarmas configurables e informes automáticos de conformidad — modelos de IA actualizados continuamente con datos de campo acumulados.</p>",
             },
           ],
-          "<h3>De la fibra al diagnóstico: soluciones completas para infraestructura crítica</h3><p>Immer Messen no ofrece solo hardware. Entregamos sistemas completos de monitoreo distribuido, del interrogador óptico a la plataforma de inteligencia operacional, todos adaptados a los requisitos técnicos, regulatorios y operacionales de cada cliente.</p>"
+          "<p>Immer Messen no suministra solo hardware. Entregamos sistemas completos de monitoreo distribuido, del interrogador óptico a la plataforma de inteligencia operativa, adaptados a los requisitos técnicos, regulatorios y operativos de cada cliente.</p>",
+          { eyebrow: "Soluciones:", variant: "numbered-cards" }
         ),
         applicationAreasBlock("Áreas de aplicación", allAreaKeys),
         aboutContentBlock(

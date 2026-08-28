@@ -51,7 +51,9 @@
     "image": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "sortOrder": {
       "type": "integer",
@@ -67,6 +69,15 @@
       "relation": "manyToMany",
       "target": "api::case-study.case-study",
       "mappedBy": "applicationAreas"
+    },
+    "tileSpan": {
+      "type": "enumeration",
+      "enum": [
+        "small",
+        "wide",
+        "large"
+      ],
+      "default": "small"
     }
   }
 }

@@ -1541,6 +1541,213 @@ body.menu-open {
 }
 
 /* ===========================================================
+   HOME — Aplicações (redesign 2026): mosaico full-bleed, tiles
+   de tamanhos variados sem respiro, legenda sobre a imagem.
+   =========================================================== */
+.applied-mosaic {
+  background: #fff;
+  padding: clamp(3rem, 5vw, 4.5rem) 0 0;
+}
+
+.applied-mosaic__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: clamp(11rem, 17vw, 16rem);
+  grid-auto-flow: row dense;
+  gap: 0;
+}
+
+.mosaic-tile {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+}
+
+.mosaic-tile[data-span="wide"] {
+  grid-column: span 2;
+}
+
+.mosaic-tile[data-span="large"] {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* o media do tile ocupa a célula inteira; sem cantos nem sombra */
+.mosaic-tile .applied-card__media {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+  background: #0d1220;
+}
+
+.mosaic-tile .applied-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 10, 24, 0) 45%, rgba(6, 10, 24, .72) 100%);
+  pointer-events: none;
+  transition: opacity .35s ease;
+}
+
+.mosaic-tile .applied-card__media:hover::after,
+.mosaic-tile .applied-card__media.is-open::after {
+  opacity: 0;
+}
+
+.mosaic-tile__title {
+  position: absolute;
+  left: 1.4rem;
+  right: 1.4rem;
+  bottom: 1.1rem;
+  z-index: 2;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(.95rem, .85rem + .35vw, 1.15rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, .45);
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+
+.mosaic-tile:hover .mosaic-tile__title {
+  opacity: 0;
+}
+
+@media (max-width: 900px) {
+  .applied-mosaic__grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: clamp(9rem, 30vw, 13rem);
+  }
+
+  .mosaic-tile[data-span="large"] {
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 560px) {
+  .applied-mosaic__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mosaic-tile[data-span="wide"],
+  .mosaic-tile[data-span="large"] {
+    grid-column: span 1;
+  }
+}
+
+/* ===========================================================
+   HOME — Bloco Soluções (redesign 2026): faixa azul-clara com
+   corte diagonal e cinco cards numerados, sempre abertos.
+   =========================================================== */
+.solucoes-cards {
+  background: #fff;
+  padding-bottom: clamp(3.5rem, 6vw, 6rem);
+}
+
+.solucoes-cards__head {
+  background: var(--c-blue-mute);
+  padding: clamp(3rem, 5vw, 4.5rem) 0 clamp(4.5rem, 7vw, 7rem);
+  clip-path: polygon(0 0, 100% 0, 100% 86%, 0 100%);
+  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.solucoes-cards__head-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.solucoes-cards__title {
+  font-size: clamp(1.5rem, 1.15rem + 1.2vw, 2.25rem);
+  line-height: 1.2;
+  font-weight: 400;
+  color: var(--c-navy);
+  margin: 0;
+}
+
+.solucoes-cards__intro {
+  font-weight: 700;
+  color: var(--c-gray-700);
+  font-size: .98rem;
+  line-height: 1.5;
+  padding-top: .35rem;
+}
+
+.solucoes-cards__intro p {
+  margin: 0;
+}
+
+.solucoes-cards__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.solucao-card {
+  border: 1px solid var(--c-gray-300);
+  padding: 1.5rem 1.25rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  background: #fff;
+}
+
+.solucao-card__num {
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--c-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.solucao-card__title {
+  font-size: 1.02rem;
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--c-navy);
+  margin: 0;
+}
+
+.solucao-card__body {
+  font-size: .82rem;
+  line-height: 1.55;
+  font-weight: 700;
+  color: var(--c-gray-700);
+}
+
+.solucao-card__body p {
+  margin: 0;
+}
+
+.solucao-card__body p + p {
+  margin-top: .6rem;
+}
+
+@media (max-width: 1100px) {
+  .solucoes-cards__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .solucoes-cards__head-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .solucoes-cards__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================================================
    HOME — Bloco Cases V3 (redesign 2026): header claro com corte
    diagonal para faixa escura; cards com imagem, título e seta.
    =========================================================== */

@@ -495,6 +495,8 @@ export interface ApiApplicationAreaApplicationArea
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 220;
       }>;
+    tileSpan: Schema.Attribute.Enumeration<['small', 'wide', 'large']> &
+      Schema.Attribute.DefaultTo<'small'>;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{

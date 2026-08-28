@@ -337,6 +337,37 @@ function AccordionSection({
 }: {
   block: Extract<CmsPageBlock, { __component: "page.accordion-block" }>;
 }) {
+  if (block.variant === "numbered-cards") {
+    return (
+      <section className="solucoes-cards" id="solucoes">
+        <div className="solucoes-cards__head">
+          <div className="container">
+            <div className="solucoes-cards__head-grid">
+              <div>
+                {block.eyebrow ? <span className="boxed-eyebrow">{block.eyebrow}</span> : null}
+                {block.heading ? <h2 className="solucoes-cards__title">{block.heading}</h2> : null}
+              </div>
+              {block.body ? <RichText className="solucoes-cards__intro" html={block.body} /> : null}
+            </div>
+          </div>
+        </div>
+        <div className="container">
+          <ol className="solucoes-cards__grid">
+            {block.items.map((item, index) => (
+              <li className="solucao-card" key={item.title}>
+                <span aria-hidden="true" className="solucao-card__num">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="solucao-card__title">{item.title}</h3>
+                <RichText className="solucao-card__body" html={item.content} />
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="solucoes-page solucoes-page--inline" id="solucoes">
       <div className="container">
@@ -364,20 +395,27 @@ async function ApplicationAreasSection({
   const areas = block.areas.length > 0 ? block.areas : await getApplicationAreas(locale);
   if (areas.length === 0) return null;
   return (
-    <section className="applied-block applied-block--light">
-      <div className="container">
-        <div className="applied-grid">
-          {areas.map((area) => (
-            <article className="applied-card" key={area.title}>
-              <h3 className="applied-card__title">{area.title}</h3>
-              <AppliedCardMedia
-                alt={area.image?.alternativeText ?? ""}
-                src={resolveMediaUrl(area.image?.url) ?? ""}
-                summary={area.summary}
-              />
-            </article>
-          ))}
+    <section className="applied-mosaic" id="aplicacoes">
+      {block.heading ? (
+        <div className="container">
+          <h2 className="rule-heading">{block.heading}</h2>
         </div>
+      ) : null}
+      <div className="applied-mosaic__grid">
+        {areas.map((area) => (
+          <article
+            className="mosaic-tile"
+            data-span={area.tileSpan ?? "small"}
+            key={area.title}
+          >
+            <AppliedCardMedia
+              alt={area.image?.alternativeText ?? ""}
+              src={resolveMediaUrl(area.image?.url) ?? ""}
+              summary={area.summary}
+            />
+            <h3 className="mosaic-tile__title">{area.title}</h3>
+          </article>
+        ))}
       </div>
     </section>
   );
