@@ -10,9 +10,35 @@
     }
   },
   "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
     "title": {
       "type": "string",
       "maxLength": 120
+    },
+    "intro": {
+      "type": "richtext"
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": [
+        "page",
+        "home-about"
+      ],
+      "default": "page"
+    },
+    "backgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "cards": {
+      "type": "component",
+      "repeatable": true,
+      "component": "page.about-card"
     },
     "rows": {
       "type": "component",

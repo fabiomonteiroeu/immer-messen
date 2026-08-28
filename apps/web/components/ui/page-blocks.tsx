@@ -603,6 +603,36 @@ function AboutContentSection({
 }: {
   block: Extract<CmsPageBlock, { __component: "page.about-content-block" }>;
 }) {
+  if (block.variant === "home-about") {
+    const bg = resolveMediaUrl(block.backgroundImage?.url);
+    return (
+      <section className="home-about" id="quem-somos">
+        {bg ? (
+          <img alt="" aria-hidden="true" className="home-about__bg" src={bg} />
+        ) : null}
+        <div className="container">
+          <div className="home-about__head">
+            <div>
+              {block.eyebrow ? <span className="home-about__eyebrow">{block.eyebrow}</span> : null}
+              {block.title ? <h2 className="home-about__title">{block.title}</h2> : null}
+            </div>
+            {block.intro ? <RichText className="home-about__intro" html={block.intro} /> : null}
+          </div>
+          {block.cards.length > 0 ? (
+            <div className="home-about__cards">
+              {block.cards.map((card) => (
+                <article className="about-card" key={card.title}>
+                  <h3 className="about-card__title">{card.title}</h3>
+                  <RichText className="about-card__body" html={card.body} />
+                </article>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="qs-page">
       <div className="container">

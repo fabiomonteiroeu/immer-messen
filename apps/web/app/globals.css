@@ -1541,6 +1541,120 @@ body.menu-open {
 }
 
 /* ===========================================================
+   HOME — Quem somos (redesign 2026): faixa escura com foto de
+   fibra ao fundo, título e intro em duas colunas, três cards.
+   =========================================================== */
+.home-about {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #fff;
+  padding: clamp(3rem, 5vw, 4.5rem) 0 clamp(3.5rem, 6vw, 5.5rem);
+  background: var(--c-navy-deep);
+}
+
+.home-about__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.home-about::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(8, 24, 52, .82) 0%, rgba(8, 20, 44, .62) 100%);
+  z-index: -1;
+}
+
+.home-about__head {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.home-about__eyebrow {
+  display: block;
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.home-about__title {
+  font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.5rem);
+  line-height: 1.15;
+  font-weight: 400;
+  margin: 0;
+  max-width: 16ch;
+}
+
+.home-about__intro {
+  font-weight: 700;
+  font-size: .95rem;
+  line-height: 1.5;
+  padding-top: .5rem;
+}
+
+.home-about__intro p {
+  margin: 0;
+}
+
+.home-about__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: stretch;
+}
+
+.about-card {
+  background: var(--c-blue-mute);
+  color: var(--c-text);
+  padding: clamp(1.5rem, 2.5vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.about-card__title {
+  font-size: clamp(1rem, .92rem + .35vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: uppercase;
+  color: var(--c-navy-deep);
+  margin: 0;
+  max-width: 18ch;
+}
+
+.about-card__body {
+  font-size: .84rem;
+  line-height: 1.6;
+  font-weight: 700;
+  color: var(--c-gray-700);
+}
+
+.about-card__body p {
+  margin: 0;
+}
+
+.about-card__body p + p {
+  margin-top: .7rem;
+}
+
+@media (max-width: 900px) {
+  .home-about__head,
+  .home-about__cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================================================
    HOME — Aplicações (redesign 2026): mosaico full-bleed, tiles
    de tamanhos variados sem respiro, legenda sobre a imagem.
    =========================================================== */

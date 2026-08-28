@@ -32,6 +32,8 @@ const pagePopulate = {
   "populate[blocks][on][page.contact-form-block][populate]": "*",
   "populate[blocks][on][page.lgpd-content-block][populate]": "*",
   "populate[blocks][on][page.about-content-block][populate][rows][populate]": "*",
+  "populate[blocks][on][page.about-content-block][populate][cards][populate]": "*",
+  "populate[blocks][on][page.about-content-block][populate][backgroundImage]": true,
   "populate[blocks][on][page.about-content-block][populate][highlight][populate]": "*",
 };
 

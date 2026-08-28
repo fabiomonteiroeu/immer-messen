@@ -13,6 +13,22 @@ export interface CaseProjectLogo extends Struct.ComponentSchema {
   };
 }
 
+export interface PageAboutCard extends Struct.ComponentSchema {
+  collectionName: 'components_page_about_cards';
+  info: {
+    displayName: 'About Card';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    body: Schema.Attribute.RichText & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface PageAboutContentBlock extends Struct.ComponentSchema {
   collectionName: 'components_page_about_content_blocks';
   info: {
@@ -24,12 +40,18 @@ export interface PageAboutContentBlock extends Struct.ComponentSchema {
     };
   };
   attributes: {
+    backgroundImage: Schema.Attribute.Media<'images'>;
+    cards: Schema.Attribute.Component<'page.about-card', true>;
+    eyebrow: Schema.Attribute.String;
     highlight: Schema.Attribute.Component<'page.about-highlight', false>;
+    intro: Schema.Attribute.RichText;
     rows: Schema.Attribute.Component<'page.about-row', true>;
     title: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 120;
       }>;
+    variant: Schema.Attribute.Enumeration<['page', 'home-about']> &
+      Schema.Attribute.DefaultTo<'page'>;
   };
 }
 
@@ -529,6 +551,7 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'case.project-logo': CaseProjectLogo;
+      'page.about-card': PageAboutCard;
       'page.about-content-block': PageAboutContentBlock;
       'page.about-highlight': PageAboutHighlight;
       'page.about-row': PageAboutRow;

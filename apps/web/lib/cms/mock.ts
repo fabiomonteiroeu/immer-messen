@@ -348,6 +348,7 @@ const aboutPagePt: CmsPage = {
   blocks: [
     {
       __component: "page.about-content-block",
+      cards: [],
       title: "QUEM SOMOS",
       rows: [
         {
@@ -512,6 +513,7 @@ const aboutPageEn: CmsPage = {
   blocks: [
     {
       __component: "page.about-content-block",
+      cards: [],
       title: "ABOUT US",
       rows: [
         {
@@ -553,6 +555,7 @@ const aboutPageEs: CmsPage = {
   blocks: [
     {
       __component: "page.about-content-block",
+      cards: [],
       title: "QUIÉNES SOMOS",
       rows: [
         {

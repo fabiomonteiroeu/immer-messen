@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_page_about_cards",
+  "info": {
+    "displayName": "About Card"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    }
+  }
+}

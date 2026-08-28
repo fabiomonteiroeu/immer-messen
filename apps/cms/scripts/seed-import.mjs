@@ -219,6 +219,10 @@ function applyAssetsToBlocks(blocks, consumer) {
           const media = consumer.take("page.about-content-block.highlight.media");
           next.highlight = media ? { ...next.highlight, media } : { ...next.highlight };
         }
+        if (next.variant === "home-about") {
+          const bg = consumer.take("page.about-content-block.background");
+          if (bg) next.backgroundImage = bg;
+        }
         break;
       }
       default:

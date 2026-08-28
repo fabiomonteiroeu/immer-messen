@@ -212,10 +212,20 @@ export const cmsAboutHighlightSchema = z.object({
   rightBody: z.string().min(1),
 });
 
+export const cmsAboutCardSchema = z.object({
+  title: z.string().min(1),
+  body: z.string().min(1),
+});
+
 export const cmsAboutContentBlockSchema = z.object({
   __component: z.literal("page.about-content-block"),
   id: z.number().int().nonnegative().optional(),
+  eyebrow: z.string().nullable().optional(),
   title: z.string().optional().default(""),
+  intro: z.string().nullable().optional(),
+  variant: z.enum(["page", "home-about"]).nullable().optional(),
+  backgroundImage: cmsMediaSchema.nullable().optional(),
+  cards: z.array(cmsAboutCardSchema).default([]),
   rows: z.array(cmsAboutRowSchema).default([]),
   highlight: cmsAboutHighlightSchema.nullable().optional(),
 });
