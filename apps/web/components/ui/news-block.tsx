@@ -124,10 +124,13 @@ export function NewsBlock({ heading, placeholderText, articles = [] }: NewsBlock
             )}
 
             <div
+              aria-label={heading ?? "Noticias"}
               className="carousel__track-wrap"
               ref={containerRef}
               onScroll={checkScrollLimits}
+              role="group"
               style={{ overflowX: "auto", scrollbarWidth: "none" }}
+              tabIndex={0}
             >
               <div className="carousel__track">
                 {articles.map((article) => {
@@ -184,10 +187,12 @@ export function NewsBlock({ heading, placeholderText, articles = [] }: NewsBlock
                 {Array.from({ length: dotsCount }).map((_, i) => (
                   <button
                     aria-current={i === activeDot ? "page" : undefined}
+                    aria-label={`${i + 1}`}
                     className="carousel__dot"
                     key={i}
                     onClick={() => scrollToPage(i)}
                     style={{ border: 0, padding: 0, cursor: "pointer" }}
+                    type="button"
                   />
                 ))}
               </div>

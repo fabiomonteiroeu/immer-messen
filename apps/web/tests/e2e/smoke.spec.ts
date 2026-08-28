@@ -17,7 +17,7 @@ test.describe("smoke - critical navigation", () => {
     const firstCase = page.locator(".case-card").first();
     await firstCase.click();
     await page.waitForURL(/\/pt-BR\/cases\/[\w-]+/);
-    await expect(page.locator(".case-project__title")).toBeVisible();
+    await expect(page.locator(".case-hero__title")).toBeVisible();
   });
 
   test("contact form is reachable on home", async ({ page }) => {
