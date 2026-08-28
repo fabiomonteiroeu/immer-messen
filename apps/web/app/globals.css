@@ -1541,6 +1541,186 @@ body.menu-open {
 }
 
 /* ===========================================================
+   CASE — detalhe (redesign 2026): hero com título editorial,
+   card "o desafio" e corpo em seções tipadas.
+   =========================================================== */
+.case-hero__title {
+  font-size: clamp(1.8rem, 1.4rem + 1.6vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+  margin: 0;
+}
+
+.case-hero__sub {
+  margin-top: .75rem;
+  font-size: clamp(.95rem, .9rem + .3vw, 1.1rem);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, .92);
+  max-width: 34ch;
+}
+
+.case-challenge {
+  background: var(--c-blue-mute);
+  border: 1px solid rgba(74, 107, 170, .35);
+  border-radius: 12px;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
+}
+
+.case-challenge__head {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--c-text);
+  margin-bottom: 1.25rem;
+}
+
+.case-challenge__body {
+  font-size: .92rem;
+  line-height: 1.65;
+  text-align: justify;
+  color: var(--c-text);
+}
+
+.case-challenge__body p {
+  margin: 0 0 .8rem;
+}
+
+.case-lead {
+  margin: clamp(2.5rem, 5vw, 4rem) 0 clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.case-lead__title {
+  font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2.1rem);
+  line-height: 1.2;
+  font-weight: 400;
+  color: var(--c-navy);
+  margin: 0 0 .6rem;
+  max-width: 26ch;
+}
+
+.case-lead__sub {
+  margin: 0;
+  font-size: clamp(1rem, .95rem + .3vw, 1.15rem);
+  line-height: 1.35;
+  color: var(--c-blue);
+  max-width: 40ch;
+}
+
+.case-section-title {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.case-highlight {
+  background: var(--c-blue-mute);
+  padding: clamp(2.5rem, 4vw, 3.5rem) 0;
+  margin: clamp(2rem, 4vw, 3rem) 0;
+  clip-path: polygon(0 4%, 100% 0, 100% 96%, 0 100%);
+}
+
+.case-highlight__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.case-highlight__heading {
+  font-size: clamp(1.15rem, 1rem + .6vw, 1.5rem);
+  line-height: 1.25;
+  font-weight: 600;
+  color: var(--c-navy);
+  margin: 0;
+  max-width: 16ch;
+}
+
+.case-highlight__body {
+  font-size: .88rem;
+  line-height: 1.6;
+  color: var(--c-gray-700);
+}
+
+.case-highlight__body p {
+  margin: 0 0 .7rem;
+}
+
+.case-figure {
+  margin: clamp(2rem, 4vw, 3rem) auto;
+}
+
+.case-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.case-figure__caption {
+  margin-top: .75rem;
+  font-size: .82rem;
+  color: var(--c-gray-600);
+  text-align: center;
+}
+
+.case-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.case-two-col__right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.case-pullquote {
+  margin: 0;
+  font-size: clamp(1.05rem, .95rem + .5vw, 1.3rem);
+  line-height: 1.35;
+  font-weight: 700;
+  color: var(--c-navy-2);
+  text-align: center;
+}
+
+.case-panel {
+  background: var(--c-blue-mute);
+  border: 1px solid rgba(74, 107, 170, .35);
+  border-radius: 12px;
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  margin: clamp(2rem, 4vw, 3rem) 0;
+}
+
+.case-panel__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--c-text);
+  margin: 0 0 1.25rem;
+}
+
+.case-panel__body {
+  font-size: .92rem;
+  line-height: 1.65;
+  text-align: justify;
+  color: var(--c-text);
+}
+
+.case-panel__body p {
+  margin: 0 0 .8rem;
+}
+
+.case-panel__body p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 800px) {
+  .case-highlight__grid,
+  .case-two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================================================
    TECNOLOGIA — faixa de specs e destaques de capacidade
    =========================================================== */
 .spec-strip {

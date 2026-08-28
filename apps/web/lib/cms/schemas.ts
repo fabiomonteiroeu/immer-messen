@@ -250,6 +250,47 @@ export const cmsProjectLogoSchema = z.object({
   alt: z.string().nullable().optional(),
 });
 
+export const cmsCaseSectionSchema = z.discriminatedUnion("__component", [
+  z.object({
+    __component: z.literal("case.text-section"),
+    id: z.number().int().nonnegative().optional(),
+    body: z.string().min(1),
+  }),
+  z.object({
+    __component: z.literal("case.section-title"),
+    id: z.number().int().nonnegative().optional(),
+    title: z.string().min(1),
+  }),
+  z.object({
+    __component: z.literal("case.highlight-section"),
+    id: z.number().int().nonnegative().optional(),
+    eyebrow: z.string().nullable().optional(),
+    heading: z.string().nullable().optional(),
+    body: z.string().min(1),
+  }),
+  z.object({
+    __component: z.literal("case.figure-section"),
+    id: z.number().int().nonnegative().optional(),
+    image: cmsMediaSchema.nullable().optional(),
+    caption: z.string().nullable().optional(),
+  }),
+  z.object({
+    __component: z.literal("case.two-column-section"),
+    id: z.number().int().nonnegative().optional(),
+    leftBody: z.string().min(1),
+    pullQuote: z.string().nullable().optional(),
+    rightBody: z.string().nullable().optional(),
+  }),
+  z.object({
+    __component: z.literal("case.panel-section"),
+    id: z.number().int().nonnegative().optional(),
+    title: z.string().min(1),
+    body: z.string().min(1),
+  }),
+]);
+
+export type CmsCaseSection = z.infer<typeof cmsCaseSectionSchema>;
+
 export const cmsCaseSchema = z.object({
   id: z.number().int().nonnegative(),
   title: z.string().min(1),
@@ -274,6 +315,11 @@ export const cmsCaseSchema = z.object({
         .filter((tag) => tag.length > 0);
     }),
   projectLogos: z.array(cmsProjectLogoSchema).default([]),
+  heroTitle: z.string().nullable().optional(),
+  challenge: z.string().nullable().optional(),
+  leadTitle: z.string().nullable().optional(),
+  leadSubtitle: z.string().nullable().optional(),
+  sections: z.array(cmsCaseSectionSchema).nullable().optional().default([]),
   body: z.string().nullable().optional(),
 });
 

@@ -1,0 +1,10 @@
+{
+  "collectionName": "components_case_panel_sections",
+  "info": { "displayName": "Case Panel Section" },
+  "options": {},
+  "pluginOptions": { "i18n": { "localized": true } },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "body": { "type": "richtext", "required": true }
+  }
+}

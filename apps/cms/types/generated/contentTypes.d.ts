@@ -540,6 +540,12 @@ export interface ApiCaseStudyCaseStudy extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    challenge: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     client: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 120;
@@ -558,6 +564,24 @@ export interface ApiCaseStudyCaseStudy extends Struct.CollectionTypeSchema {
         maxLength: 60;
       }>;
     heroMedia: Schema.Attribute.Media<'images' | 'videos' | 'files'>;
+    heroTitle: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    leadSubtitle: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    leadTitle: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -575,6 +599,21 @@ export interface ApiCaseStudyCaseStudy extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::case-study.case-study'
     >;
+    sections: Schema.Attribute.DynamicZone<
+      [
+        'case.text-section',
+        'case.section-title',
+        'case.highlight-section',
+        'case.figure-section',
+        'case.two-column-section',
+        'case.panel-section',
+      ]
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     sectorCategory: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {

@@ -27,6 +27,7 @@ const casesPt: CmsCase[] = [
     startDate: "2017-01-01",
     duration: "3 meses",
     tags: ["offshore", "integridade de dutos", "DAS", "P&D"],
+    sections: [],
     projectLogos: [
       { id: 1, logo: media(901, "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Petrobras_logo.svg/200px-Petrobras_logo.svg.png", "Petrobras"), url: null, alt: "Petrobras" },
     ],
@@ -53,6 +54,7 @@ const casesPt: CmsCase[] = [
     duration: "12 meses",
     tags: ["bioacustica", "offshore", "DAS"],
     projectLogos: [],
+    sections: [],
     body: `
       <p>Usando a fibra optica instalada como sensor distribuido, o sistema identifica padroes acusticos caracteristicos de diferentes especies de cetaceos. As deteccoes alimentam um protocolo de mitigacao que aciona pausas operacionais automaticas durante atividades sismicas em areas de presenca confirmada.</p>
       ${galleryHtml}
@@ -72,6 +74,7 @@ const casesPt: CmsCase[] = [
     duration: "18 meses",
     tags: ["energia", "DTS", "alarmistica"],
     projectLogos: [],
+    sections: [],
     body: `
       <p>O sistema combina DAS e DTS para monitorar vibracoes anomalas (queda de torres, intrusao) e variacoes termicas (incendios, sobrecarga). Eventos sao classificados por algoritmos treinados em campo brasileiro e enviados ao centro de operacoes em tempo real.</p>
       ${galleryHtml}
@@ -91,6 +94,7 @@ const casesPt: CmsCase[] = [
     duration: "24 meses",
     tags: ["dutos", "DAS", "DTS", "vazamentos"],
     projectLogos: [],
+    sections: [],
     body: `
       <p>O sistema cobre centenas de quilometros do duto com um unico interrogador DATS, classificando eventos de vazamento, escavacao nao autorizada, derivacao clandestina e atividade humana proxima. A latencia de alerta e tipicamente inferior a 30 segundos do evento ao centro de operacoes.</p>
       ${galleryHtml}

@@ -1,0 +1,7 @@
+{
+  "collectionName": "components_case_section_titles",
+  "info": { "displayName": "Case Section Title" },
+  "options": {},
+  "pluginOptions": { "i18n": { "localized": true } },
+  "attributes": { "title": { "type": "string", "required": true } }
+}

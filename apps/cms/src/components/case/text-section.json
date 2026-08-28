@@ -1,0 +1,7 @@
+{
+  "collectionName": "components_case_text_sections",
+  "info": { "displayName": "Case Text Section" },
+  "options": {},
+  "pluginOptions": { "i18n": { "localized": true } },
+  "attributes": { "body": { "type": "richtext", "required": true } }
+}

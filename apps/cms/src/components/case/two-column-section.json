@@ -1,0 +1,11 @@
+{
+  "collectionName": "components_case_two_column_sections",
+  "info": { "displayName": "Case Two Column Section" },
+  "options": {},
+  "pluginOptions": { "i18n": { "localized": true } },
+  "attributes": {
+    "leftBody": { "type": "richtext", "required": true },
+    "pullQuote": { "type": "string" },
+    "rightBody": { "type": "richtext" }
+  }
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { CaseSections } from "@/components/ui/case-sections";
 import { ContactCard } from "@/components/ui/contact-card";
 import { getCaseBySlug } from "@/lib/cms/cases";
 import { getMockCases } from "@/lib/cms/mock-cases";
@@ -30,6 +31,7 @@ const labelsByLocale: Record<
     startLabel: string;
     durationLabel: string;
     tagsLabel: string;
+    challengeLabel: string;
   }
 > = {
   "pt-BR": {
@@ -41,6 +43,7 @@ const labelsByLocale: Record<
     startLabel: "Data de inicio",
     durationLabel: "Duracao",
     tagsLabel: "Tags",
+    challengeLabel: "O desafio",
   },
   en: {
     heading: "Talk to our team",
@@ -51,6 +54,7 @@ const labelsByLocale: Record<
     startLabel: "Start date",
     durationLabel: "Duration",
     tagsLabel: "Tags",
+    challengeLabel: "The challenge",
   },
   es: {
     heading: "Hable con nuestro equipo",
@@ -61,6 +65,7 @@ const labelsByLocale: Record<
     startLabel: "Fecha de inicio",
     durationLabel: "Duracion",
     tagsLabel: "Tags",
+    challengeLabel: "El desafío",
   },
 };
 
@@ -105,6 +110,7 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
   const labels = labelsByLocale[resolvedLocale];
   const logos = caseEntry.projectLogos.slice(0, 3);
   const tags = caseEntry.tags ?? [];
+  const sections = caseEntry.sections ?? [];
   const hasAnyDetail = Boolean(
     caseEntry.client || caseEntry.startDate || caseEntry.duration || tags.length > 0,
   );
@@ -133,7 +139,10 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
             />
           ) : null}
         </div>
-        <div className="hero__inner" />
+        <div className="hero__inner">
+          <h1 className="case-hero__title">{caseEntry.heroTitle ?? caseEntry.title}</h1>
+          {caseEntry.summary ? <p className="case-hero__sub">{caseEntry.summary}</p> : null}
+        </div>
       </section>
 
       <div className="container">
@@ -186,17 +195,37 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
                 })}
               </div>
             ) : null}
-            <h1 className="case-project__title">{caseEntry.title}</h1>
-            <p className="case-project__sub">{caseEntry.summary}</p>
+            {caseEntry.challenge ? (
+              <aside className="case-challenge">
+                <div className="case-challenge__head">{labels.challengeLabel}</div>
+                <div
+                  className="case-challenge__body"
+                  dangerouslySetInnerHTML={{ __html: caseEntry.challenge }}
+                />
+              </aside>
+            ) : null}
           </div>
         </div>
-      </div>
 
-      <div className="container case-content">
-        {caseEntry.body ? (
-          <div className="case-text" dangerouslySetInnerHTML={{ __html: caseEntry.body }} />
+        {caseEntry.leadTitle ? (
+          <div className="case-lead">
+            <h2 className="case-lead__title">{caseEntry.leadTitle}</h2>
+            {caseEntry.leadSubtitle ? (
+              <p className="case-lead__sub">{caseEntry.leadSubtitle}</p>
+            ) : null}
+          </div>
         ) : null}
       </div>
+
+      {sections.length > 0 ? (
+        <CaseSections sections={sections} />
+      ) : (
+        <div className="container case-content">
+          {caseEntry.body ? (
+            <div className="case-text" dangerouslySetInnerHTML={{ __html: caseEntry.body }} />
+          ) : null}
+        </div>
+      )}
 
       <ContactCard
         bodyHtml={labels.body}

@@ -1,0 +1,10 @@
+{
+  "collectionName": "components_case_figure_sections",
+  "info": { "displayName": "Case Figure Section" },
+  "options": {},
+  "pluginOptions": { "i18n": { "localized": true } },
+  "attributes": {
+    "image": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "caption": { "type": "string" }
+  }
+}

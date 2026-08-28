@@ -1,5 +1,54 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface CaseFigureSection extends Struct.ComponentSchema {
+  collectionName: 'components_case_figure_sections';
+  info: {
+    displayName: 'Case Figure Section';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    caption: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
+  };
+}
+
+export interface CaseHighlightSection extends Struct.ComponentSchema {
+  collectionName: 'components_case_highlight_sections';
+  info: {
+    displayName: 'Case Highlight Section';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    body: Schema.Attribute.RichText & Schema.Attribute.Required;
+    eyebrow: Schema.Attribute.String;
+    heading: Schema.Attribute.String;
+  };
+}
+
+export interface CasePanelSection extends Struct.ComponentSchema {
+  collectionName: 'components_case_panel_sections';
+  info: {
+    displayName: 'Case Panel Section';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    body: Schema.Attribute.RichText & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface CaseProjectLogo extends Struct.ComponentSchema {
   collectionName: 'components_case_project_logos';
   info: {
@@ -10,6 +59,53 @@ export interface CaseProjectLogo extends Struct.ComponentSchema {
     alt: Schema.Attribute.String;
     logo: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
     url: Schema.Attribute.String;
+  };
+}
+
+export interface CaseSectionTitle extends Struct.ComponentSchema {
+  collectionName: 'components_case_section_titles';
+  info: {
+    displayName: 'Case Section Title';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface CaseTextSection extends Struct.ComponentSchema {
+  collectionName: 'components_case_text_sections';
+  info: {
+    displayName: 'Case Text Section';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    body: Schema.Attribute.RichText & Schema.Attribute.Required;
+  };
+}
+
+export interface CaseTwoColumnSection extends Struct.ComponentSchema {
+  collectionName: 'components_case_two_column_sections';
+  info: {
+    displayName: 'Case Two Column Section';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    leftBody: Schema.Attribute.RichText & Schema.Attribute.Required;
+    pullQuote: Schema.Attribute.String;
+    rightBody: Schema.Attribute.RichText;
   };
 }
 
@@ -585,7 +681,13 @@ export interface SharedSocialLink extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'case.figure-section': CaseFigureSection;
+      'case.highlight-section': CaseHighlightSection;
+      'case.panel-section': CasePanelSection;
       'case.project-logo': CaseProjectLogo;
+      'case.section-title': CaseSectionTitle;
+      'case.text-section': CaseTextSection;
+      'case.two-column-section': CaseTwoColumnSection;
       'page.about-card': PageAboutCard;
       'page.about-content-block': PageAboutContentBlock;
       'page.about-highlight': PageAboutHighlight;
