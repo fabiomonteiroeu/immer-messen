@@ -1822,7 +1822,7 @@ body.menu-open {
   isolation: isolate;
   overflow: hidden;
   color: #fff;
-  padding: clamp(3rem, 5vw, 4.5rem) 0 clamp(3.5rem, 6vw, 5.5rem);
+  padding: clamp(2rem, 3vw, 2.75rem) 0 clamp(4rem, 7vw, 7.5rem);
   background: var(--c-navy-deep);
 }
 
@@ -1845,27 +1845,27 @@ body.menu-open {
 
 .home-about__head {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: clamp(2rem, 5vw, 4rem);
+  grid-template-columns: 1.35fr 1fr;
+  gap: clamp(2rem, 3.5vw, 3.25rem);
   align-items: start;
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: clamp(2.75rem, 4.75vw, 5rem);
 }
 
 .home-about__eyebrow {
   display: block;
-  font-size: .82rem;
-  font-weight: 700;
-  letter-spacing: .12em;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: .1em;
   text-transform: uppercase;
   margin-bottom: 1.25rem;
 }
 
 .home-about__title {
-  font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.5rem);
+  font-size: clamp(1.5rem, 1.15rem + 1.25vw, 2.3rem);
   line-height: 1.15;
-  font-weight: 400;
+  font-weight: 700;
   margin: 0;
-  max-width: 16ch;
+  max-width: 27ch;
 }
 
 .home-about__intro {
@@ -1887,29 +1887,30 @@ body.menu-open {
 }
 
 .about-card {
-  background: var(--c-blue-mute);
+  background: #dee9f2;
   color: var(--c-text);
   padding: clamp(1.5rem, 2.5vw, 2.25rem);
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 1.3rem;
 }
 
 .about-card__title {
-  font-size: clamp(1rem, .92rem + .35vw, 1.2rem);
+  font-size: clamp(1.15rem, 1rem + .5vw, 1.55rem);
   font-weight: 700;
   line-height: 1.25;
   text-transform: uppercase;
+  text-wrap: balance;
   color: var(--c-navy-deep);
   margin: 0;
-  max-width: 18ch;
+  max-width: 19ch;
 }
 
 .about-card__body {
   font-size: .84rem;
   line-height: 1.75;
   font-weight: 400;
-  color: var(--c-gray-700);
+  color: #5a5b5d;
 }
 
 .about-card__body p {
