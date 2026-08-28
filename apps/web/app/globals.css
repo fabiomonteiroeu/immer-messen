@@ -2568,10 +2568,10 @@ body.menu-open {
   background: transparent;
   color: #fff;
   border-radius: 0;
-  padding: clamp(2.5rem, 4vw, 3.75rem) 1rem;
-  margin: 0 auto;
-  max-width: 862px;
-  width: 100%;
+  padding: clamp(2.5rem, 4vw, 3.75rem) 0;
+  /* mesma largura do grid padrao (.container) dos demais blocos */
+  width: min(100% - 2rem, var(--container));
+  margin-inline: auto;
   position: relative;
   z-index: 1;
   box-shadow: none;
@@ -2588,6 +2588,8 @@ body.menu-open {
   font-size: clamp(1.3rem, 1.1rem + .65vw, 1.7rem);
   margin-bottom: .9rem;
   line-height: 1.2;
+  /* mantem a quebra em 2 linhas do design mesmo com a coluna mais larga */
+  max-width: 14ch;
 }
 
 .contact-card p {
@@ -3960,8 +3962,8 @@ body.menu-open {
   }
 
   .contact-card {
-    padding: 1.5rem;
-    width: calc(100% - 1.5rem);
+    padding: 1.5rem 0;
+    width: calc(100% - 2rem);
   }
 
   .hero {
