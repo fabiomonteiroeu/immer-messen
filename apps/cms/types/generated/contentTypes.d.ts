@@ -974,6 +974,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         'page.accordion-block',
         'page.feature-grid-block',
         'page.spec-strip-block',
+        'page.equipment-callouts-block',
         'page.application-areas-block',
         'page.cases-block',
         'page.news-carousel-block',

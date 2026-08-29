@@ -36,6 +36,10 @@ export const cmsHeroBlockSchema = z.object({
   backgroundVideo: cmsMediaSchema.nullable().optional(),
 });
 
+export const cmsHeroBadgeSchema = z.object({
+  label: z.string().min(1),
+});
+
 export const cmsPageHeroBlockSchema = z.object({
   __component: z.literal("page.page-hero-block"),
   id: z.number().int().nonnegative().nullable().optional(),
@@ -43,6 +47,7 @@ export const cmsPageHeroBlockSchema = z.object({
   subtitle: z.string().nullable().optional().default(""),
   posterImage: cmsMediaSchema.nullable().optional(),
   backgroundVideo: cmsMediaSchema.nullable().optional(),
+  badges: z.array(cmsHeroBadgeSchema).nullable().optional(),
 });
 
 export const cmsTextBlockSchema = z.object({
@@ -78,9 +83,14 @@ export const cmsMediaTextBlockSchema = z.object({
   media: cmsMediaSchema.nullable().optional(),
   ctaLabel: z.string().nullable().optional(),
   ctaHref: z.string().nullable().optional(),
-  variant: z.enum(["home-tech", "tech-band", "interface"]).nullable().optional(),
+  variant: z
+    .enum(["home-tech", "tech-band", "interface", "interface-split", "tech-cta"])
+    .nullable()
+    .optional(),
   eyebrow: z.string().nullable().optional(),
   features: z.array(cmsFeatureCardSchema).nullable().optional(),
+  gallery: z.array(cmsMediaSchema).nullable().optional(),
+  backgroundImage: cmsMediaSchema.nullable().optional(),
 });
 
 export const cmsAccordionItemSchema = z.object({
@@ -103,6 +113,7 @@ export const cmsFeatureGridBlockSchema = z.object({
   __component: z.literal("page.feature-grid-block"),
   id: z.number().int().nonnegative().optional(),
   heading: z.string().optional().default(""),
+  subheading: z.string().nullable().optional(),
   variant: z.enum(["grid", "highlights"]).nullable().optional(),
   cards: z.array(cmsFeatureCardSchema).default([]),
 });
@@ -117,6 +128,23 @@ export const cmsSpecStripBlockSchema = z.object({
   id: z.number().int().nonnegative().optional(),
   eyebrow: z.string().nullable().optional(),
   items: z.array(cmsSpecItemSchema).default([]),
+});
+
+export const cmsCalloutItemSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().nullable().optional(),
+  icon: cmsMediaSchema.nullable().optional(),
+  position: z.enum(["left", "top-right", "bottom"]).nullable().optional(),
+});
+
+export const cmsEquipmentCalloutsBlockSchema = z.object({
+  __component: z.literal("page.equipment-callouts-block"),
+  id: z.number().int().nonnegative().optional(),
+  heading: z.string().nullable().optional(),
+  media: cmsMediaSchema.nullable().optional(),
+  callouts: z.array(cmsCalloutItemSchema).default([]),
+  ctaLabel: z.string().nullable().optional(),
+  ctaHref: z.string().nullable().optional(),
 });
 
 export const cmsApplicationAreaItemSchema = z.object({
@@ -332,6 +360,7 @@ export const cmsPageBlockSchema = z.discriminatedUnion("__component", [
   cmsAccordionBlockSchema,
   cmsFeatureGridBlockSchema,
   cmsSpecStripBlockSchema,
+  cmsEquipmentCalloutsBlockSchema,
   cmsApplicationAreasBlockSchema,
   cmsContactFormBlockSchema,
   cmsLgpdContentBlockSchema,

@@ -17,10 +17,13 @@ const heroBlock = (title, subtitle, ctaLabel, ctaHref, alignment = "left") => ({
   alignment,
 });
 
-const pageHeroBlock = (title, subtitle) => ({
+const pageHeroBlock = (title, subtitle, options = {}) => ({
   __component: "page.page-hero-block",
   title,
   subtitle,
+  ...(Array.isArray(options.badges) && options.badges.length
+    ? { badges: options.badges.map((label) => ({ label })) }
+    : {}),
 });
 
 const textBlock = (heading, body, width = "default", theme = "light") => ({
@@ -69,14 +72,27 @@ const specStripBlock = (eyebrow, items) => ({
   items,
 });
 
-const featureGridBlock = (heading, cards, variant) => ({
+const featureGridBlock = (heading, cards, variant, options = {}) => ({
   __component: "page.feature-grid-block",
   heading,
+  ...(options.subheading ? { subheading: options.subheading } : {}),
   ...(variant ? { variant } : {}),
   cards: cards.map((card) => ({
     title: card.title,
     description: card.description,
   })),
+});
+
+const equipmentCalloutsBlock = (heading, callouts, options = {}) => ({
+  __component: "page.equipment-callouts-block",
+  ...(heading ? { heading } : {}),
+  callouts: callouts.map((c) => ({
+    title: c.title,
+    description: c.description,
+    position: c.position,
+  })),
+  ...(options.ctaLabel ? { ctaLabel: options.ctaLabel } : {}),
+  ...(options.ctaHref ? { ctaHref: options.ctaHref } : {}),
 });
 
 const applicationAreasBlock = (heading, areaKeys) => ({
@@ -1235,8 +1251,12 @@ const pageDefs = [
     sortOrder: 2,
     assetRefs: [
       { assetKey: "technology-video", usage: "page.page-hero-block.backgroundVideo" },
-      { assetKey: "interrogador-front", usage: "page.media-text-block.media" },
-      { assetKey: "interface-monitors", usage: "page.media-text-block.media" },
+      { assetKey: "tec-equipamento-front", usage: "page.equipment-callouts-block.media" },
+      { assetKey: "tec-interface-main", usage: "page.media-text-block.media" },
+      { assetKey: "tec-interface-thumb-1", usage: "page.media-text-block.gallery" },
+      { assetKey: "tec-interface-thumb-2", usage: "page.media-text-block.gallery" },
+      { assetKey: "tec-interface-thumb-3", usage: "page.media-text-block.gallery" },
+      { assetKey: "tec-cta-bg", usage: "page.media-text-block.background" },
       { assetKey: "kf-01-fase", usage: "page.feature-card.icon" },
       { assetKey: "kf-02-frequencia", usage: "page.feature-card.icon" },
       { assetKey: "kf-03-alcance", usage: "page.feature-card.icon" },
@@ -1250,24 +1270,13 @@ const pageDefs = [
       seoTitle: "Tecnologia | Immer Messen",
       seoDescription: "Tecnologia proprietária DATS com DAS e DTS integrados.",
       blocks: () => [
-        pageHeroBlock("Tecnologia DAS/DTS Immer Messen", "Plataforma proprietária para aquisição, processamento e inteligência operacional."),
-        specStripBlock("Especificações", [
-          { value: "DAS Rayleigh + DTS Raman", label: "simultâneos na mesma fibra" },
+        pageHeroBlock("Tecnologia DAS/DTS Immer Messen", "Plataforma proprietária para aquisição, processamento e inteligência operacional.", { badges: ["DAS Rayleigh", "DTS Raman"] }),
+        specStripBlock(null, [
           { value: "120 km", label: "alcance total com um interrogador" },
           { value: "0,5 – 100 kHz", label: "amplitude da faixa de frequência" },
           { value: "3U | 10 kg", label: "design integrado e compacto" },
           { value: "300 W", label: "consumo máximo" },
         ]),
-        mediaTextBlock(
-          "Design compacto e integrado: sensoriamento óptico, eletrônica e edge computing reunidos em uma única unidade.",
-          "<p>Sensoriamento óptico, eletrônica e edge computing reunidos em uma única unidade para operação em infraestrutura crítica.</p>",
-          "right",
-          {
-            variant: "tech-band",
-            ctaLabel: "Download Datasheet",
-            ctaHref: "#",
-          }
-        ),
         featureGridBlock("Key features", [
           { title: "Tecnologia DAS baseada em fase para medições quantitativas", description: "Detecção de deformação, acústica e temperatura com alta precisão ao longo de toda a extensão da fibra." },
           { title: "DAS | DTS integrado: medições simultâneas", description: "Detecção acústica e de temperatura na mesma fibra óptica, sem necessidade de infraestrutura separada." },
@@ -1275,23 +1284,23 @@ const pageDefs = [
           { title: "Resposta em frequência banda larga: 0,5 Hz a 100 kHz", description: "Detecção simultânea de eventos de baixa e alta frequência ao longo de toda a extensão da fibra." },
           { title: "Alcance de até 120 km com um único interrogador", description: "Monitoramento simultâneo de duas fibras de até 60 km cada, com eficiência de cobertura sem precedentes." },
           { title: "Infraestrutura eficiente com fibra óptica existente", description: "Baixo consumo de energia e possibilidade de uso da fibra já instalada, reduzindo custo e complexidade de implantação." },
-        ]),
-        featureGridBlock("Capacidades", [
-          { title: "Edge Computing", description: "Processamento paralelo embarcado de alto desempenho com GPU." },
-          { title: "Fácil visualização", description: "Display frontal com dados de aquisição em tempo real." },
-          { title: "IA e ML em tempo real", description: "Classificação de eventos e redução de alarmes falsos." },
-        ], "highlights"),
+        ], undefined, { subheading: "Tecnologia de ponta para monitoramento de infraestrutura crítica em tempo real" }),
+        equipmentCalloutsBlock(null, [
+          { title: "Fácil visualização", description: "Display frontal com dados de aquisição", position: "left" },
+          { title: "Edge Computing", description: "Processamento paralelo embarcado de alto desempenho com GPU", position: "top-right" },
+          { title: "IA e ML em tempo real", description: "Classificação de eventos e redução de alarmes falsos", position: "bottom" },
+        ], { ctaLabel: "Download Datasheet", ctaHref: "#" }),
+        mediaTextBlock(
+          "Interface operacional embarcada",
+          "<p>Acesso remoto, controle total de aquisição e alarmes configuráveis direto do navegador, sem instalação.</p><p>Interface web hospedada no próprio equipamento, acessível via intranet ou internet com conexão segura. Configure largura de pulso, gauge length e taxa de amostragem em tempo real, e defina alarmes para detecção e localização precisas de anomalia.</p>",
+          "left",
+          { variant: "interface-split" }
+        ),
         mediaTextBlock(
           "Da fibra ao diagnóstico: uma plataforma completa",
           "<p>Equipamento que opera em conjunto com um sistema servidor dedicado, configurado e entregue pronto para uso. Algoritmos de IA desenvolvidos pela Immer Messen interpretam os sinais adquiridos e geram diagnósticos preditivos adaptados à operação de cada cliente.</p>",
           "right",
-          { variant: "tech-band", ctaLabel: "Fale com nossos engenheiros", ctaHref: "/pt-BR#contato" }
-        ),
-        mediaTextBlock(
-          "Interface operacional",
-          "<ul><li>Interface web embarcada.</li><li>Acesso remoto seguro por intranet ou internet.</li><li>Controle de parâmetros de aquisição.</li><li>Alarmes configuráveis para localização de anomalias.</li></ul>",
-          "left",
-          { variant: "interface" }
+          { variant: "tech-cta", ctaLabel: "Fale com nossos engenheiros", ctaHref: "/pt-BR#contato" }
         ),
       ],
     },
@@ -1301,24 +1310,13 @@ const pageDefs = [
       seoTitle: "Technology | Immer Messen",
       seoDescription: "Proprietary DATS technology with integrated DAS and DTS.",
       blocks: () => [
-        pageHeroBlock("Immer Messen DAS/DTS technology", "Proprietary platform for acquisition, processing and operational intelligence."),
-        specStripBlock("Specifications", [
-          { value: "DAS Rayleigh + DTS Raman", label: "simultaneous on the same fiber" },
+        pageHeroBlock("Immer Messen DAS/DTS technology", "Proprietary platform for acquisition, processing and operational intelligence.", { badges: ["DAS Rayleigh", "DTS Raman"] }),
+        specStripBlock(null, [
           { value: "120 km", label: "total reach with a single interrogator" },
           { value: "0.5 – 100 kHz", label: "frequency response range" },
           { value: "3U | 10 kg", label: "integrated, compact design" },
           { value: "300 W", label: "maximum power draw" },
         ]),
-        mediaTextBlock(
-          "Compact, integrated design: optical sensing, electronics and edge computing combined in a single unit.",
-          "<p>Optical sensing, electronics and edge computing combined in a single unit for operation on critical infrastructure.</p>",
-          "right",
-          {
-            variant: "tech-band",
-            ctaLabel: "Download Datasheet",
-            ctaHref: "#",
-          }
-        ),
         featureGridBlock("Key features", [
           { title: "Phase-based DAS technology", description: "Quantitative measurements of strain, acoustics and temperature." },
           { title: "Wide frequency response", description: "Monitoring from ultra-low frequencies up to tens of kHz." },
@@ -1326,23 +1324,23 @@ const pageDefs = [
           { title: "Integrated DAS and DTS", description: "Simultaneous measurements over the same optical fiber." },
           { title: "High sensitivity", description: "Detection of axial stimuli at pico-strain and milliKelvin scale." },
           { title: "Efficient infrastructure", description: "Compatible with standard fiber and low power consumption." },
-        ]),
-        featureGridBlock("Capabilities", [
-          { title: "Edge computing", description: "High-performance embedded parallel processing with GPU." },
-          { title: "At-a-glance readout", description: "Front display with live acquisition data." },
-          { title: "Real-time AI and ML", description: "Event classification and false alarm reduction." },
-        ], "highlights"),
+        ], undefined, { subheading: "State-of-the-art technology for real-time critical infrastructure monitoring" }),
+        equipmentCalloutsBlock(null, [
+          { title: "At-a-glance readout", description: "Front display with live acquisition data", position: "left" },
+          { title: "Edge computing", description: "High-performance embedded parallel processing with GPU", position: "top-right" },
+          { title: "Real-time AI and ML", description: "Event classification and false alarm reduction", position: "bottom" },
+        ], { ctaLabel: "Download Datasheet", ctaHref: "#" }),
+        mediaTextBlock(
+          "Embedded operational interface",
+          "<p>Remote access, full acquisition control and configurable alarms straight from the browser, with no installation.</p><p>Web interface hosted on the unit itself, reachable over intranet or internet on a secure connection. Set pulse width, gauge length and sampling rate in real time, and define alarms for precise anomaly detection and localization.</p>",
+          "left",
+          { variant: "interface-split" }
+        ),
         mediaTextBlock(
           "From fiber to diagnosis: a complete platform",
           "<p>The unit operates alongside a dedicated server system, configured and delivered ready to use. AI algorithms developed by Immer Messen interpret the acquired signals and generate predictive diagnostics adapted to each client operation.</p>",
           "right",
-          { variant: "tech-band", ctaLabel: "Talk to our engineers", ctaHref: "/en#contato" }
-        ),
-        mediaTextBlock(
-          "Operational interface",
-          "<ul><li>Embedded web interface.</li><li>Secure remote access via intranet or internet.</li><li>Control of acquisition parameters.</li><li>Configurable alarms for anomaly localization.</li></ul>",
-          "left",
-          { variant: "interface" }
+          { variant: "tech-cta", ctaLabel: "Talk to our engineers", ctaHref: "/en#contato" }
         ),
       ],
     },
@@ -1352,24 +1350,13 @@ const pageDefs = [
       seoTitle: "Tecnología | Immer Messen",
       seoDescription: "Tecnología propietaria DATS con DAS y DTS integrados.",
       blocks: () => [
-        pageHeroBlock("Tecnología DAS/DTS Immer Messen", "Plataforma propietaria para adquisición, procesamiento e inteligencia operativa."),
-        specStripBlock("Especificaciones", [
-          { value: "DAS Rayleigh + DTS Raman", label: "simultáneos en la misma fibra" },
+        pageHeroBlock("Tecnología DAS/DTS Immer Messen", "Plataforma propietaria para adquisición, procesamiento e inteligencia operativa.", { badges: ["DAS Rayleigh", "DTS Raman"] }),
+        specStripBlock(null, [
           { value: "120 km", label: "alcance total con un interrogador" },
           { value: "0,5 – 100 kHz", label: "amplitud del rango de frecuencia" },
           { value: "3U | 10 kg", label: "diseño integrado y compacto" },
           { value: "300 W", label: "consumo máximo" },
         ]),
-        mediaTextBlock(
-          "Diseño compacto e integrado: sensado óptico, electrónica y edge computing reunidos en una sola unidad.",
-          "<p>Sensado óptico, electrónica y edge computing reunidos en una sola unidad para operación en infraestructura crítica.</p>",
-          "right",
-          {
-            variant: "tech-band",
-            ctaLabel: "Download Datasheet",
-            ctaHref: "#",
-          }
-        ),
         featureGridBlock("Key features", [
           { title: "Tecnología DAS basada en fase", description: "Mediciones cuantitativas de deformación, acústica y temperatura." },
           { title: "Respuesta en frecuencia amplia", description: "Monitoreo desde frecuencias ultrabajas hasta decenas de kHz." },
@@ -1377,23 +1364,23 @@ const pageDefs = [
           { title: "DAS y DTS integrados", description: "Mediciones simultáneas sobre la misma fibra óptica." },
           { title: "Alta sensibilidad", description: "Detección de estímulos axiales en escala pico-strain y miliKelvin." },
           { title: "Infraestructura eficiente", description: "Compatibilidad con fibra estándar y bajo consumo energético." },
-        ]),
-        featureGridBlock("Capacidades", [
-          { title: "Edge computing", description: "Procesamiento paralelo embarcado de alto desempeño con GPU." },
-          { title: "Visualización inmediata", description: "Display frontal con datos de adquisición en tiempo real." },
-          { title: "IA y ML en tiempo real", description: "Clasificación de eventos y reducción de alarmas falsas." },
-        ], "highlights"),
+        ], undefined, { subheading: "Tecnología de punta para el monitoreo de infraestructura crítica en tiempo real" }),
+        equipmentCalloutsBlock(null, [
+          { title: "Visualización inmediata", description: "Display frontal con datos de adquisición", position: "left" },
+          { title: "Edge computing", description: "Procesamiento paralelo embarcado de alto desempeño con GPU", position: "top-right" },
+          { title: "IA y ML en tiempo real", description: "Clasificación de eventos y reducción de alarmas falsas", position: "bottom" },
+        ], { ctaLabel: "Download Datasheet", ctaHref: "#" }),
+        mediaTextBlock(
+          "Interfaz operativa embebida",
+          "<p>Acceso remoto, control total de adquisición y alarmas configurables directamente desde el navegador, sin instalación.</p><p>Interfaz web alojada en el propio equipo, accesible por intranet o internet con conexión segura. Configure ancho de pulso, gauge length y tasa de muestreo en tiempo real, y defina alarmas para detección y localización precisas de anomalías.</p>",
+          "left",
+          { variant: "interface-split" }
+        ),
         mediaTextBlock(
           "De la fibra al diagnóstico: una plataforma completa",
           "<p>Equipo que opera junto a un sistema servidor dedicado, configurado y entregado listo para usar. Algoritmos de IA desarrollados por Immer Messen interpretan las señales adquiridas y generan diagnósticos predictivos adaptados a la operación de cada cliente.</p>",
           "right",
-          { variant: "tech-band", ctaLabel: "Hable con nuestros ingenieros", ctaHref: "/es#contato" }
-        ),
-        mediaTextBlock(
-          "Interfaz operativa",
-          "<ul><li>Interfaz web embebida.</li><li>Acceso remoto seguro por intranet o internet.</li><li>Control de parámetros de adquisición.</li><li>Alarmas configurables para localización de anomalías.</li></ul>",
-          "left",
-          { variant: "interface" }
+          { variant: "tech-cta", ctaLabel: "Hable con nuestros ingenieros", ctaHref: "/es#contato" }
         ),
       ],
     },
@@ -1643,6 +1630,12 @@ export const assetManifest = {
     { assetKey: "hero-home-poster", sourcePath: "layout-aprovado/assets/img/hero-home.png", kind: "image" },
     { assetKey: "hero-home-video", sourcePath: "layout-aprovado/assets/video/HOME.mp4", kind: "video" },
     { assetKey: "technology-video", sourcePath: "layout-aprovado/assets/video/Interrogador.webm", kind: "video" },
+    { assetKey: "tec-equipamento-front", sourcePath: "resources/imagens-tecnologia/equipamento-front.png", kind: "image" },
+    { assetKey: "tec-interface-main", sourcePath: "resources/imagens-tecnologia/img-001-008.png", kind: "image" },
+    { assetKey: "tec-interface-thumb-1", sourcePath: "resources/imagens-tecnologia/img-001-010.png", kind: "image" },
+    { assetKey: "tec-interface-thumb-2", sourcePath: "resources/imagens-tecnologia/img-001-011.png", kind: "image" },
+    { assetKey: "tec-interface-thumb-3", sourcePath: "resources/imagens-tecnologia/img-001-009.png", kind: "image" },
+    { assetKey: "tec-cta-bg", sourcePath: "resources/imagens-tecnologia/img-001-007.png", kind: "image" },
     { assetKey: "interrogador-rack", sourcePath: "layout-aprovado/assets/img/interrogador.png", kind: "image" },
     { assetKey: "interrogador-front", sourcePath: "layout-aprovado/assets/img/interrogador-front.png", kind: "image" },
     { assetKey: "interface-monitors", sourcePath: "layout-aprovado/assets/img/interface-monitors.png", kind: "image" },

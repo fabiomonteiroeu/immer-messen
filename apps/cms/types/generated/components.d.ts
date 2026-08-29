@@ -257,6 +257,27 @@ export interface PageApplicationAreasBlock extends Struct.ComponentSchema {
   };
 }
 
+export interface PageCalloutItem extends Struct.ComponentSchema {
+  collectionName: 'components_page_callout_items';
+  info: {
+    displayName: 'Callout Item';
+  };
+  attributes: {
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 220;
+      }>;
+    icon: Schema.Attribute.Media<'images'>;
+    position: Schema.Attribute.Enumeration<['left', 'top-right', 'bottom']> &
+      Schema.Attribute.DefaultTo<'left'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 80;
+      }>;
+  };
+}
+
 export interface PageCasesBlock extends Struct.ComponentSchema {
   collectionName: 'components_page_cases_blocks';
   info: {
@@ -307,6 +328,34 @@ export interface PageContactFormBlock extends Struct.ComponentSchema {
   };
 }
 
+export interface PageEquipmentCalloutsBlock extends Struct.ComponentSchema {
+  collectionName: 'components_page_equipment_callouts_blocks';
+  info: {
+    displayName: 'Equipment Callouts Block';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    callouts: Schema.Attribute.Component<'page.callout-item', true>;
+    ctaHref: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    ctaLabel: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    heading: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    media: Schema.Attribute.Media<'images'>;
+  };
+}
+
 export interface PageFeatureCard extends Struct.ComponentSchema {
   collectionName: 'components_page_feature_cards';
   info: {
@@ -345,8 +394,26 @@ export interface PageFeatureGridBlock extends Struct.ComponentSchema {
     cards: Schema.Attribute.Component<'page.feature-card', true> &
       Schema.Attribute.Required;
     heading: Schema.Attribute.String;
+    subheading: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 220;
+      }>;
     variant: Schema.Attribute.Enumeration<['grid', 'highlights']> &
       Schema.Attribute.DefaultTo<'grid'>;
+  };
+}
+
+export interface PageHeroBadge extends Struct.ComponentSchema {
+  collectionName: 'components_page_hero_badges';
+  info: {
+    displayName: 'Hero Badge';
+  };
+  attributes: {
+    label: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 40;
+      }>;
   };
 }
 
@@ -426,6 +493,7 @@ export interface PageMediaTextBlock extends Struct.ComponentSchema {
     };
   };
   attributes: {
+    backgroundImage: Schema.Attribute.Media<'images'>;
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
     ctaHref: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
@@ -440,6 +508,7 @@ export interface PageMediaTextBlock extends Struct.ComponentSchema {
         maxLength: 60;
       }>;
     features: Schema.Attribute.Component<'page.feature-card', true>;
+    gallery: Schema.Attribute.Media<'images', true>;
     heading: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
@@ -449,7 +518,7 @@ export interface PageMediaTextBlock extends Struct.ComponentSchema {
     mediaPosition: Schema.Attribute.Enumeration<['left', 'right']> &
       Schema.Attribute.DefaultTo<'left'>;
     variant: Schema.Attribute.Enumeration<
-      ['home-tech', 'tech-band', 'interface']
+      ['home-tech', 'tech-band', 'interface', 'interface-split', 'tech-cta']
     >;
   };
 }
@@ -487,6 +556,7 @@ export interface PagePageHeroBlock extends Struct.ComponentSchema {
   };
   attributes: {
     backgroundVideo: Schema.Attribute.Media<'videos' | 'files'>;
+    badges: Schema.Attribute.Component<'page.hero-badge', true>;
     posterImage: Schema.Attribute.Media<'images'>;
     subtitle: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
@@ -701,10 +771,13 @@ declare module '@strapi/strapi' {
       'page.accordion-block': PageAccordionBlock;
       'page.accordion-item': PageAccordionItem;
       'page.application-areas-block': PageApplicationAreasBlock;
+      'page.callout-item': PageCalloutItem;
       'page.cases-block': PageCasesBlock;
       'page.contact-form-block': PageContactFormBlock;
+      'page.equipment-callouts-block': PageEquipmentCalloutsBlock;
       'page.feature-card': PageFeatureCard;
       'page.feature-grid-block': PageFeatureGridBlock;
+      'page.hero-badge': PageHeroBadge;
       'page.hero-block': PageHeroBlock;
       'page.lgpd-content-block': PageLgpdContentBlock;
       'page.lgpd-section': PageLgpdSection;

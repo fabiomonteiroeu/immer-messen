@@ -104,6 +104,15 @@ function PageHeroSection({
         </div>
         <h1 className="sr-only">{block.title}</h1>
         {block.subtitle ? <p className="sr-only">{block.subtitle}</p> : null}
+        {block.badges && block.badges.length > 0 ? (
+          <ul className="hero-badges">
+            {block.badges.map((badge) => (
+              <li className="hero-badges__item" key={badge.label}>
+                {badge.label}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </section>
     );
   }
@@ -281,7 +290,140 @@ function MediaTextSection({
   const variant = block.variant ?? (block.body.trim().startsWith("<ul") ? "interface" : "home-tech");
   if (variant === "tech-band") return <TechBandSection block={block} />;
   if (variant === "interface") return <InterfaceSection block={block} />;
+  if (variant === "interface-split") return <InterfaceSplitSection block={block} />;
+  if (variant === "tech-cta") return <TechCtaSection block={block} />;
   return <HomeTechSection block={block} />;
+}
+
+/* Interface operacional: screenshot grande a esquerda, texto a direita e
+   uma fileira de thumbnails embaixo. */
+function InterfaceSplitSection({
+  block,
+}: {
+  block: Extract<CmsPageBlock, { __component: "page.media-text-block" }>;
+}) {
+  const mainUrl = resolveMediaUrl(block.media?.url);
+  return (
+    <section className="itf">
+      <div className="container">
+        <div className="itf__grid">
+          <div className="itf__shot">
+            {mainUrl ? <img alt={block.media?.alternativeText ?? ""} loading="lazy" src={mainUrl} /> : null}
+          </div>
+          <div className="itf__copy">
+            <h2 className="itf__title">{block.heading}</h2>
+            <RichText className="itf__body" html={block.body} />
+          </div>
+        </div>
+        {block.gallery && block.gallery.length > 0 ? (
+          <div className="itf__gallery">
+            {block.gallery.map((shot) => {
+              const url = resolveMediaUrl(shot.url);
+              return url ? (
+                <span className="itf__thumb" key={shot.url}>
+                  <img alt={shot.alternativeText ?? ""} loading="lazy" src={url} />
+                </span>
+              ) : null;
+            })}
+          </div>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
+/* CTA final: imagem de fundo full-bleed com texto centralizado. */
+function TechCtaSection({
+  block,
+}: {
+  block: Extract<CmsPageBlock, { __component: "page.media-text-block" }>;
+}) {
+  const bg = resolveMediaUrl(block.backgroundImage?.url);
+  return (
+    <section className="tech-cta">
+      {bg ? <img alt="" aria-hidden="true" className="tech-cta__bg" src={bg} /> : null}
+      <div className="container tech-cta__inner">
+        <h2 className="tech-cta__title">{block.heading}</h2>
+        <RichText className="tech-cta__body" html={block.body} />
+        {block.ctaLabel && block.ctaHref ? (
+          <Link className="tech-cta__btn" href={block.ctaHref}>
+            {block.ctaLabel}
+          </Link>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
+const CALLOUT_ICONS: Record<string, React.ReactNode> = {
+  left: (
+    <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} viewBox="0 0 24 24">
+      <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z" />
+      <circle cx="12" cy="12" r="2.6" />
+    </svg>
+  ),
+  "top-right": (
+    <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} viewBox="0 0 24 24">
+      <rect height="10" rx="1.5" width="10" x="7" y="7" />
+      <path d="M10 4v3M14 4v3M10 17v3M14 17v3M4 10h3M4 14h3M17 10h3M17 14h3" />
+    </svg>
+  ),
+  bottom: (
+    <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} viewBox="0 0 24 24">
+      <path d="M12 5.5a3 3 0 0 0-3 3v.4a2.6 2.6 0 0 0-1 4.6v.5a3 3 0 0 0 4 2.8 3 3 0 0 0 4-2.8v-.5a2.6 2.6 0 0 0-1-4.6v-.4a3 3 0 0 0-3-3Z" />
+      <path d="M12 5.5v13M9 11h6" />
+    </svg>
+  ),
+};
+
+/* Equipamento centralizado com callouts ligados por linha conectora. */
+function EquipmentCalloutsSection({
+  block,
+}: {
+  block: Extract<CmsPageBlock, { __component: "page.equipment-callouts-block" }>;
+}) {
+  const mediaUrl = resolveMediaUrl(block.media?.url);
+  return (
+    <section className="equip">
+      <div className="container equip__inner">
+        {block.heading ? <h2 className="equip__heading">{block.heading}</h2> : null}
+        <div className="equip__stage">
+          {mediaUrl ? (
+            <img
+              alt={block.media?.alternativeText ?? ""}
+              className="equip__photo"
+              loading="lazy"
+              src={mediaUrl}
+            />
+          ) : null}
+          {block.callouts.map((callout) => {
+            const pos = callout.position ?? "left";
+            const iconUrl = resolveMediaUrl(callout.icon?.url);
+            return (
+              <div className={`equip__callout equip__callout--${pos}`} key={callout.title}>
+                <span aria-hidden="true" className="equip__line" />
+                <span className="equip__ico">
+                  {iconUrl ? <img alt="" src={iconUrl} /> : CALLOUT_ICONS[pos]}
+                </span>
+                <div className="equip__text">
+                  <h3 className="equip__callout-title">{callout.title}</h3>
+                  {callout.description ? <p>{callout.description}</p> : null}
+                </div>
+              </div>
+            );
+          })}
+          {block.ctaLabel && block.ctaHref ? (
+            <Link className="equip__btn" href={block.ctaHref}>
+              {block.ctaLabel}
+              <span aria-hidden="true" className="equip__btn-chevron">
+                &#8964;
+              </span>
+            </Link>
+          ) : null}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function TextSection({
@@ -309,17 +451,19 @@ function SpecStripSection({
   if (block.items.length === 0) return null;
   return (
     <section className="spec-strip">
-      <div className="container">
-        {block.eyebrow ? <span className="spec-strip__eyebrow">{block.eyebrow}</span> : null}
-        <dl className="spec-strip__grid">
-          {block.items.map((item) => (
-            <div className="spec" key={item.value}>
-              <dt className="spec__value">{item.value}</dt>
-              {item.label ? <dd className="spec__label">{item.label}</dd> : null}
-            </div>
-          ))}
-        </dl>
-      </div>
+      {block.eyebrow ? (
+        <div className="container">
+          <span className="spec-strip__eyebrow">{block.eyebrow}</span>
+        </div>
+      ) : null}
+      <dl className="spec-strip__grid">
+        {block.items.map((item) => (
+          <div className="spec" key={item.value}>
+            <dt className="spec__value">{item.value}</dt>
+            {item.label ? <dd className="spec__label">{item.label}</dd> : null}
+          </div>
+        ))}
+      </dl>
     </section>
   );
 }
@@ -353,20 +497,20 @@ function FeatureGridSection({
     <section className="key-features">
       <div className="container">
         {block.heading ? <h2 className="key-features__title">{block.heading}</h2> : null}
+        {block.subheading ? <p className="key-features__sub">{block.subheading}</p> : null}
         <div className="key-features-grid">
           {block.cards.map((card) => (
             <article className="kf" key={card.title}>
               {card.icon ? (
-                <img
-                  alt={card.icon.alternativeText ?? ""}
-                  className="kf__icon kf__icon--img"
-                  src={resolveMediaUrl(card.icon.url) ?? undefined}
-                />
+                <span className="kf__icon">
+                  <img
+                    alt={card.icon.alternativeText ?? ""}
+                    src={resolveMediaUrl(card.icon.url) ?? undefined}
+                  />
+                </span>
               ) : null}
-              <p>
-                <b>{card.title}</b>
-                {card.description ? ` ${card.description}` : null}
-              </p>
+              <h3 className="kf__title">{card.title}</h3>
+              {card.description ? <p className="kf__body">{card.description}</p> : null}
             </article>
           ))}
         </div>
@@ -771,6 +915,8 @@ export function PageBlocks({ blocks, locale }: { blocks: CmsPageBlock[]; locale:
             return <FeatureGridSection block={block} key={key} />;
           case "page.spec-strip-block":
             return <SpecStripSection block={block} key={key} />;
+          case "page.equipment-callouts-block":
+            return <EquipmentCalloutsSection block={block} key={key} />;
           case "page.accordion-block":
             return <AccordionSection block={block} key={key} />;
           case "page.application-areas-block":

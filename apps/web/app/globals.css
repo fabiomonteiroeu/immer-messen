@@ -634,66 +634,88 @@ body.menu-open {
 .key-features__title {
   text-align: center;
   font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: .12em;
+  text-transform: uppercase;
   color: var(--c-gray-700);
-  margin-bottom: clamp(2.5rem, 4vw, 4rem);
+  margin-bottom: 1rem;
+}
+
+.key-features__sub {
+  text-align: center;
+  font-size: clamp(.95rem, .88rem + .3vw, 1.12rem);
+  line-height: 1.5;
+  color: var(--c-gray-600);
+  max-width: 62ch;
+  margin: 0 auto clamp(2.5rem, 4vw, 4rem);
 }
 
 .key-features-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: clamp(2rem, 3vw, 3rem) 2.5rem;
-  max-width: 1000px;
+  gap: 0;
+  max-width: 1120px;
   margin: 0 auto;
 }
 
+/* grid 3x2 com divisorias entre colunas e entre as duas fileiras */
 .kf {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  gap: 1rem;
+  gap: .85rem;
+  padding: clamp(1.75rem, 2.8vw, 2.6rem) clamp(1.25rem, 2.2vw, 2.1rem);
+  border-left: 1px solid var(--c-gray-300);
+}
+
+.kf:nth-child(3n+1) {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.kf:nth-child(n+4) {
+  border-top: 1px solid var(--c-gray-300);
 }
 
 .kf__icon {
-  width: 54px;
-  height: 54px;
-  min-width: 54px;
-  border-radius: 50%;
-  background: linear-gradient(180deg, #444 0%, #1a1a1a 100%);
-  color: #fff;
-  display: flex;
+  width: clamp(2.6rem, 3.4vw, 3.2rem);
+  height: clamp(2.6rem, 3.4vw, 3.2rem);
+  border-radius: 6px;
+  background: #e6eefb;
+  color: var(--c-navy);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
 .kf__icon svg {
-  width: 26px;
-  height: 26px;
+  width: 55%;
+  height: 55%;
 }
 
-/* The icons (Ativo 21-26) already include their own gradient circle + transparent bg,
-   so we render them flat as images at the right size. */
-.kf__icon--img {
-  width: 64px;
-  height: 64px;
-  min-width: 64px;
-  background: transparent;
-  border-radius: 0;
-  padding: 0;
+.kf__icon img {
+  width: 62%;
+  height: 62%;
   object-fit: contain;
-  display: block;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .18));
 }
 
-.kf p {
-  font-size: .85rem;
-  line-height: 1.45;
-  color: var(--c-text);
+.kf__title {
   margin: 0;
-  max-width: 27ch;
+  font-size: clamp(.92rem, .84rem + .3vw, 1.08rem);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--c-gray-700);
+  max-width: 24ch;
+}
+
+.kf__body {
+  margin: 0;
+  font-size: clamp(.86rem, .8rem + .22vw, .98rem);
+  line-height: 1.5;
+  color: var(--c-gray-600);
+  max-width: 28ch;
 }
 
 .kf p b {
@@ -1551,6 +1573,306 @@ body.menu-open {
 }
 
 /* ===========================================================
+   TECNOLOGIA — equipamento com callouts, interface e CTA final
+   =========================================================== */
+.equip {
+  background: #e1ebf3;
+  padding: clamp(2.5rem, 4vw, 4rem) 0 clamp(3.5rem, 6vw, 6rem);
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2.5rem), 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2.5rem), 0 100%);
+}
+
+.equip__heading {
+  font-size: clamp(1.3rem, 1rem + .9vw, 1.85rem);
+  font-weight: 600;
+  color: var(--c-navy);
+  margin: 0 0 2rem;
+}
+
+/* palco proporcional: as posicoes sao % medidas no design (2912x1490) */
+.equip__stage {
+  position: relative;
+  aspect-ratio: 2912/1490;
+  width: 100%;
+}
+
+.equip__photo {
+  position: absolute;
+  left: 29.5%;
+  top: 32.5%;
+  width: 43%;
+  height: auto;
+  object-fit: contain;
+}
+
+.equip__callout {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+  width: 21%;
+}
+
+.equip__callout--left {
+  left: 14.6%;
+  top: 17.1%;
+}
+
+.equip__callout--top-right {
+  left: 81.4%;
+  top: 10.7%;
+}
+
+.equip__callout--bottom {
+  left: 64.1%;
+  top: 63.6%;
+}
+
+.equip__ico {
+  width: clamp(2.2rem, 3.1vw, 2.9rem);
+  height: clamp(2.2rem, 3.1vw, 2.9rem);
+  border-radius: 50%;
+  border: 1px solid rgba(27, 42, 94, .22);
+  background: #eaf1f9;
+  color: var(--c-blue-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.equip__ico svg {
+  width: 52%;
+  height: 52%;
+}
+
+.equip__ico img {
+  width: 58%;
+  height: 58%;
+  object-fit: contain;
+}
+
+/* conector em L saindo do icone ate o equipamento */
+.equip__line {
+  position: absolute;
+  border: 0 solid rgba(27, 42, 94, .26);
+  pointer-events: none;
+}
+
+.equip__callout--left .equip__line {
+  left: calc(clamp(2.2rem, 3.1vw, 2.9rem) + .5rem);
+  top: clamp(1.1rem, 1.55vw, 1.45rem);
+  width: 78%;
+  height: 4.6vw;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.equip__callout--top-right .equip__line {
+  right: calc(100% - clamp(2.2rem, 3.1vw, 2.9rem) + .5rem);
+  top: clamp(1.1rem, 1.55vw, 1.45rem);
+  width: 62%;
+  height: 6.4vw;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.equip__callout--bottom .equip__line {
+  right: calc(100% - clamp(2.2rem, 3.1vw, 2.9rem) + .5rem);
+  bottom: calc(100% - clamp(1.1rem, 1.55vw, 1.45rem));
+  width: 42%;
+  height: 5.4vw;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.equip__callout-title {
+  margin: .35rem 0 0;
+  font-size: clamp(.95rem, .85rem + .5vw, 1.35rem);
+  font-weight: 700;
+  color: var(--c-blue-soft);
+  line-height: 1.2;
+}
+
+.equip__callout p {
+  margin: 0;
+  font-size: clamp(.82rem, .76rem + .25vw, 1rem);
+  line-height: 1.4;
+  color: var(--c-gray-700);
+}
+
+.equip__btn {
+  position: absolute;
+  left: 14.6%;
+  top: 72%;
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .9rem 1.9rem;
+  background: #a8adb6;
+  color: #fff;
+  font-weight: 600;
+  font-size: clamp(.9rem, .84rem + .3vw, 1.1rem);
+  transition: background .2s ease;
+}
+
+.equip__btn:hover {
+  background: #949aa5;
+}
+
+.equip__btn-chevron {
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+@media (max-width: 900px) {
+  .equip__stage {
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
+  .equip__photo,
+  .equip__callout,
+  .equip__btn {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+  }
+
+  .equip__line {
+    display: none;
+  }
+
+  .equip__btn {
+    width: auto;
+  }
+}
+
+.itf {
+  background: #fff;
+  padding: clamp(3rem, 5vw, 5rem) 0;
+}
+
+.itf__grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.itf__shot img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.itf__title {
+  font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--c-blue-soft);
+  margin: 0 0 1.1rem;
+  max-width: 12ch;
+}
+
+.itf__body> :first-child {
+  font-weight: 700;
+  font-size: clamp(1rem, .92rem + .35vw, 1.2rem);
+  line-height: 1.4;
+  color: var(--c-gray-700);
+  border-top: 1px solid var(--c-gray-300);
+  padding-top: 1.3rem;
+  margin: 0 0 1.4rem;
+}
+
+.itf__body p {
+  font-size: clamp(.92rem, .86rem + .25vw, 1.05rem);
+  line-height: 1.55;
+  color: var(--c-gray-600);
+  margin: 0;
+}
+
+.itf__gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 2.2vw, 2.2rem);
+  margin-top: clamp(2rem, 3.5vw, 3.5rem);
+}
+
+.itf__thumb {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16/9;
+}
+
+.itf__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tech-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--c-navy-deep);
+  color: #fff;
+  padding: clamp(4rem, 7vw, 7.5rem) 0;
+  text-align: center;
+}
+
+.tech-cta__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.tech-cta__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.tech-cta__title {
+  font-size: clamp(1.5rem, 1.15rem + 1.5vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 1.5rem;
+}
+
+.tech-cta__body p {
+  font-size: clamp(.95rem, .88rem + .35vw, 1.18rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, .95);
+  max-width: 68ch;
+  margin: 0 auto;
+}
+
+.tech-cta__btn {
+  display: inline-block;
+  margin-top: clamp(1.75rem, 3vw, 2.75rem);
+  padding: .95rem 2.25rem;
+  border: 1px solid #fff;
+  color: #fff;
+  font-size: clamp(.9rem, .84rem + .28vw, 1.05rem);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  transition: background .2s ease, color .2s ease;
+}
+
+.tech-cta__btn:hover {
+  background: #fff;
+  color: var(--c-navy);
+}
+
+/* ===========================================================
    CASE — detalhe (redesign 2026): hero com título editorial,
    card "o desafio" e corpo em seções tipadas.
    =========================================================== */
@@ -1734,9 +2056,39 @@ body.menu-open {
    TECNOLOGIA — faixa de specs e destaques de capacidade
    =========================================================== */
 .spec-strip {
-  background: var(--c-navy-deep);
+  /* faixa full-bleed: navy chapado ate ~40% e escurecendo ate quase preto
+     na direita, como no design (medido #29356F -> #04050A) */
+  background: linear-gradient(90deg, #29356f 0%, #29356f 40%, #04050a 100%);
   color: #fff;
-  padding: clamp(2.5rem, 4vw, 3.5rem) 0;
+  padding: 0;
+}
+
+.hero-badges {
+  position: absolute;
+  right: clamp(1.5rem, 4.6vw, 4.2rem);
+  bottom: clamp(1.75rem, 3.5vw, 3.2rem);
+  z-index: 2;
+  display: flex;
+  gap: clamp(.75rem, 1.7vw, 1.6rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-badges__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: clamp(9rem, 14.7vw, 13.25rem);
+  min-height: clamp(2.4rem, 3.3vw, 2.95rem);
+  padding: .5rem 1.25rem;
+  border: 1px solid #fff;
+  color: #fff;
+  font-size: clamp(.9rem, .78rem + .4vw, 1.15rem);
+  font-weight: 500;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .spec-strip__eyebrow {
@@ -1750,19 +2102,30 @@ body.menu-open {
 
 .spec-strip__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-  gap: clamp(1.5rem, 3vw, 2.5rem);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
   margin: 0;
 }
 
+/* colunas de largura igual separadas por divisoria, sem container */
 .spec {
   display: flex;
   flex-direction: column;
-  gap: .4rem;
+  gap: .5rem;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  min-height: clamp(7rem, 10vw, 9.1rem);
+  padding: clamp(1.5rem, 2.5vw, 2.25rem) clamp(1rem, 2vw, 2rem);
+  border-left: 1px solid rgba(255, 255, 255, .16);
+}
+
+.spec:first-child {
+  border-left: 0;
 }
 
 .spec__value {
-  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem);
+  font-size: clamp(1.5rem, 1.15rem + 1.35vw, 2.45rem);
   font-weight: 600;
   line-height: 1.05;
   color: #fff;
@@ -1771,12 +2134,12 @@ body.menu-open {
 
 .spec__label {
   margin: 0;
-  font-size: .78rem;
-  letter-spacing: .06em;
+  font-size: clamp(.72rem, .66rem + .22vw, .88rem);
+  letter-spacing: .04em;
   text-transform: uppercase;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, .72);
-  max-width: 22ch;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, .82);
+  max-width: 18ch;
 }
 
 .tech-highlights {

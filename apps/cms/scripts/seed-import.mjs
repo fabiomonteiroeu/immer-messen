@@ -191,10 +191,34 @@ function applyAssetsToBlocks(blocks, consumer) {
       case "page.media-text-block": {
         const media = consumer.take("page.media-text-block.media");
         if (media) next.media = media;
+        if (next.variant === "interface-split") {
+          const gallery = [];
+          for (;;) {
+            const item = consumer.take("page.media-text-block.gallery");
+            if (!item) break;
+            gallery.push(item);
+          }
+          if (gallery.length) next.gallery = gallery;
+        }
+        if (next.variant === "tech-cta") {
+          const bg = consumer.take("page.media-text-block.background");
+          if (bg) next.backgroundImage = bg;
+        }
         if (Array.isArray(next.features)) {
           next.features = next.features.map((feature) => {
             const icon = consumer.take("page.feature-card.icon");
             return icon ? { ...feature, icon } : { ...feature };
+          });
+        }
+        break;
+      }
+      case "page.equipment-callouts-block": {
+        const media = consumer.take("page.equipment-callouts-block.media");
+        if (media) next.media = media;
+        if (Array.isArray(next.callouts)) {
+          next.callouts = next.callouts.map((callout) => {
+            const icon = consumer.take("page.callout-item.icon");
+            return icon ? { ...callout, icon } : { ...callout };
           });
         }
         break;
