@@ -16,6 +16,15 @@ import type { SupportedLocale } from "@/lib/i18n/config";
 
 const cmsPageCollectionSchema = cmsCollectionResponseSchema(cmsPageSchema);
 
+/* Componentes adicionados depois do CMS ir para producao. Se a Strapi ainda
+   nao os conhece, o `populate ... on` deles derruba a requisicao inteira com
+   400 e a pagina cai no mock — o site todo volta ao conteudo antigo. Ficam
+   separados para poderem ser removidos no retry. */
+const optionalPopulate = {
+  "populate[blocks][on][page.equipment-callouts-block][populate][media]": true,
+  "populate[blocks][on][page.equipment-callouts-block][populate][callouts][populate]": "*",
+};
+
 const pagePopulate = {
   "populate[seo][populate]": "*",
   "populate[blocks][on][page.hero-block][populate]": "*",
@@ -28,8 +37,6 @@ const pagePopulate = {
   "populate[blocks][on][page.accordion-block][populate]": "*",
   "populate[blocks][on][page.feature-grid-block][populate][cards][populate]": "*",
   "populate[blocks][on][page.spec-strip-block][populate][items][populate]": "*",
-  "populate[blocks][on][page.equipment-callouts-block][populate][media]": true,
-  "populate[blocks][on][page.equipment-callouts-block][populate][callouts][populate]": "*",
   "populate[blocks][on][page.application-areas-block][populate][areas][populate]": "*",
   "populate[blocks][on][page.cases-block][populate][cases][populate]": "*",
   "populate[blocks][on][page.news-carousel-block][populate][articles][populate]": "*",
@@ -62,14 +69,14 @@ export async function getInstitutionalPageBySlug({
     return null;
   }
 
-  try {
-    const response = await fetchFromCms({
+  const fetchPage = (populate: Record<string, unknown>) =>
+    fetchFromCms({
       path: "/api/pages",
       query: {
         locale,
         "filters[pageKey][$eq]": pageKey,
         "pagination[pageSize]": 1,
-        ...pagePopulate,
+        ...populate,
       },
       schema: cmsPageCollectionSchema,
       init: {
@@ -79,6 +86,20 @@ export async function getInstitutionalPageBySlug({
         },
       },
     });
+
+  try {
+    let response;
+    try {
+      response = await fetchPage({ ...pagePopulate, ...optionalPopulate });
+    } catch (error) {
+      // CMS mais antigo que o frontend: repete sem os componentes novos em vez
+      // de devolver o mock e derrubar a pagina inteira.
+      console.warn(
+        `[CMS] populate completo falhou (pageKey: ${pageKey}, locale: ${locale}), repetindo sem os componentes novos:`,
+        error
+      );
+      response = await fetchPage(pagePopulate);
+    }
 
     return response.data[0] ?? getMockPage(pageKey, locale);
   } catch (error) {
