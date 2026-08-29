@@ -435,7 +435,13 @@ async function ApplicationAreasSection({
   block: Extract<CmsPageBlock, { __component: "page.application-areas-block" }>;
   locale: SupportedLocale;
 }) {
-  const areas = block.areas.length > 0 ? block.areas : await getApplicationAreas(locale);
+  const allAreas = block.areas.length > 0 ? block.areas : await getApplicationAreas(locale);
+  // O mosaico e um layout desenhado: cada tile ocupa a celula que o tileSpan define.
+  // Entradas legadas anteriores ao campo vem com tileSpan nulo e nao fazem parte do
+  // desenho — entram como celulas soltas e desalinham o grid. O schema define
+  // default "small", entao qualquer area criada pelo admin ja nasce com valor e
+  // continua aparecendo aqui.
+  const areas = allAreas.filter((area) => Boolean(area.tileSpan));
   if (areas.length === 0) return null;
   return (
     <section className="applied-mosaic" id="aplicacoes">
