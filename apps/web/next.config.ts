@@ -58,6 +58,19 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  /* Carimbo do build: permite responder "qual codigo esta no ar?" com um
+     curl em /api/health, sem depender do painel de deploy. BUILD_TIME e
+     avaliado na hora do build; BUILD_COMMIT so aparece se a plataforma
+     injetar o SHA como env. */
+  env: {
+    BUILD_TIME: new Date().toISOString(),
+    BUILD_COMMIT:
+      process.env.SOURCE_COMMIT ??
+      process.env.GIT_COMMIT ??
+      process.env.GIT_SHA ??
+      process.env.RAILWAY_GIT_COMMIT_SHA ??
+      "unknown",
+  },
   output: "standalone",
   outputFileTracingRoot: path.join(__dirname, "..", ".."),
   turbopack: {

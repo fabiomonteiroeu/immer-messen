@@ -9,6 +9,8 @@ export async function GET() {
     status: "ok" as const,
     uptime: process.uptime(),
     version: process.env.npm_package_version ?? "unknown",
+    buildTime: process.env.BUILD_TIME ?? "unknown",
+    buildCommit: process.env.BUILD_COMMIT ?? "unknown",
     cms,
   };
   return Response.json(body, { headers: { "Cache-Control": "no-store" } });
