@@ -1257,12 +1257,6 @@ const pageDefs = [
       { assetKey: "tec-interface-thumb-2", usage: "page.media-text-block.gallery" },
       { assetKey: "tec-interface-thumb-3", usage: "page.media-text-block.gallery" },
       { assetKey: "tec-cta-bg", usage: "page.media-text-block.background" },
-      { assetKey: "kf-01-fase", usage: "page.feature-card.icon" },
-      { assetKey: "kf-02-frequencia", usage: "page.feature-card.icon" },
-      { assetKey: "kf-03-alcance", usage: "page.feature-card.icon" },
-      { assetKey: "kf-04-das-dts", usage: "page.feature-card.icon" },
-      { assetKey: "kf-05-sensibilidade", usage: "page.feature-card.icon" },
-      { assetKey: "kf-06-infraestrutura", usage: "page.feature-card.icon" },
     ],
     "pt-BR": {
       title: "Tecnologia",

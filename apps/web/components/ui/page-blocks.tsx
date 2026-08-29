@@ -178,6 +178,40 @@ function HomeTechSection({
   );
 }
 
+/* Icones do grid Key features: tracos simples navy, como no design.
+   Sao posicionais e servem de fallback — se o card trouxer icon do CMS,
+   a media vence. */
+const KEY_FEATURE_ICONS: React.ReactNode[] = [
+  // lupa com onda: medicao quantitativa
+  <svg fill="none" key="kf1" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} viewBox="0 0 24 24">
+    <circle cx="10.5" cy="10.5" r="6.5" />
+    <path d="M6.8 10.5h1.6l1.3-2.6 1.6 5 1.2-2.4h1.7M15.4 15.4 20 20" />
+  </svg>,
+  // pulso: resposta em frequencia
+  <svg fill="none" key="kf2" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} viewBox="0 0 24 24">
+    <path d="M2 12h3.5l2-6.5 3.5 13 2.5-8 1.8 4h6.7" />
+  </svg>,
+  // setas expandindo: alcance
+  <svg fill="none" key="kf3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} viewBox="0 0 24 24">
+    <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5M4 4l6 6M20 4l-6 6M4 20l6-6M20 20l-6-6" />
+  </svg>,
+  // termometro na fibra: DAS/DTS integrado
+  <svg fill="none" key="kf4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} viewBox="0 0 24 24">
+    <path d="M7 3c1.6 1.6 1.6 3.2 0 4.8S5.4 11 7 12.6s1.6 3.2 0 4.8S5.4 20.6 7 22" />
+    <path d="M16.5 13.6V6a1.9 1.9 0 1 1 3.8 0v7.6a3.5 3.5 0 1 1-3.8 0Z" />
+  </svg>,
+  // area tracejada com cursor: alta sensibilidade
+  <svg fill="none" key="kf5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} viewBox="0 0 24 24">
+    <path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3" strokeDasharray="0" />
+    <path d="M9 9l7 3.2-3 1.1-1.1 3L9 9Z" />
+  </svg>,
+  // tomada: infraestrutura eficiente
+  <svg fill="none" key="kf6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9" />
+    <path d="M9.5 7.5v3.2a2.5 2.5 0 0 0 5 0V7.5M12 13.2v3.3" />
+  </svg>,
+];
+
 const FEATURE_ICONS: Record<FeatureIconKey, React.ReactNode> = {
   sensors: (
     <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth={1.6} viewBox="0 0 24 24">
@@ -499,16 +533,18 @@ function FeatureGridSection({
         {block.heading ? <h2 className="key-features__title">{block.heading}</h2> : null}
         {block.subheading ? <p className="key-features__sub">{block.subheading}</p> : null}
         <div className="key-features-grid">
-          {block.cards.map((card) => (
+          {block.cards.map((card, index) => (
             <article className="kf" key={card.title}>
-              {card.icon ? (
-                <span className="kf__icon">
+              <span className="kf__icon">
+                {card.icon ? (
                   <img
                     alt={card.icon.alternativeText ?? ""}
                     src={resolveMediaUrl(card.icon.url) ?? undefined}
                   />
-                </span>
-              ) : null}
+                ) : (
+                  KEY_FEATURE_ICONS[index % KEY_FEATURE_ICONS.length]
+                )}
+              </span>
               <h3 className="kf__title">{card.title}</h3>
               {card.description ? <p className="kf__body">{card.description}</p> : null}
             </article>
