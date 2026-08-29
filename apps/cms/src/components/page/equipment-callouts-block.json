@@ -1,0 +1,36 @@
+{
+  "collectionName": "components_page_equipment_callouts_blocks",
+  "info": {
+    "displayName": "Equipment Callouts Block"
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "media": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "callouts": {
+      "type": "component",
+      "repeatable": true,
+      "component": "page.callout-item"
+    },
+    "ctaLabel": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "ctaHref": {
+      "type": "string",
+      "maxLength": 255
+    }
+  }
+}

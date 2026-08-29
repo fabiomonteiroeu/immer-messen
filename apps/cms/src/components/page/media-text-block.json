@@ -26,16 +26,29 @@
     "media": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["images", "videos", "files"]
+      "allowedTypes": [
+        "images",
+        "videos",
+        "files"
+      ]
     },
     "mediaPosition": {
       "type": "enumeration",
-      "enum": ["left", "right"],
+      "enum": [
+        "left",
+        "right"
+      ],
       "default": "left"
     },
     "variant": {
       "type": "enumeration",
-      "enum": ["home-tech", "tech-band", "interface"]
+      "enum": [
+        "home-tech",
+        "tech-band",
+        "interface",
+        "interface-split",
+        "tech-cta"
+      ]
     },
     "ctaLabel": {
       "type": "string",
@@ -49,6 +62,20 @@
       "type": "component",
       "repeatable": true,
       "component": "page.feature-card"
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "backgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
     }
   }
 }

@@ -22,12 +22,22 @@
     "posterImage": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "backgroundVideo": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["videos", "files"]
+      "allowedTypes": [
+        "videos",
+        "files"
+      ]
+    },
+    "badges": {
+      "type": "component",
+      "repeatable": true,
+      "component": "page.hero-badge"
     }
   }
 }

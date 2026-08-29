@@ -13,6 +13,10 @@
     "heading": {
       "type": "string"
     },
+    "subheading": {
+      "type": "text",
+      "maxLength": 220
+    },
     "variant": {
       "type": "enumeration",
       "enum": [

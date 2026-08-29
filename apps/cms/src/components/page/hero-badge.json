@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_page_hero_badges",
+  "info": {
+    "displayName": "Hero Badge"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true,
+      "maxLength": 40
+    }
+  }
+}

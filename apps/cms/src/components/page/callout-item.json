@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_page_callout_items",
+  "info": {
+    "displayName": "Callout Item"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "text",
+      "maxLength": 220
+    },
+    "icon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "position": {
+      "type": "enumeration",
+      "enum": ["left", "top-right", "bottom"],
+      "default": "left"
+    }
+  }
+}
