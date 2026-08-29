@@ -195,7 +195,7 @@ const shell = {
           links: [
             { label: "Tecnologia", href: "/pt-BR/tecnologia", openInNewTab: false },
             { label: "Soluções", href: "/pt-BR#solucoes", openInNewTab: false },
-            { label: "Quem somos", href: "/pt-BR/quem-somos", openInNewTab: false },
+            { label: "Quem somos", href: "/pt-BR#quem-somos", openInNewTab: false },
             { label: "Cases", href: "/pt-BR#cases", openInNewTab: false },
             { label: "Notícias", href: "/pt-BR#noticias", openInNewTab: false },
             { label: "Contato", href: "/pt-BR#contato", openInNewTab: false },
@@ -252,7 +252,7 @@ const shell = {
           links: [
             { label: "Technology", href: "/en/technology", openInNewTab: false },
             { label: "Solutions", href: "/en#solucoes", openInNewTab: false },
-            { label: "About", href: "/en/about", openInNewTab: false },
+            { label: "About", href: "/en#quem-somos", openInNewTab: false },
             { label: "Cases", href: "/en#cases", openInNewTab: false },
             { label: "News", href: "/en#noticias", openInNewTab: false },
             { label: "Contact", href: "/en#contato", openInNewTab: false },
@@ -309,7 +309,7 @@ const shell = {
           links: [
             { label: "Tecnología", href: "/es/tecnologia", openInNewTab: false },
             { label: "Soluciones", href: "/es#solucoes", openInNewTab: false },
-            { label: "Quiénes somos", href: "/es/quienes-somos", openInNewTab: false },
+            { label: "Quiénes somos", href: "/es#quem-somos", openInNewTab: false },
             { label: "Casos", href: "/es#cases", openInNewTab: false },
             { label: "Noticias", href: "/es#noticias", openInNewTab: false },
             { label: "Contacto", href: "/es#contato", openInNewTab: false },
@@ -966,7 +966,6 @@ const caseStudies = caseStudyDefs.flatMap((def) =>
 const slugByPageKey = {
   home: { "pt-BR": "home", en: "home", es: "inicio" },
   technology: { "pt-BR": "tecnologia", en: "technology", es: "tecnologia" },
-  about: { "pt-BR": "quem-somos", en: "about", es: "quienes-somos" },
   lgpd: { "pt-BR": "lgpd", en: "lgpd", es: "lgpd" },
 };
 
@@ -1375,123 +1374,6 @@ const pageDefs = [
           "<p>Equipo que opera junto a un sistema servidor dedicado, configurado y entregado listo para usar. Algoritmos de IA desarrollados por Immer Messen interpretan las señales adquiridas y generan diagnósticos predictivos adaptados a la operación de cada cliente.</p>",
           "right",
           { variant: "tech-cta", ctaLabel: "Hable con nuestros ingenieros", ctaHref: "/es#contato" }
-        ),
-      ],
-    },
-  },
-  {
-    pageKey: "about",
-    sortOrder: 4,
-    assetRefs: [
-      { assetKey: "about-lab-data-center", usage: "page.about-content-block.row.media" },
-      { assetKey: "about-lab-data-center", usage: "page.about-content-block.row.media" },
-      { assetKey: "about-interrogador-rack", usage: "page.about-content-block.highlight.media" },
-    ],
-    "pt-BR": {
-      title: "Quem somos",
-      summary: "História, posicionamento técnico e ecossistema de parceiros da Immer Messen.",
-      seoTitle: "Quem somos | Immer Messen",
-      seoDescription: "Origem acadêmica, P&D aplicado e capacidade de entrega da Immer Messen.",
-      blocks: () => [
-        aboutContentBlock(
-          "QUEM SOMOS",
-          [
-            {
-              mediaPosition: "left",
-              heading: "Nascemos nos laboratórios. Chegamos ao campo.",
-              body: "<p>A Immer Messen tem origem na pesquisa de ponta desenvolvida na Universidade Tecnológica Federal do Paraná (UTFPR), em Curitiba. Foi dentro dos laboratórios da universidade que surgiu o primeiro interrogador DAS de desenvolvimento genuinamente nacional — resultado de anos de pesquisa aplicada em fotônica, metrologia óptica e processamento de sinais.</p><p>Esse DNA acadêmico não ficou no laboratório. Ele se traduziu em tecnologia proprietária, arquitetura de hardware independente de fornecedores externos e capacidade de desenvolvimento de algoritmos específicos para as condições operacionais da infraestrutura crítica brasileira.</p>",
-            },
-            {
-              mediaPosition: "right",
-              heading: "Da pesquisa ao mercado, com validação de classe mundial",
-              body: "<p>O reconhecimento do potencial tecnológico da Immer Messen veio antes mesmo do lançamento comercial. A Petrobras, maior operadora de infraestrutura de energia do país, selecionou a empresa como parceira em projeto de P&amp;D que validou a maturidade técnica do sistema e acelerou o desenvolvimento de aplicações para o segmento de óleo e gás.</p><p>Essa parceria resultou em projetos de pesquisa aplicada voltados ao monitoramento de reservatórios, com foco em armazenamento, tratamento e distribuição de dados DFOS para aplicações de sensoriamento em poços e infraestrutura subsuperficial — posicionando a Immer Messen como referência técnica nacional no segmento.</p>",
-            },
-          ],
-          {
-            badgeLabel: "INCEPTION PROGRAM",
-            leftHeading: "Membro do NVIDIA Inception Program",
-            leftBody: "<p>A Immer Messen integra o NVIDIA Inception Program, iniciativa global de suporte a startups de deep-tech e inteligência artificial — reconhecimento do papel estratégico que os algoritmos de IA desempenham na plataforma da empresa e do alinhamento com a fronteira tecnológica em aceleração de modelos de machine learning aplicados a dados de sensoriamento distribuído.</p>",
-            rightHeading: "Pioneirismo Brasileiro",
-            rightBody: "<p>Somos o único desenvolvedor brasileiro de tecnologia DFOS com hardware proprietário, algoritmos de IA treinados com dados de campo nacionais e capacidade de entrega de solução completa — do interrogador óptico à plataforma de monitoramento contínuo. Nossa estrutura local permite suporte ágil, precificação competitiva e integração nativa aos requisitos regulatórios do mercado brasileiro.</p>",
-          }
-        ),
-        partnersBlock("Nossos parceiros:", allPartnerKeys),
-        contactFormBlock(
-          "Fale com a nossa equipe",
-          "<p>Se você tem interesse em saber mais sobre as nossas soluções, deixe o seu contato.</p>",
-          "Enviar"
-        ),
-      ],
-    },
-    en: {
-      title: "About",
-      summary: "History, technical positioning and partner ecosystem of Immer Messen.",
-      seoTitle: "About | Immer Messen",
-      seoDescription: "Academic origin, applied R&D and delivery capacity of Immer Messen.",
-      blocks: () => [
-        aboutContentBlock(
-          "ABOUT US",
-          [
-            {
-              mediaPosition: "left",
-              heading: "Born in the labs. Proven in the field.",
-              body: "<p>Immer Messen originates from cutting-edge research developed at the Federal University of Technology - Paraná (UTFPR) in Curitiba. The first genuinely Brazilian DAS interrogator was built inside the university's labs — the result of years of applied research in photonics, optical metrology and signal processing.</p><p>That academic DNA didn't stay in the lab. It evolved into proprietary technology, a hardware architecture independent of external vendors, and the capability to develop algorithms specific to the operating conditions of Brazilian critical infrastructure.</p>",
-            },
-            {
-              mediaPosition: "right",
-              heading: "From research to market, with world-class validation",
-              body: "<p>Recognition of Immer Messen's technological potential arrived even before its commercial launch. Petrobras, the country's largest energy infrastructure operator, selected the company as a partner in an R&amp;D project that validated the system's technical maturity and accelerated the development of applications for the oil and gas segment.</p><p>This partnership produced applied research projects focused on reservoir monitoring — with emphasis on storage, processing and distribution of DFOS data for downhole and subsurface sensing — positioning Immer Messen as the national technical reference in the segment.</p>",
-            },
-          ],
-          {
-            badgeLabel: "INCEPTION PROGRAM",
-            leftHeading: "Member of the NVIDIA Inception Program",
-            leftBody: "<p>Immer Messen is part of the NVIDIA Inception Program, a global initiative supporting deep-tech and AI startups — recognition of the strategic role that AI algorithms play in the company's platform and of its alignment with the technological frontier in accelerating machine learning models applied to distributed sensing data.</p>",
-            rightHeading: "Brazilian Pioneering",
-            rightBody: "<p>We are the only Brazilian developer of DFOS technology with proprietary hardware, AI algorithms trained on national field data, and the capability to deliver a full solution — from optical interrogator to continuous monitoring platform. Our local structure enables agile support, competitive pricing and native compliance with Brazilian regulatory requirements.</p>",
-          }
-        ),
-        partnersBlock("Our partners:", allPartnerKeys),
-        contactFormBlock(
-          "Talk to our team",
-          "<p>If you would like to learn more about our solutions, leave your contact information.</p>",
-          "Send"
-        ),
-      ],
-    },
-    es: {
-      title: "Quiénes somos",
-      summary: "Historia, posicionamiento técnico y ecosistema de aliados de Immer Messen.",
-      seoTitle: "Quiénes somos | Immer Messen",
-      seoDescription: "Origen académico, I+D aplicada y capacidad de entrega de Immer Messen.",
-      blocks: () => [
-        aboutContentBlock(
-          "QUIÉNES SOMOS",
-          [
-            {
-              mediaPosition: "left",
-              heading: "Nacimos en los laboratorios. Llegamos al campo.",
-              body: "<p>Immer Messen tiene origen en la investigación de punta desarrollada en la Universidad Tecnológica Federal de Paraná (UTFPR), en Curitiba. Fue dentro de los laboratorios de la universidad donde surgió el primer interrogador DAS de desarrollo genuinamente brasileño — resultado de años de investigación aplicada en fotónica, metrología óptica y procesamiento de señales.</p><p>Ese ADN académico no se quedó en el laboratorio. Se tradujo en tecnología propietaria, arquitectura de hardware independiente de proveedores externos y capacidad para desarrollar algoritmos específicos para las condiciones operativas de la infraestructura crítica brasileña.</p>",
-            },
-            {
-              mediaPosition: "right",
-              heading: "De la investigación al mercado, con validación de clase mundial",
-              body: "<p>El reconocimiento del potencial tecnológico de Immer Messen llegó incluso antes del lanzamiento comercial. Petrobras, el mayor operador de infraestructura de energía del país, seleccionó a la empresa como aliada en un proyecto de I+D que validó la madurez técnica del sistema y aceleró el desarrollo de aplicaciones para el segmento de petróleo y gas.</p><p>Esta alianza resultó en proyectos de investigación aplicada orientados al monitoreo de reservorios, con enfoque en almacenamiento, tratamiento y distribución de datos DFOS para aplicaciones de sensado en pozos e infraestructura subsuperficial — posicionando a Immer Messen como referencia técnica nacional en el segmento.</p>",
-            },
-          ],
-          {
-            badgeLabel: "INCEPTION PROGRAM",
-            leftHeading: "Miembro del NVIDIA Inception Program",
-            leftBody: "<p>Immer Messen integra el NVIDIA Inception Program, iniciativa global de apoyo a startups de deep-tech e inteligencia artificial — reconocimiento del papel estratégico que los algoritmos de IA desempeñan en la plataforma de la empresa y del alineamiento con la frontera tecnológica en aceleración de modelos de machine learning aplicados a datos de sensado distribuido.</p>",
-            rightHeading: "Pionerismo Brasileño",
-            rightBody: "<p>Somos el único desarrollador brasileño de tecnología DFOS con hardware propietario, algoritmos de IA entrenados con datos de campo nacionales y capacidad de entrega de solución completa — del interrogador óptico a la plataforma de monitoreo continuo. Nuestra estructura local permite soporte ágil, precificación competitiva e integración nativa a los requisitos regulatorios del mercado brasileño.</p>",
-          }
-        ),
-        partnersBlock("Nuestros aliados:", allPartnerKeys),
-        contactFormBlock(
-          "Hable con nuestro equipo",
-          "<p>Si desea conocer más sobre nuestras soluciones, déjenos sus datos de contacto.</p>",
-          "Enviar"
         ),
       ],
     },

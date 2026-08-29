@@ -8,9 +8,9 @@ import {
 
 describe("getInstitutionalSlug", () => {
   it("returns localized slug for known page key", () => {
-    expect(getInstitutionalSlug("pt-BR", "about")).toBe("quem-somos");
-    expect(getInstitutionalSlug("en", "about")).toBe("about");
-    expect(getInstitutionalSlug("es", "about")).toBe("quienes-somos");
+    expect(getInstitutionalSlug("pt-BR", "technology")).toBe("tecnologia");
+    expect(getInstitutionalSlug("en", "technology")).toBe("technology");
+    expect(getInstitutionalSlug("es", "home")).toBe("inicio");
   });
 });
 
@@ -28,8 +28,12 @@ describe("getInstitutionalPageKeyFromSlug", () => {
 
 describe("localizePath", () => {
   it("translates institutional slug when switching locale", () => {
-    expect(localizePath("/pt-BR/quem-somos", "en")).toBe("/en/about");
-    expect(localizePath("/en/about", "es")).toBe("/es/quienes-somos");
+    expect(localizePath("/pt-BR/tecnologia", "en")).toBe("/en/technology");
+    expect(localizePath("/en/home", "es")).toBe("/es/inicio");
+  });
+
+  it("keeps an unknown slug as-is (ex: quem-somos, que virou ancora na home)", () => {
+    expect(localizePath("/pt-BR/quem-somos", "en")).toBe("/en/quem-somos");
   });
 
   it("falls through to the home of a locale for empty path", () => {

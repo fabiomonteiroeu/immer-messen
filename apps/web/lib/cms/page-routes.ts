@@ -4,19 +4,16 @@ const slugByLocaleAndPageKey = {
   "pt-BR": {
     home: "home",
     technology: "tecnologia",
-    about: "quem-somos",
     lgpd: "lgpd",
   },
   en: {
     home: "home",
     technology: "technology",
-    about: "about",
     lgpd: "lgpd",
   },
   es: {
     home: "inicio",
     technology: "tecnologia",
-    about: "quienes-somos",
     lgpd: "lgpd",
   },
 } as const;
