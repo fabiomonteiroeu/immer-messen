@@ -3,7 +3,9 @@ import type { Schema, Struct } from '@strapi/strapi';
 export interface CaseFigureSection extends Struct.ComponentSchema {
   collectionName: 'components_case_figure_sections';
   info: {
+    description: "Figura larga com legenda. O 'alt' e localizavel e descreve o que a imagem MOSTRA (nao repete a legenda); deixe vazio so quando a figura for puramente decorativa.";
     displayName: 'Case Figure Section';
+    icon: 'picture';
   };
   pluginOptions: {
     i18n: {
@@ -11,14 +13,45 @@ export interface CaseFigureSection extends Struct.ComponentSchema {
     };
   };
   attributes: {
+    alt: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 240;
+      }>;
     caption: Schema.Attribute.String;
     image: Schema.Attribute.Media<'images'>;
+  };
+}
+
+export interface CaseHeroSection extends Struct.ComponentSchema {
+  collectionName: 'components_case_hero_sections';
+  info: {
+    description: 'Bloco de abertura do case: titulo, subtitulo e midia full-bleed. E um bloco comum da zona \u2014 pode ser removido, reordenado ou trocado por outro bloco.';
+    displayName: 'Case Hero Section';
+    icon: 'picture';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    media: Schema.Attribute.Media<'images' | 'videos' | 'files'>;
+    subtitle: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 320;
+      }>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 160;
+      }>;
   };
 }
 
 export interface CaseHighlightSection extends Struct.ComponentSchema {
   collectionName: 'components_case_highlight_sections';
   info: {
+    description: "Faixa angulada de destaque. 'opening' (topo reto, base descendo) mostra o eyebrow e usa titulo em negrito; 'closing' (topo descendo, base reta) ignora o eyebrow e trata o texto da esquerda como frase de fechamento.";
     displayName: 'Case Highlight Section';
   };
   pluginOptions: {
@@ -30,12 +63,118 @@ export interface CaseHighlightSection extends Struct.ComponentSchema {
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
     eyebrow: Schema.Attribute.String;
     heading: Schema.Attribute.String;
+    variant: Schema.Attribute.Enumeration<['opening', 'closing']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'opening'>;
+  };
+}
+
+export interface CaseInfoCard extends Struct.ComponentSchema {
+  collectionName: 'components_case_info_cards';
+  info: {
+    description: "Card informativo generico: icone + titulo + texto e/ou linhas rotulo/valor, com tira opcional de ate 3 logos de parceiro. Serve tanto para 'Detalhes do projeto' quanto para 'O desafio'. Em um par de cards lado a lado, coloque o card compacto (so linhas) primeiro.";
+    displayName: 'Case Info Card';
+    icon: 'information';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    body: Schema.Attribute.RichText;
+    icon: Schema.Attribute.Enumeration<
+      [
+        'none',
+        'clipboard',
+        'target',
+        'bar_chart',
+        'map_pin',
+        'waves',
+        'cpu',
+        'calendar',
+        'users',
+        'check_circle',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'none'>;
+    logosCaption: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 160;
+      }>;
+    partnerLogos: Schema.Attribute.Component<'case.project-logo', true> &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 3;
+        },
+        number
+      >;
+    rows: Schema.Attribute.Component<'case.info-row', true> &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 12;
+        },
+        number
+      >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 120;
+      }>;
+  };
+}
+
+export interface CaseInfoRow extends Struct.ComponentSchema {
+  collectionName: 'components_case_info_rows';
+  info: {
+    description: "Par rotulo/valor livre de um Info Card. Digite o rotulo SEM os dois-pontos \u2014 a marcacao do site adiciona o ':' automaticamente (escreva 'Cliente', nao 'Cliente:').";
+    displayName: 'Case Info Row';
+    icon: 'bulletList';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    label: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    value: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 240;
+      }>;
+  };
+}
+
+export interface CaseLeadSection extends Struct.ComponentSchema {
+  collectionName: 'components_case_lead_sections';
+  info: {
+    description: 'Abertura editorial do case: titulo em richtext (use <strong> para a enfase mista dentro do mesmo paragrafo) e subtitulo de apoio.';
+    displayName: 'Case Lead Section';
+    icon: 'quote';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    subtitle: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 320;
+      }>;
+    title: Schema.Attribute.RichText & Schema.Attribute.Required;
   };
 }
 
 export interface CasePanelSection extends Struct.ComponentSchema {
   collectionName: 'components_case_panel_sections';
   info: {
+    description: "Painel colapsavel com icone, titulo e corpo. 'defaultOpen' define se o painel chega expandido ao visitante.";
     displayName: 'Case Panel Section';
   };
   pluginOptions: {
@@ -45,6 +184,22 @@ export interface CasePanelSection extends Struct.ComponentSchema {
   };
   attributes: {
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
+    defaultOpen: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    icon: Schema.Attribute.Enumeration<
+      [
+        'none',
+        'clipboard',
+        'target',
+        'bar_chart',
+        'map_pin',
+        'waves',
+        'cpu',
+        'calendar',
+        'users',
+        'check_circle',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'none'>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -52,8 +207,14 @@ export interface CasePanelSection extends Struct.ComponentSchema {
 export interface CaseProjectLogo extends Struct.ComponentSchema {
   collectionName: 'components_case_project_logos';
   info: {
+    description: "Logo de parceiro. Preencha o 'alt' com o nome do parceiro: sem ele o logo nao e renderizado quando tem link, para nao gerar um link sem nome acessivel.";
     displayName: 'Project Logo';
     icon: 'image';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
   };
   attributes: {
     alt: Schema.Attribute.String;
@@ -758,7 +919,11 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'case.figure-section': CaseFigureSection;
+      'case.hero-section': CaseHeroSection;
       'case.highlight-section': CaseHighlightSection;
+      'case.info-card': CaseInfoCard;
+      'case.info-row': CaseInfoRow;
+      'case.lead-section': CaseLeadSection;
       'case.panel-section': CasePanelSection;
       'case.project-logo': CaseProjectLogo;
       'case.section-title': CaseSectionTitle;
