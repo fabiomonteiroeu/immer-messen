@@ -132,6 +132,9 @@
     "sections": {
       "type": "dynamiczone",
       "components": [
+        "case.hero-section",
+        "case.info-card",
+        "case.lead-section",
         "case.text-section",
         "case.section-title",
         "case.highlight-section",
