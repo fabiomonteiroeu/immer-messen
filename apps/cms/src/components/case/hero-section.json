@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_case_hero_sections",
+  "info": {
+    "displayName": "Case Hero Section",
+    "icon": "picture",
+    "description": "Bloco de abertura do case: titulo, subtitulo e midia full-bleed. E um bloco comum da zona — pode ser removido, reordenado ou trocado por outro bloco."
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 160
+    },
+    "subtitle": {
+      "type": "text",
+      "maxLength": 320
+    },
+    "media": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "videos",
+        "files"
+      ]
+    }
+  }
+}

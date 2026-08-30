@@ -1,10 +1,30 @@
 {
   "collectionName": "components_case_panel_sections",
-  "info": { "displayName": "Case Panel Section" },
+  "info": {
+    "displayName": "Case Panel Section",
+    "description": "Painel colapsavel com icone, titulo e corpo. 'defaultOpen' define se o painel chega expandido ao visitante."
+  },
   "options": {},
   "pluginOptions": { "i18n": { "localized": true } },
   "attributes": {
+    "icon": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "clipboard",
+        "target",
+        "bar_chart",
+        "map_pin",
+        "waves",
+        "cpu",
+        "calendar",
+        "users",
+        "check_circle"
+      ],
+      "default": "none"
+    },
     "title": { "type": "string", "required": true },
-    "body": { "type": "richtext", "required": true }
+    "body": { "type": "richtext", "required": true },
+    "defaultOpen": { "type": "boolean", "default": true }
   }
 }

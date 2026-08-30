@@ -1,9 +1,18 @@
 {
   "collectionName": "components_case_highlight_sections",
-  "info": { "displayName": "Case Highlight Section" },
+  "info": {
+    "displayName": "Case Highlight Section",
+    "description": "Faixa angulada de destaque. 'opening' (topo reto, base descendo) mostra o eyebrow e usa titulo em negrito; 'closing' (topo descendo, base reta) ignora o eyebrow e trata o texto da esquerda como frase de fechamento."
+  },
   "options": {},
   "pluginOptions": { "i18n": { "localized": true } },
   "attributes": {
+    "variant": {
+      "type": "enumeration",
+      "enum": ["opening", "closing"],
+      "default": "opening",
+      "required": true
+    },
     "eyebrow": { "type": "string" },
     "heading": { "type": "string" },
     "body": { "type": "richtext", "required": true }

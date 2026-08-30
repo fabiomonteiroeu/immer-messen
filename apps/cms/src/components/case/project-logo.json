@@ -2,9 +2,11 @@
   "collectionName": "components_case_project_logos",
   "info": {
     "displayName": "Project Logo",
-    "icon": "image"
+    "icon": "image",
+    "description": "Logo de parceiro. Preencha o 'alt' com o nome do parceiro: sem ele o logo nao e renderizado quando tem link, para nao gerar um link sem nome acessivel."
   },
   "options": {},
+  "pluginOptions": { "i18n": { "localized": true } },
   "attributes": {
     "logo": {
       "type": "media",
