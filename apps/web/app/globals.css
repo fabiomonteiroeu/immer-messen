@@ -2095,45 +2095,241 @@ body.menu-open {
   margin: 0 0 .8rem;
 }
 
-.case-section-title {
-  margin-top: clamp(2.5rem, 5vw, 4rem);
+/* ---------- 2. info card ----------
+   O renderer agrupa blocos `case.info-card` adjacentes numa linha unica; a
+   cardinalidade do grupo escolhe a largura e o grid. Medido: card esquerdo 437.2,
+   card direito 598.6, vao 30.1 -> proporcao 1 : 1.37. Num par, o card compacto
+   (linhas rotulo/valor) vem primeiro. */
+.case-info-row {
+  display: grid;
+  align-items: stretch;
 }
 
-.case-highlight {
-  background: var(--c-blue-mute);
-  padding: clamp(2.5rem, 4vw, 3.5rem) 0;
-  margin: clamp(2rem, 4vw, 3rem) 0;
-  clip-path: polygon(0 4%, 100% 0, 100% 96%, 0 100%);
+.case-info-row--1 {
+  width: min(100% - 2rem, var(--case-w-prose));
+  grid-template-columns: 1fr;
 }
 
-.case-highlight__grid {
+.case-info-row--2 {
+  width: min(100% - 2rem, var(--case-w-wide));
+  grid-template-columns: 1fr 1.4fr;
+  gap: 30px;
+}
+
+.case-info-row--many {
+  width: min(100% - 2rem, var(--case-w-wide));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.case-info {
+  background: var(--c-ice);
+  /* hairline DECORATIVA (2.7:1 sobre --c-ice): nunca comunica estado, foco ou erro */
+  border: 1px solid var(--c-ice-hair);
+  border-radius: var(--case-r-card);
+  padding: 32px 48px 40px;
+  /* flex column e requisito da tira de logos: ela e sempre o ultimo filho */
+  display: flex;
+  flex-direction: column;
+}
+
+.case-info__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Set curado de icones (D-12/D-12a): solidos, 24x24, cor herdada de --c-text.
+   `.case-icon` e o default de CaseIcon; os dois modificadores sao os que o
+   renderer emite hoje (card informativo e painel colapsavel). */
+.case-icon,
+.case-info__icon,
+.case-panel__icon {
+  width: 24px;
+  height: 24px;
+  color: var(--c-text);
+  flex: none;
+}
+
+.case-info__title {
+  font-size: var(--case-fs-500);
+  line-height: 32px;
+  font-weight: 700;
+  color: var(--c-text);
+  margin: 0;
+}
+
+/* Gap titulo -> conteudo: pitch 81.9 medido com a linha do titulo.
+   A tira de logos e a excecao (48px, ver .case-info__logos). */
+.case-info__rows,
+.case-info__body {
+  margin-top: 32px;
+}
+
+/* pitch de regua medido 40.7 / 39.6; cor da regua medida (199,208,213) */
+.case-info__row {
+  padding: 12px 0;
+  border-bottom: 1px solid #C7D0D5;
+  font-size: var(--case-fs-100);
+  line-height: var(--case-lh-100);
+  font-weight: 400;
+  color: var(--c-text);
+}
+
+.case-info__row b {
+  font-weight: 700;
+}
+
+.case-info__row:last-child {
+  border-bottom: 0;
+}
+
+.case-info__body {
+  font-size: var(--case-fs-200);
+  line-height: 27px;
+  font-weight: 400;
+  color: var(--c-text);
+  text-align: justify;
+}
+
+.case-info__body p {
+  margin: 0 0 27px;
+}
+
+.case-info__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- 2b. tira de logos de parceiros (D-08a) ----------
+   Flex e nao grid de 3 colunas: as larguras naturais dos logos diferem muito
+   (94.5 / 111.8 / 69.7) e um repeat(3, 1fr) daria colunas de 93.7, cortando o
+   logo do meio. O comp nao normaliza as alturas (49.7 / 57.2 / 68.0); o
+   contrato normaliza em 64 com align-items: center. */
+.case-info__logos {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: var(--case-gap-lg);
+}
+
+.case-info__logo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.case-info__logo img {
+  max-height: 64px;
+  width: auto;
+  object-fit: contain;
+}
+
+a.case-info__logo:focus-visible {
+  outline: var(--case-focus-w) solid var(--c-navy);
+  outline-offset: var(--case-focus-o);
+}
+
+.case-info__logos-caption {
+  margin: 0;
+  margin-top: 16px;
+  font-size: var(--case-fs-100);
+  line-height: var(--case-lh-100);
+  color: var(--c-gray-600);
+  text-align: left;
+}
+
+/* ---------- 5. faixa angulada de destaque (D-11) ----------
+   A faixa NAO e full-bleed: medida 198 -> 1265.8, ou seja 1068 centrados.
+   Padding horizontal assimetrico medido (eyebrow em 297.7 com a faixa em 198
+   -> 99.7; corpo termina em 1143.2 com a faixa em 1265.8 -> 122.6). */
+.case-band {
+  width: min(100% - 2rem, var(--case-w-wide));
+  background: var(--c-ice);
+  border: 0;
+  padding-inline: 100px 120px;
+}
+
+.case-band__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(1.5rem, 4vw, 3.5rem);
+  gap: 80px;
   align-items: start;
 }
 
-.case-highlight__heading {
-  font-size: clamp(1.15rem, 1rem + .6vw, 1.5rem);
-  line-height: 1.25;
-  font-weight: 600;
-  color: var(--c-navy);
-  margin: 0;
+/* Topo reto, base descendo da esquerda para a direita.
+   padding-bottom 112 = 48 + 64 do angulo: o conteudo respeita a aresta mais alta. */
+.case-band--opening {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - var(--case-band-skew)));
+  padding-block: 48px 112px;
+}
+
+/* Espelho da opening: topo descendo da esquerda para a direita, base reta. */
+.case-band--closing {
+  clip-path: polygon(0 0, 100% var(--case-band-skew), 100% 100%, 0 100%);
+  padding-block: 112px 48px;
+}
+
+/* Variante escopada de case do eyebrow em caixa. A .boxed-eyebrow global e
+   compartilhada com outras paginas e nao pode ser alterada nem reusada aqui. */
+.case-band__eyebrow {
+  display: inline-block;
+  font-size: var(--case-fs-100);
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 6px 12px;
+  border: 1px solid var(--c-black);
+  color: var(--c-text);
+  margin-bottom: 16px;
+}
+
+.case-band__heading {
+  font-size: var(--case-fs-400);
+  line-height: 27px;
+  font-weight: 700;
+  color: var(--c-navy-2);
   max-width: 16ch;
+  margin: 0;
 }
 
-.case-highlight__body {
-  font-size: .88rem;
-  line-height: 1.6;
-  color: var(--c-gray-700);
+.case-band__statement {
+  font-size: var(--case-fs-400);
+  line-height: 27px;
+  font-weight: 400;
+  color: var(--c-navy-2);
+  margin: 0;
 }
 
-.case-highlight__body p {
-  margin: 0 0 .7rem;
+.case-band__statement strong {
+  font-weight: 700;
 }
 
+/* Unico consumidor de --case-lh-100-tight (pitch medido 18.0).
+   --c-graphite e consumido no valor ja shipado: 9.4:1 sobre --c-ice. */
+.case-band__body {
+  font-size: var(--case-fs-100);
+  line-height: var(--case-lh-100-tight);
+  font-weight: 400;
+  color: var(--c-graphite);
+}
+
+.case-band__body strong {
+  font-weight: 700;
+}
+
+.case-band__body p {
+  margin: 0 0 12px;
+}
+
+.case-band__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- 6. figura com legenda ----------
+   Medida 252.4 -> 1175.2: a figura usa a coluna de prosa, nao e bloco largo. */
 .case-figure {
-  margin: clamp(2rem, 4vw, 3rem) auto;
+  width: min(100% - 2rem, var(--case-w-prose));
 }
 
 .case-figure img {
@@ -2143,67 +2339,169 @@ body.menu-open {
 }
 
 .case-figure__caption {
-  margin-top: .75rem;
-  font-size: .82rem;
+  margin: 0;
+  margin-top: 12px;
+  font-size: var(--case-fs-100);
+  line-height: var(--case-lh-100);
   color: var(--c-gray-600);
   text-align: center;
 }
 
+/* ---------- 7. titulo com reguas ----------
+   Grid proprio: a .rule-heading global e compartilhada com Aplicacoes, Parceiros,
+   Noticias e Quem Somos e nao pode ser alterada.
+   Sem `margin` aqui de proposito: o elemento e filho direto de .case-blocks e
+   declarar margem zeraria o ritmo vertical (mesma especificidade, regra posterior). */
+.case-section-title {
+  width: min(100% - 2rem, var(--case-w-prose));
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 34px;
+}
+
+.case-section-title__rule {
+  height: 0;
+  border-top: 1px solid var(--c-black);
+}
+
+.case-section-title__text {
+  font-size: var(--case-fs-500);
+  line-height: 32px;
+  font-weight: 700;
+  color: var(--c-text);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ---------- 8. duas colunas com pull-quote ---------- */
 .case-two-col {
+  width: min(100% - 2rem, var(--case-w-prose));
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(1.5rem, 4vw, 3.5rem);
+  gap: 60px;
   align-items: start;
-  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Dentro do grid, .case-text preenche a coluna: a largura de bloco nao se aplica. */
+.case-two-col .case-text {
+  width: 100%;
 }
 
 .case-two-col__right {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
 }
 
+/* Nem <blockquote> (nao e citacao atribuida) nem heading. */
 .case-pullquote {
-  margin: 0;
-  font-size: clamp(1.05rem, .95rem + .5vw, 1.3rem);
-  line-height: 1.35;
+  margin: 24px 0;
+  font-size: var(--case-fs-500);
+  line-height: 32px;
   font-weight: 700;
   color: var(--c-navy-2);
   text-align: center;
 }
 
+/* ---------- 9. painel colapsavel (D-10) ----------
+   Medidas: largura 878 + 2 bordas; padding topo 52.8, esquerda 67.9, direita 62.8. */
 .case-panel {
-  background: var(--c-blue-mute);
-  border: 1px solid rgba(74, 107, 170, .35);
-  border-radius: 12px;
-  padding: clamp(1.75rem, 3vw, 2.5rem);
-  margin: clamp(2rem, 4vw, 3rem) 0;
+  width: min(100% - 2rem, var(--case-w-panel));
+  margin-top: var(--case-gap-lg);
+  background: var(--c-ice);
+  border: 1px solid var(--c-ice-hair);
+  border-radius: var(--case-r-card);
+  padding: 48px 64px;
+}
+
+.case-panel__heading {
+  margin: 0;
+}
+
+.case-panel__trigger {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* 3px/3px, ~12:1 sobre --c-ice */
+.case-panel__trigger:focus-visible {
+  outline: var(--case-focus-w) solid var(--c-navy);
+  outline-offset: var(--case-focus-o);
 }
 
 .case-panel__title {
-  font-size: 1.2rem;
+  flex: 1;
+  font-size: var(--case-fs-500);
+  line-height: 32px;
   font-weight: 700;
   color: var(--c-text);
-  margin: 0 0 1.25rem;
 }
 
+.case-panel__chev {
+  width: 28px;
+  height: 28px;
+  flex: none;
+  transition: transform .3s ease;
+}
+
+.case-panel.is-open .case-panel__chev {
+  transform: rotate(180deg);
+}
+
+/* Colapso por grid-template-rows, nunca por display: o corpo permanece no DOM
+   mesmo recolhido (SEO). Quem tira os links da ordem de foco e o `inert` do
+   componente — as duas camadas sao complementares e ambas obrigatorias. */
 .case-panel__body {
-  font-size: .92rem;
-  line-height: 1.65;
-  text-align: justify;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .35s ease;
+}
+
+.case-panel.is-open .case-panel__body {
+  grid-template-rows: 1fr;
+}
+
+.case-panel__body-inner {
+  overflow: hidden;
+  font-size: var(--case-fs-200);
+  line-height: 27px;
+  font-weight: 400;
   color: var(--c-text);
+  text-align: justify;
 }
 
-.case-panel__body p {
-  margin: 0 0 .8rem;
+.case-panel__body-inner p {
+  margin: 0 0 27px;
 }
 
-.case-panel__body p:last-child {
+.case-panel__body-inner p:last-child {
   margin-bottom: 0;
 }
 
+/* Gap titulo -> corpo medido 39.4. O overflow:hidden acima cria um contexto de
+   formatacao proprio, entao esta margem fica dentro do inner e some no colapso. */
+.case-panel__body-inner > *:first-child {
+  margin-top: 40px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .case-panel__body,
+  .case-panel__chev {
+    transition: none;
+  }
+}
+
 @media (max-width: 800px) {
-  .case-highlight__grid,
   .case-two-col {
     grid-template-columns: 1fr;
   }
