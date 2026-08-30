@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_case_info_rows",
+  "info": {
+    "displayName": "Case Info Row",
+    "icon": "bulletList",
+    "description": "Par rotulo/valor livre de um Info Card. Digite o rotulo SEM os dois-pontos — a marcacao do site adiciona o ':' automaticamente (escreva 'Cliente', nao 'Cliente:')."
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true,
+      "maxLength": 60
+    },
+    "value": {
+      "type": "string",
+      "required": true,
+      "maxLength": 240
+    }
+  }
+}

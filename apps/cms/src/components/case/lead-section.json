@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_case_lead_sections",
+  "info": {
+    "displayName": "Case Lead Section",
+    "icon": "quote",
+    "description": "Abertura editorial do case: titulo em richtext (use <strong> para a enfase mista dentro do mesmo paragrafo) e subtitulo de apoio."
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "richtext",
+      "required": true
+    },
+    "subtitle": {
+      "type": "text",
+      "maxLength": 320
+    }
+  }
+}

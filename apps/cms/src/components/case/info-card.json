@@ -1,0 +1,56 @@
+{
+  "collectionName": "components_case_info_cards",
+  "info": {
+    "displayName": "Case Info Card",
+    "icon": "information",
+    "description": "Card informativo generico: icone + titulo + texto e/ou linhas rotulo/valor, com tira opcional de ate 3 logos de parceiro. Serve tanto para 'Detalhes do projeto' quanto para 'O desafio'. Em um par de cards lado a lado, coloque o card compacto (so linhas) primeiro."
+  },
+  "options": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "icon": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "clipboard",
+        "target",
+        "bar_chart",
+        "map_pin",
+        "waves",
+        "cpu",
+        "calendar",
+        "users",
+        "check_circle"
+      ],
+      "default": "none"
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 120
+    },
+    "body": {
+      "type": "richtext"
+    },
+    "rows": {
+      "type": "component",
+      "repeatable": true,
+      "component": "case.info-row",
+      "max": 12
+    },
+    "partnerLogos": {
+      "type": "component",
+      "repeatable": true,
+      "component": "case.project-logo",
+      "max": 3
+    },
+    "logosCaption": {
+      "type": "string",
+      "maxLength": 160
+    }
+  }
+}
