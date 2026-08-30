@@ -1,10 +1,15 @@
 {
   "collectionName": "components_case_figure_sections",
-  "info": { "displayName": "Case Figure Section" },
+  "info": {
+    "displayName": "Case Figure Section",
+    "icon": "picture",
+    "description": "Figura larga com legenda. O 'alt' e localizavel e descreve o que a imagem MOSTRA (nao repete a legenda); deixe vazio so quando a figura for puramente decorativa."
+  },
   "options": {},
   "pluginOptions": { "i18n": { "localized": true } },
   "attributes": {
     "image": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "alt": { "type": "string", "maxLength": 240 },
     "caption": { "type": "string" }
   }
 }

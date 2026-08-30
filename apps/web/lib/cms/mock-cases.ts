@@ -95,6 +95,7 @@ const rawCasesPt: MockCaseInput[] = [
           "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?auto=format&fit=crop&w=1800&q=80",
           "Cabo de fibra optica em bobina antes do lancamento",
         ),
+        alt: "Bobina de cabo de fibra optica em conves de embarcacao, pronta para lancamento ao mar.",
         caption: "O mesmo cabo de telecomunicacoes passa a operar como sensor distribuido.",
       },
       {

@@ -292,9 +292,12 @@ function CaseBlock({
     case "case.figure-section": {
       const src = resolveMediaUrl(section.image?.url);
       if (!src) return null;
+      // O alt do bloco vence o da midia: `alternativeText` e global no Strapi e
+      // nao acompanha o locale. Sem nenhum dos dois, a figura fica decorativa.
+      const alt = (section.alt ?? section.image?.alternativeText ?? "").trim();
       return (
         <figure className="case-figure">
-          <img alt={section.image?.alternativeText ?? ""} loading="lazy" src={src} />
+          <img alt={alt} loading="lazy" src={src} />
           {section.caption ? (
             <figcaption className="case-figure__caption">{section.caption}</figcaption>
           ) : null}

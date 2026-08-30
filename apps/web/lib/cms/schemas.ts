@@ -346,6 +346,9 @@ export const cmsCaseSectionSchema = z.discriminatedUnion("__component", [
     __component: z.literal("case.figure-section"),
     id: z.number().int().nonnegative().optional(),
     image: cmsMediaSchema.nullable().optional(),
+    // Alt localizavel do bloco: o `alternativeText` da midia e global (a
+    // biblioteca do Strapi nao e traduzivel) e serve so de fallback.
+    alt: z.string().nullable().optional(),
     caption: z.string().nullable().optional(),
   }),
   z.object({
