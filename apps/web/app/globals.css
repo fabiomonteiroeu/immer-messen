@@ -2070,31 +2070,6 @@ body.menu-open {
   color: var(--c-text);
 }
 
-.case-challenge {
-  background: var(--c-blue-mute);
-  border: 1px solid rgba(74, 107, 170, .35);
-  border-radius: 12px;
-  padding: clamp(1.5rem, 2.5vw, 2rem);
-}
-
-.case-challenge__head {
-  font-weight: 700;
-  font-size: 1.15rem;
-  color: var(--c-text);
-  margin-bottom: 1.25rem;
-}
-
-.case-challenge__body {
-  font-size: .92rem;
-  line-height: 1.65;
-  text-align: justify;
-  color: var(--c-text);
-}
-
-.case-challenge__body p {
-  margin: 0 0 .8rem;
-}
-
 /* ---------- 2. info card ----------
    O renderer agrupa blocos `case.info-card` adjacentes numa linha unica; a
    cardinalidade do grupo escolhe a largura e o grid. Medido: card esquerdo 437.2,
@@ -2501,9 +2476,141 @@ a.case-info__logo:focus-visible {
   }
 }
 
-@media (max-width: 800px) {
+/* ---------- responsivo dos blocos de case ----------
+   O mecanismo anti-colapso (.case-blocks em flex) NAO e desfeito em nenhuma media
+   query: so o valor de --case-gap muda. Nenhuma regra abaixo devolve display:block
+   ao wrapper. */
+
+/* 900-1199px (abaixo do breakpoint de 1200px): a gutter sobe de 2rem para 3rem */
+@media (max-width: 1199px) {
+
+  .case-lead,
+  .case-text,
+  .case-figure,
+  .case-section-title,
+  .case-two-col,
+  .case-info-row--1 {
+    width: min(100% - 3rem, var(--case-w-prose));
+  }
+
+  .case-info-row--2,
+  .case-info-row--many,
+  .case-band {
+    width: min(100% - 3rem, var(--case-w-wide));
+  }
+
+  .case-panel {
+    width: min(100% - 3rem, var(--case-w-panel));
+  }
+
+  .case-band {
+    padding-inline: clamp(32px, 7vw, 100px);
+  }
+
+  .case-info {
+    padding: 32px;
+  }
+}
+
+/* < 900px: os grids multi-coluna viram coluna unica.
+   A tira de logos permanece flex com wrap — virar grid quebraria as larguras
+   naturais desiguais dos logos. */
+@media (max-width: 899px) {
+
+  .case-blocks {
+    --case-gap: 24px;
+    --case-band-skew: 32px;
+  }
+
+  .case-info-row--2,
+  .case-info-row--many,
+  .case-band__grid,
   .case-two-col {
     grid-template-columns: 1fr;
+  }
+
+  .case-band__grid,
+  .case-two-col {
+    gap: 32px;
+  }
+
+  /* 48 + 32 do angulo, acompanhando --case-band-skew */
+  .case-band--opening {
+    padding-block: 48px 80px;
+  }
+
+  .case-band--closing {
+    padding-block: 80px 48px;
+  }
+
+  .case-info__logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+
+  .case-hero {
+    min-height: 60vh;
+  }
+
+  .case-info,
+  .case-panel {
+    padding: 24px;
+  }
+
+  .case-pullquote {
+    margin: 24px 0;
+  }
+}
+
+/* < 600px: a escala tipografica desce um passo, redefinida nos tokens e nao
+   seletor a seletor. Os line-heights fixos em px viram relativos no mesmo passo,
+   senao 42->30 deixaria o titulo com 46px de entrelinha. */
+@media (max-width: 599px) {
+
+  .case-blocks,
+  .case-empty-note {
+    --case-fs-600: clamp(30px, 12px + 5vw, 42px);
+    --case-fs-500: clamp(24px, 15px + 2.5vw, 30px);
+    --case-fs-400: clamp(20px, 14px + 1.667vw, 24px);
+    --case-fs-300: clamp(18px, 15px + .833vw, 20px);
+    --case-fs-200: clamp(16px, 13px + .833vw, 18px);
+  }
+
+  .case-hero__title,
+  .case-lead__title {
+    line-height: 1.1;
+  }
+
+  .case-info__title,
+  .case-panel__title,
+  .case-section-title__text,
+  .case-pullquote {
+    line-height: 1.08;
+  }
+
+  .case-band__heading,
+  .case-band__statement {
+    line-height: 1.14;
+  }
+
+  .case-lead__sub,
+  .case-text,
+  .case-info__body,
+  .case-panel__body-inner {
+    line-height: 1.5;
+  }
+
+  /* justificado em coluna estreita produz rios de espaco */
+  .case-text,
+  .case-info__body,
+  .case-two-col,
+  .case-panel__body-inner {
+    text-align: left;
+  }
+
+  .case-section-title {
+    gap: 16px;
   }
 }
 
@@ -4292,83 +4399,6 @@ a.case-info__logo:focus-visible {
 /* ===========================================================
    CASE individual page
    =========================================================== */
-.case-details {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 3rem;
-  align-items: start;
-  padding: 4rem 0 3rem;
-}
-
-.case-details__card {
-  background: var(--c-graphite);
-  color: #fff;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
-
-.case-details__card-head {
-  background: var(--c-graphite);
-  padding: 1.1rem 1.5rem;
-  text-align: center;
-  font-weight: 500;
-  font-size: 1rem;
-  letter-spacing: .02em;
-}
-
-.case-details__card-body {
-  background: var(--c-blue-mute);
-  color: var(--c-text);
-  padding: 1.5rem 1.5rem 1.75rem;
-}
-
-.case-details__row {
-  padding: .65rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, .08);
-  font-size: .94rem;
-}
-
-.case-details__row:last-child {
-  border-bottom: 0;
-}
-
-.case-details__row b {
-  font-weight: 600;
-}
-
-.case-logos {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-bottom: 1.75rem;
-}
-
-.case-logo-slot {
-  aspect-ratio: 1/1;
-  background: #0A0A0A;
-  border-radius: 10px;
-  color: rgba(255, 255, 255, .5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  letter-spacing: .05em;
-}
-
-.case-project__title {
-  font-size: clamp(1.3rem, 1rem + 1vw, 1.9rem);
-  margin-bottom: .5rem;
-}
-
-.case-project__sub {
-  font-size: var(--fs-md);
-  color: var(--c-gray-700);
-}
-
-.case-content {
-  padding: 1rem 0 3rem;
-}
-
 .case-section {
   padding: 1rem 0;
 }
@@ -4385,14 +4415,6 @@ a.case-info__logo:focus-visible {
   aspect-ratio: 4/3;
   object-fit: cover;
   border-radius: 6px;
-}
-
-.case-hero-img {
-  width: 100%;
-  aspect-ratio: 16/9;
-  object-fit: cover;
-  border-radius: var(--radius);
-  margin: 2rem 0;
 }
 
 /* ===========================================================
@@ -4637,7 +4659,6 @@ a.case-info__logo:focus-visible {
   .interface-grid,
   .tech-hero-card,
   .contact-card__grid,
-  .case-details,
   .contato-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -4783,15 +4804,6 @@ a.case-info__logo:focus-visible {
 
   .hero__title {
     font-size: clamp(2rem, 1.5rem + 4vw, 3rem);
-  }
-
-  .case-logos {
-    grid-template-columns: repeat(3, 1fr);
-    gap: .5rem;
-  }
-
-  .case-logo-slot {
-    font-size: .9rem;
   }
 
   .interface-card {
