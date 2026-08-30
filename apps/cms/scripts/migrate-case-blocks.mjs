@@ -373,6 +373,34 @@ async function publishedDocumentIds(locale) {
   return new Set((res?.data ?? []).map((entry) => entry.documentId));
 }
 
+// `/actions/publish` NAO faz parte do Content API do Strapi v5: responde 405.
+// O PUT do Content API ja propaga a alteracao para a versao publicada, entao a
+// chamada e best-effort e o erro e tolerado — mesmo motivo pelo qual o
+// `publishEntry` do seed-import.mjs engole a excecao. A garantia real vem de
+// isPublishedMigrated(), nao desta chamada.
+async function republish(documentId, locale) {
+  try {
+    await strapi(
+      `/api/case-studies/${documentId}/actions/publish?locale=${encodeURIComponent(locale)}`,
+      { method: "POST", body: JSON.stringify({}) }
+    );
+  } catch {
+    // silencioso de proposito: nada de corpo de resposta autenticada no log (T-10-22)
+  }
+}
+
+// Evidencia positiva: a versao PUBLICADA precisa mesmo conter o hero derivado
+// dos campos legados. Sem isso a migracao nao pode ser dada como concluida —
+// ausencia de erro nao e prova de escrita.
+async function isPublishedMigrated(documentId, locale) {
+  const params = new URLSearchParams();
+  params.set("locale", locale);
+  params.set("status", "published");
+  params.set("populate[sections][on][case.hero-section][populate]", "*");
+  const res = await strapi(`/api/case-studies/${documentId}?${params.toString()}`);
+  return Boolean(res?.data && isMigrated(res.data));
+}
+
 async function migrateLocale(locale) {
   const stats = { migrated: 0, skipped: 0, failed: 0 };
 
@@ -412,13 +440,17 @@ async function migrateLocale(locale) {
         `/api/case-studies/${entry.documentId}?locale=${encodeURIComponent(locale)}`,
         { method: "PUT", body: JSON.stringify({ data: { sections } }) }
       );
+      let republished = false;
       if (published.has(entry.documentId)) {
-        await strapi(
-          `/api/case-studies/${entry.documentId}/actions/publish?locale=${encodeURIComponent(locale)}`,
-          { method: "POST", body: JSON.stringify({}) }
-        );
+        await republish(entry.documentId, locale);
+        republished = await isPublishedMigrated(entry.documentId, locale);
+        if (!republished) {
+          throw new Error(
+            "a versao publicada nao recebeu os blocos — o conteudo publicado ficaria defasado"
+          );
+        }
       }
-      log(`  ${label}: migrated (${sections.length} blocos${published.has(entry.documentId) ? ", republicado" : ""})`);
+      log(`  ${label}: migrated (${sections.length} blocos${republished ? ", republicado" : ""})`);
       stats.migrated += 1;
     } catch (error) {
       console.error(`  ${label}: FAILED — ${error.message}`);
