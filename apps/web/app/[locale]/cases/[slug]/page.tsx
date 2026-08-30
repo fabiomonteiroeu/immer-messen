@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { CaseSections } from "@/components/ui/case-sections";
@@ -20,52 +21,40 @@ type CaseDetailPageProps = {
   params: Promise<{ locale: string; slug: string }>;
 };
 
+/**
+ * D-14: todo o conteudo visivel da pagina vem da dynamic zone `sections`. O unico texto que
+ * ainda mora no codigo e o do CTA de contato, que continua fixo no fim de toda pagina de case
+ * e **fora** da zona (D-07), mais a mensagem de zona vazia visivel so em preview.
+ *
+ * Os rotulos de linha do card de detalhes sairam daqui (D-09): agora sao digitados pelo editor,
+ * por locale, dentro do proprio bloco `case.info-card`.
+ */
 const labelsByLocale: Record<
   SupportedLocale,
   {
     heading: string;
     body: string;
     submit: string;
-    detailsLabel: string;
-    clientLabel: string;
-    startLabel: string;
-    durationLabel: string;
-    tagsLabel: string;
-    challengeLabel: string;
+    emptyZone: string;
   }
 > = {
   "pt-BR": {
     heading: "Fale com a nossa equipe",
     body: "<p>Se voce tem interesse em saber mais sobre as nossas solucoes, deixe o seu contato.</p>",
     submit: "enviar",
-    detailsLabel: "Detalhes do Projeto",
-    clientLabel: "Cliente",
-    startLabel: "Data de inicio",
-    durationLabel: "Duracao",
-    tagsLabel: "Tags",
-    challengeLabel: "O desafio",
+    emptyZone: "Este case ainda não tem blocos. Adicione blocos em Conteúdo → Sections no Strapi.",
   },
   en: {
     heading: "Talk to our team",
     body: "<p>If you would like to know more about our solutions, leave us your contact.</p>",
     submit: "send",
-    detailsLabel: "Project details",
-    clientLabel: "Client",
-    startLabel: "Start date",
-    durationLabel: "Duration",
-    tagsLabel: "Tags",
-    challengeLabel: "The challenge",
+    emptyZone: "This case has no blocks yet. Add blocks under Content → Sections in Strapi.",
   },
   es: {
     heading: "Hable con nuestro equipo",
     body: "<p>Si desea saber mas sobre nuestras soluciones, dejenos su contacto.</p>",
     submit: "enviar",
-    detailsLabel: "Detalles del proyecto",
-    clientLabel: "Cliente",
-    startLabel: "Fecha de inicio",
-    durationLabel: "Duracion",
-    tagsLabel: "Tags",
-    challengeLabel: "El desafío",
+    emptyZone: "Este caso aún no tiene bloques. Agregue bloques en Contenido → Sections en Strapi.",
   },
 };
 
@@ -75,7 +64,8 @@ export async function generateMetadata({ params }: CaseDetailPageProps): Promise
   const caseEntry = await getCaseBySlug({ locale: locale as SupportedLocale, slug });
   if (!caseEntry) return {};
   const canonical = `/${locale}/cases/${caseEntry.slug}`;
-  const ogImageUrl = resolveMediaUrl(caseEntry.heroMedia?.url ?? caseEntry.coverImage?.url);
+  // D-05: a imagem social vem de coverImage, o campo de metadado que permanece no content type.
+  const ogImageUrl = resolveMediaUrl(caseEntry.coverImage?.url);
   const languages: Record<string, string> = {};
   for (const l of supportedLocales) languages[l] = `/${l}/cases/${caseEntry.slug}`;
   languages["x-default"] = `/pt-BR/cases/${caseEntry.slug}`;
@@ -108,19 +98,14 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
   }
 
   const labels = labelsByLocale[resolvedLocale];
-  const logos = caseEntry.projectLogos.slice(0, 3);
-  const tags = caseEntry.tags ?? [];
   const sections = caseEntry.sections ?? [];
-  const hasAnyDetail = Boolean(
-    caseEntry.client || caseEntry.startDate || caseEntry.duration || tags.length > 0,
-  );
+  const { isEnabled: isPreview } = await draftMode();
 
   const articleLd = articleJsonLd({
     headline: caseEntry.title,
     description: caseEntry.summary,
-    image: resolveMediaUrl(caseEntry.heroMedia?.url ?? caseEntry.coverImage?.url) ?? undefined,
+    image: resolveMediaUrl(caseEntry.coverImage?.url) ?? undefined,
     url: `${getSiteUrl()}/${resolvedLocale}/cases/${caseEntry.slug}`,
-    datePublished: caseEntry.startDate ?? undefined,
   });
 
   return (
@@ -129,103 +114,13 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
         dangerouslySetInnerHTML={{ __html: jsonLdScript(articleLd) }}
         type="application/ld+json"
       />
-      <section aria-label={caseEntry.title} className="hero hero--short">
-        <div className="hero__media">
-          {caseEntry.heroMedia ? (
-            <img
-              alt={caseEntry.heroMedia.alternativeText ?? ""}
-              aria-hidden="true"
-              src={resolveMediaUrl(caseEntry.heroMedia.url) ?? undefined}
-            />
-          ) : null}
-        </div>
-        <div className="hero__inner">
-          <h1 className="case-hero__title">{caseEntry.heroTitle ?? caseEntry.title}</h1>
-          {caseEntry.summary ? <p className="case-hero__sub">{caseEntry.summary}</p> : null}
-        </div>
-      </section>
 
-      <div className="container">
-        <div className="case-details">
-          {hasAnyDetail ? (
-            <aside className="case-details__card">
-              <div className="case-details__card-head">{labels.detailsLabel}</div>
-              <div className="case-details__card-body">
-                {caseEntry.client ? (
-                  <div className="case-details__row">
-                    <b>{labels.clientLabel}:</b> {caseEntry.client}
-                  </div>
-                ) : null}
-                {caseEntry.startDate ? (
-                  <div className="case-details__row">
-                    <b>{labels.startLabel}:</b> {formatDate(caseEntry.startDate, resolvedLocale)}
-                  </div>
-                ) : null}
-                {caseEntry.duration ? (
-                  <div className="case-details__row">
-                    <b>{labels.durationLabel}:</b> {caseEntry.duration}
-                  </div>
-                ) : null}
-                {tags.length > 0 ? (
-                  <div className="case-details__row">
-                    <b>{labels.tagsLabel}:</b> {tags.join(", ")}
-                  </div>
-                ) : null}
-              </div>
-            </aside>
-          ) : null}
-          <div>
-            {logos.length > 0 ? (
-              <div className="case-logos">
-                {logos.map((slot) => {
-                  const src = resolveMediaUrl(slot.logo.url) ?? undefined;
-                  const alt = slot.alt ?? slot.logo.alternativeText ?? "";
-                  const img = <img alt={alt} loading="lazy" src={src} />;
-                  return (
-                    <div className="case-logo-slot" key={slot.id ?? slot.logo.id}>
-                      {slot.url ? (
-                        <a href={slot.url} rel="noopener noreferrer" target="_blank">
-                          {img}
-                        </a>
-                      ) : (
-                        img
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            ) : null}
-            {caseEntry.challenge ? (
-              <aside className="case-challenge">
-                <div className="case-challenge__head">{labels.challengeLabel}</div>
-                <div
-                  className="case-challenge__body"
-                  dangerouslySetInnerHTML={{ __html: caseEntry.challenge }}
-                />
-              </aside>
-            ) : null}
-          </div>
-        </div>
+      <CaseSections sections={sections} />
 
-        {caseEntry.leadTitle ? (
-          <div className="case-lead">
-            <h2 className="case-lead__title">{caseEntry.leadTitle}</h2>
-            {caseEntry.leadSubtitle ? (
-              <p className="case-lead__sub">{caseEntry.leadSubtitle}</p>
-            ) : null}
-          </div>
-        ) : null}
-      </div>
-
-      {sections.length > 0 ? (
-        <CaseSections sections={sections} />
-      ) : (
-        <div className="container case-content">
-          {caseEntry.body ? (
-            <div className="case-text" dangerouslySetInnerHTML={{ __html: caseEntry.body }} />
-          ) : null}
-        </div>
-      )}
+      {/* A dica de painel so aparece em preview; no site publico a zona vazia nao emite nada. */}
+      {sections.length === 0 && isPreview ? (
+        <p className="container case-empty-note">{labels.emptyZone}</p>
+      ) : null}
 
       <ContactCard
         bodyHtml={labels.body}
@@ -236,16 +131,4 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
       />
     </>
   );
-}
-
-function formatDate(iso: string, locale: SupportedLocale): string {
-  try {
-    return new Date(iso).toLocaleDateString(locale, {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  } catch {
-    return iso;
-  }
 }
