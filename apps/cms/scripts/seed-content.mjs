@@ -733,6 +733,160 @@ const newsArticles = newsArticleDefs.flatMap((def) =>
   }))
 );
 
+// ---- cases: montagem da dynamic zone ----
+//
+// Depois do plano 10-06 os campos de corpo (heroTitle, client, startDate,
+// duration, tags, projectLogos, challenge, leadTitle, leadSubtitle, body)
+// nao existem mais no content type (D-03). As defs abaixo continuam
+// declarando esses valores, mas `buildCaseSections` os converte em blocos
+// `case.*` antes de gravar — o que vai para `data` sao so os metadados (D-04)
+// mais `sections`.
+
+// Rotulos das linhas do card "Detalhes do projeto", por locale.
+// ESPELHAM `LABELS` de scripts/migrate-case-blocks.mjs: os dois precisam
+// gravar exatamente o mesmo texto, senao um re-seed troca o rotulo do
+// conteudo ja migrado. Rotulo SEM dois-pontos — a marcacao do frontend
+// adiciona o ":" (D-09).
+const caseBlockLabels = {
+  "pt-BR": {
+    detailsTitle: "Detalhes do projeto",
+    challengeTitle: "O desafio",
+    client: "Cliente",
+    startDate: "Data de início",
+    duration: "Duração",
+    tags: "Tags",
+  },
+  en: {
+    detailsTitle: "Project details",
+    challengeTitle: "The challenge",
+    client: "Client",
+    startDate: "Start date",
+    duration: "Duration",
+    tags: "Tags",
+  },
+  es: {
+    detailsTitle: "Detalles del proyecto",
+    challengeTitle: "El desafío",
+    client: "Cliente",
+    startDate: "Fecha de inicio",
+    duration: "Duración",
+    tags: "Tags",
+  },
+};
+
+const partnerNameByKey = new Map(partners.map((partner) => [partner.key, partner.data.name]));
+
+// Mesma formatacao do `formatDate` que a pagina usava antes do 10-04, com
+// timeZone UTC para nao deslocar o dia em fuso negativo.
+const formatCaseDate = (iso, locale) => {
+  if (!iso) return "";
+  try {
+    return new Date(iso).toLocaleDateString(locale, {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      timeZone: "UTC",
+    });
+  } catch {
+    return String(iso);
+  }
+};
+
+const joinTags = (raw) =>
+  String(raw ?? "")
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean)
+    .join(", ");
+
+// Uma figura declarada em `def.figures` vira um `case.figure-section` com alt e
+// legenda do locale. `figureAssetKey` e consumido e removido por seed-import.
+const figureBlock = (figure, locale) => ({
+  __component: "case.figure-section",
+  figureAssetKey: figure.assetKey,
+  alt: figure[locale]?.alt ?? figure["pt-BR"]?.alt ?? "",
+  caption: figure[locale]?.caption ?? figure["pt-BR"]?.caption ?? null,
+});
+
+const buildCaseSections = (def, locale) => {
+  const localized = def[locale] ?? {};
+  const labels = caseBlockLabels[locale] ?? caseBlockLabels["pt-BR"];
+  const figures = def.figures ?? [];
+  const blocks = [];
+
+  const heroTitle = localized.heroTitle ?? localized.title;
+  if (heroTitle) {
+    blocks.push({
+      __component: "case.hero-section",
+      title: heroTitle,
+      subtitle: localized.summary ?? null,
+    });
+  }
+
+  const rows = [];
+  if (def.client) rows.push({ label: labels.client, value: def.client });
+  const startDate = formatCaseDate(def.startDate, locale);
+  if (startDate) rows.push({ label: labels.startDate, value: startDate });
+  if (localized.duration) rows.push({ label: labels.duration, value: localized.duration });
+  const tags = joinTags(localized.tags);
+  if (tags) rows.push({ label: labels.tags, value: tags });
+
+  // O `logo` de cada slot e preenchido por seed-import a partir dos assetRefs;
+  // o alt e o nome do parceiro (logo sem alt nao e renderizado no frontend).
+  const partnerLogos = (def.projectLogoKeys ?? []).map((partnerKey) => ({
+    alt: partnerNameByKey.get(partnerKey) ?? partnerKey,
+    url: null,
+  }));
+
+  if (rows.length > 0 || partnerLogos.length > 0) {
+    blocks.push({
+      __component: "case.info-card",
+      icon: "clipboard",
+      title: labels.detailsTitle,
+      rows,
+      partnerLogos,
+    });
+  }
+
+  if (localized.challenge) {
+    blocks.push({
+      __component: "case.info-card",
+      icon: "target",
+      title: labels.challengeTitle,
+      body: localized.challenge,
+      rows: [],
+      partnerLogos: [],
+    });
+  }
+
+  if (localized.leadTitle) {
+    blocks.push({
+      __component: "case.lead-section",
+      title: `<p>${localized.leadTitle}</p>`,
+      subtitle: localized.leadSubtitle ?? null,
+    });
+  }
+
+  if (Array.isArray(localized.sections)) {
+    for (const block of localized.sections) {
+      if (block.figureKey) {
+        const figure = figures.find((item) => item.key === block.figureKey);
+        if (figure) blocks.push(figureBlock(figure, locale));
+        continue;
+      }
+      blocks.push(block);
+    }
+    return blocks;
+  }
+
+  // Locale sem `sections` proprias: corpo corrido e, na sequencia, as figuras
+  // do case — assim o alt traduzido chega aos 3 locales.
+  if (localized.body) blocks.push({ __component: "case.text-section", body: localized.body });
+  for (const figure of figures) blocks.push(figureBlock(figure, locale));
+
+  return blocks;
+};
+
 const caseStudyDefs = [
   {
     key: "projeto-pd-petrobras",
@@ -780,9 +934,63 @@ const caseStudyDefs = [
     sectorCategory: "meio-ambiente",
     applicationAreaKeys: ["meio-ambiente", "cabos-submarinos"],
     coverAssetKey: "case-cover-baleias",
+    heroAssetKey: "case-hero-plataforma",
     client: "Consórcio offshore",
     startDate: "2021-06-01",
     projectLogoKeys: ["instituto-aqualie"],
+    // Figuras de resources/Cases_Imagens (10-ASSETS-DECISION.md).
+    // O alt descreve o que a figura MOSTRA — nao repete a legenda; mapa e
+    // espectrograma sao figuras tecnicas e precisam do conteudo descrito.
+    figures: [
+      {
+        key: "baleia",
+        assetKey: "case-fig-baleia",
+        "pt-BR": {
+          alt: "Baleia-jubarte adulta nadando sob a superfície do mar, vista de lado, com as longas nadadeiras peitorais claras estendidas.",
+          caption: "Baleias-jubarte se comunicam por vocalizações de baixa frequência ao longo de toda a costa brasileira.",
+        },
+        en: {
+          alt: "An adult humpback whale swimming below the sea surface, seen from the side, with its long pale pectoral fins extended.",
+          caption: "Humpback whales communicate through low-frequency vocalisations along the entire Brazilian coast.",
+        },
+        es: {
+          alt: "Ballena jorobada adulta nadando bajo la superficie del mar, vista de lado, con las largas aletas pectorales claras extendidas.",
+          caption: "Las ballenas jorobadas se comunican mediante vocalizaciones de baja frecuencia a lo largo de toda la costa brasileña.",
+        },
+      },
+      {
+        key: "mapa-campos",
+        assetKey: "case-fig-mapa-campos",
+        "pt-BR": {
+          alt: "Mapa da Bacia de Campos, no litoral do Rio de Janeiro, marcando o traçado do cabo monitorado por DAS a partir de Barra do Furado e, mais ao norte, a área dos sensores sísmicos PRM no Campo de Jubarte.",
+          caption: "Localização espacial dos sensores PRM e do cabo monitorado por DAS na Bacia de Campos.",
+        },
+        en: {
+          alt: "Map of the Campos Basin off the coast of Rio de Janeiro, marking the route of the DAS-monitored cable running from Barra do Furado and, further north, the area of the PRM seismic sensors at the Jubarte Field.",
+          caption: "Spatial localization of the PRM sensors and of the DAS-monitored cable in the Campos Basin.",
+        },
+        es: {
+          alt: "Mapa de la Cuenca de Campos, en el litoral de Río de Janeiro, que marca el trazado del cable monitoreado por DAS desde Barra do Furado y, más al norte, el área de los sensores sísmicos PRM en el Campo de Jubarte.",
+          caption: "Localización espacial de los sensores PRM y del cable monitoreado por DAS en la Cuenca de Campos.",
+        },
+      },
+      {
+        key: "espectrograma",
+        assetKey: "case-fig-espectrograma",
+        "pt-BR": {
+          alt: "Espectrograma em cascata do sinal DAS: distância ao longo do cabo no eixo horizontal, tempo no vertical e energia acústica em escala de cor, com padrões em forma de V concentrados nas frequências baixas.",
+          caption: "Cada padrão em V marca a posição, ao longo da fibra, de onde partiu a vocalização detectada.",
+        },
+        en: {
+          alt: "Waterfall spectrogram of the DAS signal: distance along the cable on the horizontal axis, time on the vertical axis and acoustic energy on a colour scale, with V-shaped patterns concentrated in the low frequencies.",
+          caption: "Each V-shaped pattern marks the position along the fibre where the detected vocalisation originated.",
+        },
+        es: {
+          alt: "Espectrograma en cascada de la señal DAS: distancia a lo largo del cable en el eje horizontal, tiempo en el vertical y energía acústica en escala de color, con patrones en forma de V concentrados en las frecuencias bajas.",
+          caption: "Cada patrón en V marca la posición, a lo largo de la fibra, desde donde partió la vocalización detectada.",
+        },
+      },
+    ],
     "pt-BR": {
       heroTitle: "Ouvindo o oceano",
       challenge: "<p>O monitoramento acústico tradicional enfrenta limitações conhecidas em ambientes offshore: hidrofones e redes de sensores fixos têm custo elevado de instalação e manutenção, cobertura espacial restrita e logística complexa em águas profundas. Ampliar a escala e a continuidade da coleta de dados sem multiplicar essa infraestrutura é um dos principais gargalos da bioacústica marinha atual — especialmente em um litoral tão extenso e biodiverso quanto o brasileiro, onde nove das quinze espécies de baleias catalogadas mundialmente já foram registradas.</p>",
@@ -790,15 +998,18 @@ const caseStudyDefs = [
       leadSubtitle: "Como a tecnologia DAS e inteligência artificial revolucionam a bioacústica marinha.",
       sections: [
         { __component: "case.text-section", body: "<p>A Petrobras realiza monitoramento contínuo de populações de espécies marinhas ao longo de suas áreas de operação, buscando compreender e mitigar eventuais impactos ambientais de suas atividades. Como parte desse compromisso, a empresa é uma das maiores patrocinadoras de programas de proteção da biodiversidade marinha no Brasil. Um dos principais focos desse esforço é o ambiente acústico submarino: cetáceos — baleias e golfinhos — dependem do som para se comunicar, navegar e se reproduzir, o que os torna particularmente sensíveis a ruídos de origem antrópica, como os gerados por campanhas de prospecção sísmica.</p><p>Para acompanhar esse impacto, a Petrobras conta com o Instituto Aqualie, uma das principais autoridades mundiais em bioacústica marinha, responsável por um dos mais longevos programas de monitoramento acústico passivo do Atlântico Sul. O Instituto combina diferentes tecnologias — hidrofones, tags acústicas, avistamentos visuais e acompanhamento populacional — para mapear a presença, o comportamento e a distribuição sazonal de cetáceos ao longo da costa brasileira.</p>" },
-        { __component: "case.highlight-section", eyebrow: "A solução", heading: "Fibra óptica como sensor acústico", body: "<p><b>Desde 2024, o Instituto Aqualie contratou a Immer Messen para desenvolver uma abordagem inédita no Brasil:</b> transformar cabos de telecomunicações submarinos já instalados pela Petrobras em sensores acústicos contínuos, por meio da tecnologia de Sensoriamento Distribuído a Fibra Óptica (DFOS), especificamente na modalidade DAS (Distributed Acoustic Sensing).</p>" },
+        { figureKey: "baleia" },
+        { __component: "case.highlight-section", variant: "opening", eyebrow: "A solução", heading: "Fibra óptica como sensor acústico", body: "<p><b>Desde 2024, o Instituto Aqualie contratou a Immer Messen para desenvolver uma abordagem inédita no Brasil:</b> transformar cabos de telecomunicações submarinos já instalados pela Petrobras em sensores acústicos contínuos, por meio da tecnologia de Sensoriamento Distribuído a Fibra Óptica (DFOS), especificamente na modalidade DAS (Distributed Acoustic Sensing).</p>" },
         { __component: "case.text-section", body: "<p>O princípio é direto: fibras ópticas ociosas dentro de um cabo de telecomunicações — que não carregam tráfego de dados — podem ser interrogadas por um equipamento instalado em terra, capaz de detectar nanodeformações ao longo de toda a extensão do cabo. Cada metro de fibra se torna, na prática, um ponto de escuta. Não é necessário qualquer intervenção física na infraestrutura submarina existente.</p>" },
         { __component: "case.text-section", body: "<p>O projeto também se apoia, de forma complementar, em dados históricos de Permanent Reservoir Monitoring (PRM) — sensores sísmicos originalmente instalados pela Petrobras no Campo de Jubarte para monitoramento de reservatório — reaproveitados pelo Instituto Aqualie para confirmar a ocorrência sazonal de baleias-jubarte, baleias-fin e baleias-sei na Bacia de Campos.</p><p>Após uma fase de testes laboratoriais em 2024 — que validou a sensibilidade do sistema a sons de baixa frequência e calibrou parâmetros como tensão do cabo e comprimento de gauge —, a Immer Messen instalou seu sistema de interrogação em uma estação de telecomunicações em Barra do Furado (RJ), monitorando um cabo submarino de mais de <b>110 km de extensão</b> na Bacia de Campos.</p>" },
+        { figureKey: "mapa-campos" },
         { __component: "case.section-title", title: "Inteligência artificial na detecção de anomalias" },
         { __component: "case.two-column-section", leftBody: "<p>O volume de dados gerado por um sistema DAS operando continuamente sobre uma centena de quilômetros de cabo é da ordem de dezenas de terabytes por campanha — inviável para inspeção manual. Para lidar com essa escala, a Immer Messen desenvolve, desde 2020, um algoritmo próprio de detecção automática de anomalias, baseado na análise da densidade espectral de potência (PSD) do sinal em cada ponto do cabo, ao longo de janelas temporais definidas. O algoritmo varre o conjunto de dados no espaço e no tempo, identificando variações abruptas de energia em faixas de frequência específicas e gerando um catálogo de eventos — cada um associado a posição, horário e assinatura espectral — posteriormente validado por especialistas do Instituto Aqualie.</p>", pullQuote: "hoje, o monitoramento funciona em tempo real", rightBody: "<p>Essa camada de inteligência artificial é o que torna o sistema operacionalmente viável: permitindo que biólogos do Instituto Aqualie, a partir de sua sede em Juiz de Fora, Minas Gerais, acompanhem remotamente a presença de baleias ao redor dos cabos de telecomunicações da Petrobras — sem necessidade de embarcações, equipes em campo ou deslocamento até o litoral.</p>" },
-        { __component: "case.panel-section", title: "Resultados", body: "<p>As campanhas de campo confirmaram a viabilidade da tecnologia para bioacústica em escala real. Em uma medição realizada a cerca de <b>21 km da costa</b>, o sistema identificou 17 vocalizações distintas em uma janela de apenas 90 segundos, com padrões espectrais na faixa de <b>40 a 120 Hz</b> — consistentes com vocalizações de baleias-fin. Os sinais aparecem nos dados como padrões característicos em forma de \\\"V\\\", resultado da propagação da onda acústica ao longo do cabo, o que permite não apenas detectar, mas também localizar a origem do som com precisão de poucos metros.</p><p>A mesma infraestrutura e o mesmo algoritmo de detecção de anomalias demonstraram sensibilidade a outras classes de sinais relevantes para operações offshore: embarcações foram identificadas e tiveram sua trajetória estimada a partir de padrões acústicos hiperbólicos característicos de seus motores; ondulações de superfície e a dinâmica de arrebentação junto à costa também foram capturadas com clareza pelo mesmo conjunto de dados.</p>" },
+        { figureKey: "espectrograma" },
+        { __component: "case.panel-section", icon: "bar_chart", defaultOpen: true, title: "Resultados", body: "<p>As campanhas de campo confirmaram a viabilidade da tecnologia para bioacústica em escala real. Em uma medição realizada a cerca de <b>21 km da costa</b>, o sistema identificou 17 vocalizações distintas em uma janela de apenas 90 segundos, com padrões espectrais na faixa de <b>40 a 120 Hz</b> — consistentes com vocalizações de baleias-fin. Os sinais aparecem nos dados como padrões característicos em forma de \\\"V\\\", resultado da propagação da onda acústica ao longo do cabo, o que permite não apenas detectar, mas também localizar a origem do som com precisão de poucos metros.</p><p>A mesma infraestrutura e o mesmo algoritmo de detecção de anomalias demonstraram sensibilidade a outras classes de sinais relevantes para operações offshore: embarcações foram identificadas e tiveram sua trajetória estimada a partir de padrões acústicos hiperbólicos característicos de seus motores; ondulações de superfície e a dinâmica de arrebentação junto à costa também foram capturadas com clareza pelo mesmo conjunto de dados.</p>" },
         { __component: "case.section-title", title: "Impacto e próximos passos" },
         { __component: "case.text-section", body: "<p>Os resultados devem contribuir diretamente para o entendimento científico dos padrões migratórios de cetáceos no litoral brasileiro. Espécies como a baleia-jubarte utilizam o corredor entre o Atlântico Sul e o litoral nordestino durante a temporada reprodutiva, e dados contínuos como os gerados pelo sistema DAS vão ajudar o Instituto Aqualie a refinar estimativas populacionais e identificar quais espécies transitam por diferentes trechos da costa ao longo do ano — informação essencial para orientar o planejamento de campanhas sísmicas com menor impacto ambiental.</p><p>A parceria entre Immer Messen, Instituto Aqualie e Petrobras segue em desenvolvimento, com o objetivo de expandir a cobertura geográfica do monitoramento e aprimorar os modelos de classificação automática por espécie ao longo dos próximos anos.</p>" },
-        { __component: "case.highlight-section", eyebrow: undefined, heading: "O projeto é reconhecido como o primeiro monitoramento de baleias por DAS realizado no Atlântico Sul", body: "<p>Isso consolida a Immer Messen como <b>referência em soluções de monitoramento acústico</b> distribuído para ambientes offshore — uma capacidade que se estende, com a mesma base tecnológica, a aplicações como segurança de ativos submarinos, detecção de intrusão em dutos e cabos, e monitoramento estrutural de infraestrutura crítica.</p>" },
+        { __component: "case.highlight-section", variant: "closing", heading: "O projeto é reconhecido como o primeiro monitoramento de baleias por DAS realizado no Atlântico Sul", body: "<p>Isso consolida a Immer Messen como <b>referência em soluções de monitoramento acústico</b> distribuído para ambientes offshore — uma capacidade que se estende, com a mesma base tecnológica, a aplicações como segurança de ativos submarinos, detecção de intrusão em dutos e cabos, e monitoramento estrutural de infraestrutura crítica.</p>" },
       ],
       slug: "monitoramento-de-baleias",
       title: "Monitoramento de baleias",
@@ -921,46 +1132,55 @@ const caseStudyDefs = [
 ];
 
 const caseStudies = caseStudyDefs.flatMap((def) =>
-  locales.map((locale) => ({
-    key: def.key,
-    documentId: def.documentId,
-    locale,
-    data: {
-      title: def[locale].title,
-      slug: def[locale].slug,
-      summary: def[locale].summary,
-      sectorCategory: def.sectorCategory,
-      client: def.client,
-      startDate: def.startDate,
-      duration: def[locale].duration,
-      tags: def[locale].tags,
-      body: def[locale].body,
-      heroTitle: def[locale].heroTitle,
-      challenge: def[locale].challenge,
-      leadTitle: def[locale].leadTitle,
-      leadSubtitle: def[locale].leadSubtitle,
-      sections: def[locale].sections ?? [
-        { __component: "case.text-section", body: def[locale].body },
+  locales.map((locale) => {
+    const sections = buildCaseSections(def, locale);
+
+    // Os assetRefs sao derivados dos blocos ja montados: seed-import consome a
+    // fila por `usage` na ordem em que os blocos aparecem, entao a ordem aqui
+    // precisa ser exatamente a ordem dos blocos.
+    const heroRefs = sections.some((block) => block.__component === "case.hero-section")
+      ? [{ assetKey: def.heroAssetKey ?? "case-hero-offshore", usage: "case.hero-section.media" }]
+      : [];
+    const logoRefs = sections
+      .filter((block) => block.__component === "case.info-card")
+      .flatMap((block) => block.partnerLogos ?? [])
+      .map((_, index) => ({
+        assetKey: `partner-${(def.projectLogoKeys ?? [])[index]}`,
+        usage: "case.info-card.partnerLogos",
+      }));
+    const figureRefs = sections
+      .filter((block) => block.__component === "case.figure-section")
+      .map((block) => ({ assetKey: block.figureAssetKey, usage: "case.figure-section.image" }));
+
+    return {
+      key: def.key,
+      documentId: def.documentId,
+      locale,
+      // Apenas os campos de metadado que permanecem no content type (D-04);
+      // todo o corpo vive em `sections` (D-03).
+      data: {
+        title: def[locale].title,
+        slug: def[locale].slug,
+        summary: def[locale].summary,
+        sectorCategory: def.sectorCategory,
+        sections,
+        seo: seo(
+          def[locale].seoTitle,
+          def[locale].seoDescription,
+          `https://www.immermessen.com/${locale}/cases/${def[locale].slug}`
+        ),
+      },
+      relationRefs: {
+        applicationAreaKeys: def.applicationAreaKeys,
+      },
+      assetRefs: [
+        { assetKey: def.coverAssetKey, usage: "case-study.coverImage", status: "placeholder-external" },
+        ...heroRefs,
+        ...logoRefs,
+        ...figureRefs,
       ],
-      seo: seo(
-        def[locale].seoTitle,
-        def[locale].seoDescription,
-        `https://www.immermessen.com/${locale}/cases/${def[locale].slug}`
-      ),
-    },
-    relationRefs: {
-      applicationAreaKeys: def.applicationAreaKeys,
-      projectLogoKeys: def.projectLogoKeys ?? [],
-    },
-    assetRefs: [
-      { assetKey: "case-hero-offshore", usage: "case-study.heroMedia" },
-      { assetKey: def.coverAssetKey, usage: "case-study.coverImage", status: "placeholder-external" },
-      ...((def.projectLogoKeys ?? []).map((partnerKey) => ({
-        assetKey: `partner-${partnerKey}`,
-        usage: "case-study.projectLogos",
-      }))),
-    ],
-  }))
+    };
+  })
 );
 
 const slugByPageKey = {
@@ -1516,6 +1736,15 @@ export const assetManifest = {
     { assetKey: "interrogador-front", sourcePath: "layout-aprovado/assets/img/interrogador-front.png", kind: "image" },
     { assetKey: "interface-monitors", sourcePath: "layout-aprovado/assets/img/interface-monitors.png", kind: "image" },
     { assetKey: "case-hero-offshore", sourcePath: "layout-aprovado/assets/img/case-hero-offshore.png", kind: "image" },
+    // resources/Cases_Imagens — mapeamento confirmado em 10-ASSETS-DECISION.md.
+    // image_016/018 sao os logos Petrobras e Instituto Aqualie (ja existem como
+    // partner-*) e image_006/012/014/020 sao mascaras pretas do export do SVG:
+    // nenhum dos dois grupos entra aqui.
+    { assetKey: "case-hero-plataforma", sourcePath: "resources/Cases_Imagens/image_000.png", kind: "image" },
+    { assetKey: "case-fig-baleia", sourcePath: "resources/Cases_Imagens/image_004.png", kind: "image" },
+    { assetKey: "case-fig-mapa-campos", sourcePath: "resources/Cases_Imagens/image_008.png", kind: "image" },
+    { assetKey: "case-fig-espectrograma", sourcePath: "resources/Cases_Imagens/image_010.png", kind: "image" },
+    { assetKey: "case-bg-fibra", sourcePath: "resources/Cases_Imagens/image_022.png", kind: "image" },
     { assetKey: "application-integridade-estrutural", sourcePath: "layout-aprovado/assets/img/areas/integridade-estrutural.png", kind: "image" },
     { assetKey: "application-vazamentos", sourcePath: "layout-aprovado/assets/img/areas/vazamentos.png", kind: "image" },
     { assetKey: "application-seguranca-patrimonial", sourcePath: "layout-aprovado/assets/img/areas/seguranca-patrimonial.png", kind: "image" },
@@ -1588,7 +1817,9 @@ export const assetManifest = {
 
 const validateSeed = () => {
   const errors = [];
-  const pageKeys = new Set(["home", "technology", "about", "lgpd"]);
+  // `about` saiu do seed no commit deebde2 (quem somos virou ancora da home);
+  // a lista de esperados nao acompanhou e o validador falhava desde entao.
+  const pageKeys = new Set(["home", "technology", "lgpd"]);
   const seenPageLocales = new Map();
 
   for (const locale of locales) {
@@ -1623,6 +1854,59 @@ const validateSeed = () => {
 
   if (seedContent.caseStudies.length < 4 * locales.length) {
     errors.push(`Expected at least ${4 * locales.length} localized case studies, found ${seedContent.caseStudies.length}`);
+  }
+
+  // Guarda do plano 10-06: o seed nao pode reintroduzir a estrutura legada.
+  // Os 9 campos de corpo sairam do content type (D-03) e um `data` que ainda os
+  // declare seria rejeitado pelo Strapi — ou, pior, aceito e silenciosamente
+  // descartado, deixando o case sem corpo.
+  const removedCaseFields = [
+    "client",
+    "startDate",
+    "duration",
+    "tags",
+    "body",
+    "heroTitle",
+    "challenge",
+    "leadTitle",
+    "leadSubtitle",
+  ];
+  const requiredCaseFields = ["title", "slug", "summary", "sectorCategory", "seo"];
+  const knownAssetKeys = new Set(assetManifest.readyAssets.map((asset) => asset.assetKey));
+
+  for (const entry of seedContent.caseStudies) {
+    const label = `${entry.key} [${entry.locale}]`;
+    for (const field of removedCaseFields) {
+      if (field in entry.data) {
+        errors.push(`Case ${label} still declares removed field ${field}`);
+      }
+    }
+    for (const field of requiredCaseFields) {
+      if (!entry.data[field]) errors.push(`Case ${label} lost metadata field ${field}`);
+    }
+    const sections = entry.data.sections;
+    if (!Array.isArray(sections) || sections.length === 0) {
+      errors.push(`Case ${label} has an empty sections zone`);
+      continue;
+    }
+    for (const row of sections.flatMap((block) => block.rows ?? [])) {
+      if (String(row.label ?? "").trim().endsWith(":")) {
+        errors.push(`Case ${label} has an info row label ending in ':' (${row.label})`);
+      }
+    }
+    for (const figure of sections.filter((block) => block.__component === "case.figure-section")) {
+      if (!figure.figureAssetKey || !knownAssetKeys.has(figure.figureAssetKey)) {
+        errors.push(`Case ${label} references unknown figure asset ${figure.figureAssetKey}`);
+      }
+      if (!String(figure.alt ?? "").trim()) {
+        errors.push(`Case ${label} has a figure without alt text`);
+      }
+    }
+    for (const ref of entry.assetRefs ?? []) {
+      if (!knownAssetKeys.has(ref.assetKey) && ref.status !== "placeholder-external") {
+        errors.push(`Case ${label} references unknown asset ${ref.assetKey}`);
+      }
+    }
   }
 
   return errors;

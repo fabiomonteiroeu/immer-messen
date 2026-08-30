@@ -261,6 +261,45 @@ function applyAssetsToBlocks(blocks, consumer) {
   });
 }
 
+/**
+ * Assets dos blocos da dynamic zone do case. Consome a fila de `assetRefs` por
+ * `usage`, na ordem em que os blocos aparecem — seed-content monta os refs a
+ * partir dos blocos ja montados, entao as duas ordens batem.
+ */
+function applyAssetsToCaseBlocks(blocks, consumer) {
+  return blocks.map((block) => {
+    const next = { ...block };
+    switch (block.__component) {
+      case "case.hero-section": {
+        const media = consumer.take("case.hero-section.media");
+        if (media) next.media = media;
+        break;
+      }
+      case "case.info-card": {
+        if (Array.isArray(next.partnerLogos) && next.partnerLogos.length > 0) {
+          next.partnerLogos = next.partnerLogos
+            .map((slot) => {
+              const logo = consumer.take("case.info-card.partnerLogos");
+              return logo ? { ...slot, logo } : null;
+            })
+            .filter((slot) => slot !== null);
+        }
+        break;
+      }
+      case "case.figure-section": {
+        const image = consumer.take("case.figure-section.image");
+        if (image) next.image = image;
+        // Chave de montagem do seed, nao e campo do componente.
+        next.figureAssetKey = undefined;
+        break;
+      }
+      default:
+        break;
+    }
+    return next;
+  });
+}
+
 function applyRelationsToBlocks(blocks, relationMaps) {
   const { areaIds, partnerIds, articleIds, caseIds } = relationMaps;
   return blocks.map((block) => {
@@ -569,9 +608,6 @@ async function seedCaseStudies(assetIdByKey, areaIds) {
       const coverRef = variant.assetRefs?.find((r) => r.usage === "case-study.coverImage");
       const coverId = coverRef ? assetIdByKey.get(coverRef.assetKey) : null;
       if (coverId) data.coverImage = coverId;
-      const heroRef = variant.assetRefs?.find((r) => r.usage === "case-study.heroMedia");
-      const heroId = heroRef ? assetIdByKey.get(heroRef.assetKey) : null;
-      if (heroId) data.heroMedia = heroId;
 
       if (variant.relationRefs?.applicationAreaKeys?.length) {
         data.applicationAreas = variant.relationRefs.applicationAreaKeys
@@ -579,14 +615,10 @@ async function seedCaseStudies(assetIdByKey, areaIds) {
           .filter((id) => typeof id === "number");
       }
 
-      const projectLogoKeys = variant.relationRefs?.projectLogoKeys ?? [];
-      data.projectLogos = projectLogoKeys
-        .map((partnerKey) => {
-          const logoId = assetIdByKey.get(`partner-${partnerKey}`);
-          if (!logoId) return null;
-          return { logo: logoId, url: null, alt: null };
-        })
-        .filter((slot) => slot !== null);
+      // Hero, logos de parceiro e figuras vivem dentro de `sections` desde o
+      // plano 10-06 — nao ha mais `heroMedia` nem `projectLogos` no case.
+      const consumer = buildAssetConsumer(variant.assetRefs, assetIdByKey);
+      data.sections = applyAssetsToCaseBlocks(data.sections ?? [], consumer);
 
       return data;
     },
