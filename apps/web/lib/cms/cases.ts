@@ -11,6 +11,29 @@ import type { SupportedLocale } from "@/lib/i18n/config";
 
 const cmsCaseCollectionSchema = cmsCollectionResponseSchema(cmsCaseSchema);
 
+/**
+ * Populate explicito da dynamic zone `sections`, compartilhado pelas tres queries de case.
+ *
+ * Fonte unica de verdade: no Strapi, um componente sem linha de populate volta com os campos
+ * aninhados vazios e **sem nenhum erro** — a pagina renderiza um bloco mudo. Triplicar essas
+ * chaves nas queries foi o que produziu essa classe de falha antes; qualquer bloco novo da zona
+ * entra aqui, uma vez so.
+ *
+ * `case.info-card` precisa das duas linhas: `"*"` traria `partnerLogos` sem o `logo` dentro.
+ */
+const caseSectionsPopulate = {
+  "populate[sections][on][case.hero-section][populate][media]": true,
+  "populate[sections][on][case.info-card][populate][rows]": true,
+  "populate[sections][on][case.info-card][populate][partnerLogos][populate][logo]": true,
+  "populate[sections][on][case.lead-section][populate]": "*",
+  "populate[sections][on][case.text-section][populate]": "*",
+  "populate[sections][on][case.section-title][populate]": "*",
+  "populate[sections][on][case.highlight-section][populate]": "*",
+  "populate[sections][on][case.figure-section][populate][image]": true,
+  "populate[sections][on][case.two-column-section][populate]": "*",
+  "populate[sections][on][case.panel-section][populate]": "*",
+} as const;
+
 type GetCasesArgs = {
   locale: SupportedLocale;
   limit?: number;
@@ -27,12 +50,7 @@ export async function getCases({ locale, limit }: GetCasesArgs): Promise<CmsCase
         "populate[coverImage]": true,
         "populate[heroMedia]": true,
         "populate[projectLogos][populate][logo]": true,
-        "populate[sections][on][case.figure-section][populate][image]": true,
-        "populate[sections][on][case.text-section][populate]": "*",
-        "populate[sections][on][case.section-title][populate]": "*",
-        "populate[sections][on][case.highlight-section][populate]": "*",
-        "populate[sections][on][case.two-column-section][populate]": "*",
-        "populate[sections][on][case.panel-section][populate]": "*",
+        ...caseSectionsPopulate,
       },
       schema: cmsCaseCollectionSchema,
       init: {
@@ -84,12 +102,7 @@ export async function getCasesPage({
         "populate[coverImage]": true,
         "populate[heroMedia]": true,
         "populate[projectLogos][populate][logo]": true,
-        "populate[sections][on][case.figure-section][populate][image]": true,
-        "populate[sections][on][case.text-section][populate]": "*",
-        "populate[sections][on][case.section-title][populate]": "*",
-        "populate[sections][on][case.highlight-section][populate]": "*",
-        "populate[sections][on][case.two-column-section][populate]": "*",
-        "populate[sections][on][case.panel-section][populate]": "*",
+        ...caseSectionsPopulate,
       },
       schema: cmsCaseCollectionSchema,
       init: { next: { revalidate: 300, tags: ["cases", `cases:page:${page}`] } },
@@ -143,12 +156,7 @@ export async function getCaseBySlug({
         "populate[coverImage]": true,
         "populate[heroMedia]": true,
         "populate[projectLogos][populate][logo]": true,
-        "populate[sections][on][case.figure-section][populate][image]": true,
-        "populate[sections][on][case.text-section][populate]": "*",
-        "populate[sections][on][case.section-title][populate]": "*",
-        "populate[sections][on][case.highlight-section][populate]": "*",
-        "populate[sections][on][case.two-column-section][populate]": "*",
-        "populate[sections][on][case.panel-section][populate]": "*",
+        ...caseSectionsPopulate,
       },
       schema: cmsCaseCollectionSchema,
       init: { next: { revalidate: 300, tags: ["cases", `case:${slug}`] } },
