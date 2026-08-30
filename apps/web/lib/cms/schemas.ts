@@ -279,7 +279,51 @@ export const cmsProjectLogoSchema = z.object({
   alt: z.string().nullable().optional(),
 });
 
+export const cmsCaseIconKeySchema = z.enum([
+  "none",
+  "clipboard",
+  "target",
+  "bar_chart",
+  "map_pin",
+  "waves",
+  "cpu",
+  "calendar",
+  "users",
+  "check_circle",
+]);
+
+export type CmsCaseIconKey = z.infer<typeof cmsCaseIconKeySchema>;
+
+export const cmsCaseInfoRowSchema = z.object({
+  id: z.number().int().nonnegative().optional(),
+  label: z.string().min(1),
+  value: z.string().min(1),
+});
+
 export const cmsCaseSectionSchema = z.discriminatedUnion("__component", [
+  z.object({
+    __component: z.literal("case.hero-section"),
+    id: z.number().int().nonnegative().optional(),
+    title: z.string().min(1),
+    subtitle: z.string().nullable().optional(),
+    media: cmsMediaSchema.nullable().optional(),
+  }),
+  z.object({
+    __component: z.literal("case.info-card"),
+    id: z.number().int().nonnegative().optional(),
+    icon: cmsCaseIconKeySchema.nullable().optional(),
+    title: z.string().min(1),
+    body: z.string().nullable().optional(),
+    rows: z.array(cmsCaseInfoRowSchema).default([]),
+    partnerLogos: z.array(cmsProjectLogoSchema).default([]),
+    logosCaption: z.string().nullable().optional(),
+  }),
+  z.object({
+    __component: z.literal("case.lead-section"),
+    id: z.number().int().nonnegative().optional(),
+    title: z.string().min(1),
+    subtitle: z.string().nullable().optional(),
+  }),
   z.object({
     __component: z.literal("case.text-section"),
     id: z.number().int().nonnegative().optional(),
@@ -293,6 +337,7 @@ export const cmsCaseSectionSchema = z.discriminatedUnion("__component", [
   z.object({
     __component: z.literal("case.highlight-section"),
     id: z.number().int().nonnegative().optional(),
+    variant: z.enum(["opening", "closing"]).nullable().optional(),
     eyebrow: z.string().nullable().optional(),
     heading: z.string().nullable().optional(),
     body: z.string().min(1),
@@ -313,8 +358,10 @@ export const cmsCaseSectionSchema = z.discriminatedUnion("__component", [
   z.object({
     __component: z.literal("case.panel-section"),
     id: z.number().int().nonnegative().optional(),
+    icon: cmsCaseIconKeySchema.nullable().optional(),
     title: z.string().min(1),
     body: z.string().min(1),
+    defaultOpen: z.boolean().nullable().optional(),
   }),
 ]);
 
