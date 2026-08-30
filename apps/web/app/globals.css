@@ -65,6 +65,46 @@
   --radius-xl: 32px;
   --shadow-1: 0 4px 14px rgba(10, 15, 40, .08);
   --shadow-2: 0 18px 50px rgba(10, 15, 40, .18);
+
+  /* ---- CASE (fase 10) — tokens escopados da pagina de detalhe de case ----
+     Valores medidos em resources/Pagina Cases.jpg e transcritos em 10-UI-SPEC.md.
+     Regra dura: esta fase CONSOME os tokens globais de cor no valor ja shipado
+     (grafite de apoio, texto, preto, navy e navy-2) e nao redefine nenhum deles.
+     A cor de superficie do comp entra como token novo, --c-ice. */
+  --c-ice: #DFECF4;
+  --c-ice-hair: #1693DC;
+
+  /* larguras canonicas por tipo de bloco (D-02) — nao expostas ao editor */
+  --case-w-prose: 930px;
+  --case-w-wide: 1068px;
+  --case-w-panel: 880px;
+
+  /* ritmo vertical */
+  --case-gap: 32px;
+  --case-gap-lg: 48px;
+
+  /* faixa angulada */
+  --case-band-skew: 64px;
+  --case-band-pad: 48px;
+
+  /* raios */
+  --case-r-hero: 40px;
+  --case-r-card: 12px;
+
+  /* foco */
+  --case-focus-w: 3px;
+  --case-focus-o: 3px;
+
+  /* escala tipografica da pagina de case: 6 tamanhos, 2 pesos (400/700) */
+  --case-fs-100: 16px;
+  --case-fs-200: 18px;
+  --case-fs-300: 20px;
+  --case-fs-400: 24px;
+  --case-fs-500: 30px;
+  --case-fs-600: 42px;
+  --case-lh-100: 21px;
+  /* unico consumidor: .case-band__body */
+  --case-lh-100-tight: 18px;
 }
 
 /* ---------- RESET / BASE ---------- */
@@ -1873,23 +1913,161 @@ body.menu-open {
 }
 
 /* ===========================================================
-   CASE — detalhe (redesign 2026): hero com título editorial,
-   card "o desafio" e corpo em seções tipadas.
+   CASE — detalhe (fase 10): pagina composta por blocos
+   reordenaveis da dynamic zone. Classes emitidas por
+   components/ui/case-sections.tsx e case-panel.tsx.
+   Valores medidos no comp aprovado (ver 10-UI-SPEC.md).
    =========================================================== */
+
+/* ---------- ritmo vertical (ordem-independente) ----------
+   display:flex e OBRIGATORIO. Em fluxo de bloco normal as margens verticais de
+   irmaos adjacentes colapsam para max(32,32)=32 em vez de somarem 64, e toda a
+   tabela de juncoes do contrato sairia pela metade. Um contentor flex nao colapsa
+   margens: um bloco que pede 48 de topo continua ganhando 48 alem dos 32 do vizinho.
+   Nao trocar margin-block por padding-block: os blocos de card, faixa e painel
+   pintam fundo proprio e o padding entraria dentro da caixa colorida.
+   <main id="main"> e compartilhado por todas as rotas e nao e tocado aqui. */
+.case-blocks {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.case-blocks > * {
+  margin-block: var(--case-gap);
+  margin-inline: auto;
+}
+
+/* Primeiro bloco da zona nao e o hero: o conteudo passaria por baixo do header
+   fixo transparente. 90px e a altura do header, ja assumida por scroll-padding-top. */
+.case-blocks--header-offset {
+  padding-top: 90px;
+}
+
+/* As excecoes de margem por bloco (hero, lead, painel) tem a mesma especificidade
+   de `.case-blocks > *` e por isso vivem depois dele, nas regras de cada bloco. */
+
+/* ---------- 1. hero de case ---------- */
+.case-hero {
+  position: relative;
+  width: 100%;
+  display: flex;
+  /* conteudo no fim, nao centrado: medido 427 acima / 112 abaixo */
+  align-items: flex-end;
+  min-height: clamp(360px, 45.5vw, 780px);
+  overflow: hidden;
+  /* so os cantos inferiores, medido 42 */
+  border-radius: 0 0 var(--case-r-hero) var(--case-r-hero);
+  color: #fff;
+  /* estado sem midia: fundo solido, sem mensagem no site publico */
+  background: var(--c-navy-deep);
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.case-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.case-hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Gradiente copiado de .hero__media::after. Copiado de proposito, nao herdado:
+   .hero__media e compartilhado com outras rotas e nao pode ser reusado aqui. */
+.case-hero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .45) 0%, rgba(0, 0, 0, .3) 40%, rgba(0, 0, 0, .55) 100%);
+}
+
+.case-hero__inner {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 112px;
+}
+
 .case-hero__title {
-  font-size: clamp(1.8rem, 1.4rem + 1.6vw, 3rem);
-  font-weight: 700;
-  line-height: 1.1;
+  font-size: var(--case-fs-600);
+  line-height: 46px;
+  font-weight: 400;
   color: #fff;
   margin: 0;
 }
 
 .case-hero__sub {
-  margin-top: .75rem;
-  font-size: clamp(.95rem, .9rem + .3vw, 1.1rem);
-  line-height: 1.4;
+  margin: 0;
+  margin-top: 24px;
+  font-size: var(--case-fs-100);
+  line-height: var(--case-lh-100);
+  font-weight: 400;
   color: rgba(255, 255, 255, .92);
   max-width: 34ch;
+}
+
+/* ---------- 3. lead editorial ---------- */
+.case-lead {
+  width: min(100% - 2rem, var(--case-w-prose));
+  margin-top: var(--case-gap-lg);
+}
+
+.case-lead__title {
+  font-size: var(--case-fs-600);
+  line-height: 46px;
+  font-weight: 400;
+  color: var(--c-navy-2);
+  max-width: 26ch;
+  text-align: left;
+  margin: 0;
+}
+
+.case-lead__title strong {
+  font-weight: 700;
+}
+
+.case-lead__sub {
+  margin: 0;
+  margin-top: 22px;
+  font-size: var(--case-fs-300);
+  line-height: 27px;
+  font-weight: 400;
+  color: var(--c-navy-2);
+  max-width: 40ch;
+}
+
+/* ---------- 4. texto corrido ---------- */
+.case-text {
+  width: min(100% - 2rem, var(--case-w-prose));
+  font-size: var(--case-fs-200);
+  line-height: 27px;
+  font-weight: 400;
+  color: var(--c-text);
+  text-align: justify;
+}
+
+/* 27px = o proprio line-height; pitch entre paragrafos medido 54.0 = 27 + 27 */
+.case-text p {
+  margin: 0 0 27px;
+}
+
+.case-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* Preview com a zona vazia: CaseSections nao renderiza nada, entao nao existe
+   .case-blocks--header-offset para afastar o aviso do header fixo. 90 + 32. */
+.case-empty-note {
+  padding-top: 122px;
+  padding-bottom: var(--case-gap);
+  font-size: var(--case-fs-200);
+  line-height: 27px;
+  color: var(--c-text);
 }
 
 .case-challenge {
@@ -1915,27 +2093,6 @@ body.menu-open {
 
 .case-challenge__body p {
   margin: 0 0 .8rem;
-}
-
-.case-lead {
-  margin: clamp(2.5rem, 5vw, 4rem) 0 clamp(1.5rem, 3vw, 2.5rem);
-}
-
-.case-lead__title {
-  font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2.1rem);
-  line-height: 1.2;
-  font-weight: 400;
-  color: var(--c-navy);
-  margin: 0 0 .6rem;
-  max-width: 26ch;
-}
-
-.case-lead__sub {
-  margin: 0;
-  font-size: clamp(1rem, .95rem + .3vw, 1.15rem);
-  line-height: 1.35;
-  color: var(--c-blue);
-  max-width: 40ch;
 }
 
 .case-section-title {
@@ -3912,28 +4069,6 @@ body.menu-open {
 
 .case-content {
   padding: 1rem 0 3rem;
-}
-
-.case-text {
-  max-width: 75ch;
-  margin: 0 auto;
-  font-size: .98rem;
-  color: var(--c-gray-700);
-  line-height: 1.75;
-}
-
-.case-text + .case-text,
-.case-text + .case-hero-img,
-.case-hero-img + .case-text {
-  margin-top: 2.5rem;
-}
-
-.case-text p {
-  margin: 0 0 1.25rem;
-}
-
-.case-text p:last-child {
-  margin-bottom: 0;
 }
 
 .case-section {
