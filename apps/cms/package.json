@@ -9,6 +9,8 @@
     "seed:check": "node ./scripts/seed-content.mjs",
     "seed:import": "node ./scripts/seed-import.mjs",
     "seed:import:dry": "node ./scripts/seed-import.mjs --dry-run",
+    "migrate:cases": "node ./scripts/migrate-case-blocks.mjs",
+    "migrate:cases:dry": "node ./scripts/migrate-case-blocks.mjs --dry-run",
     "lint": "echo 'cms lint placeholder - to be implemented in phase 1.3'",
     "test": "echo 'cms test placeholder - to be implemented in phase 1.3'",
     "typecheck": "echo 'cms typecheck placeholder - to be implemented in phase 1.3'"
