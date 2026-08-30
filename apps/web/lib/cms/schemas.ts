@@ -378,28 +378,7 @@ export const cmsCaseSchema = z.object({
   summary: z.string().min(1),
   sectorCategory: z.string().nullable().optional(),
   coverImage: cmsMediaSchema.optional(),
-  heroMedia: cmsMediaSchema.optional(),
-  client: z.string().nullable().optional(),
-  startDate: z.string().nullable().optional(),
-  duration: z.string().nullable().optional(),
-  tags: z
-    .union([z.string(), z.array(z.string()), z.null()])
-    .optional()
-    .transform((value) => {
-      if (Array.isArray(value)) return value;
-      if (typeof value !== "string") return [];
-      return value
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0);
-    }),
-  projectLogos: z.array(cmsProjectLogoSchema).default([]),
-  heroTitle: z.string().nullable().optional(),
-  challenge: z.string().nullable().optional(),
-  leadTitle: z.string().nullable().optional(),
-  leadSubtitle: z.string().nullable().optional(),
   sections: z.array(cmsCaseSectionSchema).nullable().optional().default([]),
-  body: z.string().nullable().optional(),
 });
 
 export const cmsPageBlockSchema = z.discriminatedUnion("__component", [

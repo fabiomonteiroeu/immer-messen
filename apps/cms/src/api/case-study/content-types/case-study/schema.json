@@ -26,14 +26,6 @@
         }
       }
     },
-    "heroTitle": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
     "slug": {
       "type": "uid",
       "targetField": "title",
@@ -65,70 +57,6 @@
         "images"
       ]
     },
-    "heroMedia": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "videos",
-        "files"
-      ]
-    },
-    "client": {
-      "type": "string",
-      "maxLength": 120
-    },
-    "startDate": {
-      "type": "date"
-    },
-    "duration": {
-      "type": "string",
-      "maxLength": 60,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "tags": {
-      "type": "string",
-      "maxLength": 255,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "projectLogos": {
-      "type": "component",
-      "repeatable": true,
-      "component": "case.project-logo",
-      "max": 3
-    },
-    "challenge": {
-      "type": "richtext",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "leadTitle": {
-      "type": "string",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "leadSubtitle": {
-      "type": "text",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
     "sections": {
       "type": "dynamiczone",
       "components": [
@@ -142,14 +70,6 @@
         "case.two-column-section",
         "case.panel-section"
       ],
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "body": {
-      "type": "richtext",
       "pluginOptions": {
         "i18n": {
           "localized": true
