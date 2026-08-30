@@ -19,6 +19,7 @@
  * renderer — os blocos de case usam classes proprias, todas prefixadas por `case-`.
  */
 
+import { CaseIcon } from "@/components/ui/case-icons";
 import { CasePanel } from "@/components/ui/case-panel";
 import type { CmsCaseSection } from "@/lib/cms/schemas";
 import { resolveMediaUrl } from "@/lib/cms/media";
@@ -50,6 +51,49 @@ function blockHasTitle(section: CmsCaseSection): boolean {
     default:
       return false;
   }
+}
+
+/**
+ * O titulo do lead e richtext e chega do Strapi envolvido em `<p>...</p>`. Um `<p>` dentro de
+ * `<h1>`/`<h2>` e HTML invalido, entao a normalizacao remove **apenas** as tags de paragrafo,
+ * preservando `<strong>`, `<em>` e `<br>` — a enfase mista do comp e `<strong>` dentro do mesmo
+ * paragrafo.
+ *
+ * Isto e normalizacao estrutural, **nao** sanitizacao: o richtext continua sendo dado de editor
+ * autenticado, na mesma superficie de confianca do resto do renderer (T-10-12).
+ */
+function stripParagraphTags(html: string): string {
+  return html.replace(/<\/?p\b[^>]*>/gi, "");
+}
+
+type ResolvedLogo = {
+  alt: string;
+  href: string | null;
+  key: string;
+  src: string;
+};
+
+/**
+ * Um logo so renderiza com `alt` preenchido: dentro de um `<a>`, uma `<img alt="">` produz link
+ * com nome acessivel vazio (`link-name`, serious/wcag2a). Melhor perder o logo do que emitir a
+ * violacao (T-10-15).
+ *
+ * O `href` so e emitido para `http://` e `https://` — qualquer outro esquema (`javascript:`,
+ * `data:`, relativo) e ignorado e o logo renderiza sem link (T-10-13).
+ */
+function resolveLogos(
+  slots: { id?: number; logo: { id: number; url: string; alternativeText?: string | null }; url?: string | null; alt?: string | null }[],
+): ResolvedLogo[] {
+  return slots.flatMap((slot, position) => {
+    const src = resolveMediaUrl(slot.logo.url);
+    const alt = (slot.alt ?? slot.logo.alternativeText ?? "").trim();
+    if (!src || alt.length === 0) return [];
+
+    const raw = (slot.url ?? "").trim();
+    const href = raw.startsWith("https://") || raw.startsWith("http://") ? raw : null;
+
+    return [{ alt, href, key: String(slot.id ?? slot.logo.id ?? position), src }];
+  });
 }
 
 /** Unidade de render: um bloco solto ou um grupo de `case.info-card` adjacentes. */
@@ -134,6 +178,82 @@ function CaseBlock({
   const Heading = headingLevel === 1 ? "h1" : "h2";
 
   switch (section.__component) {
+    case "case.hero-section": {
+      const mediaSrc = resolveMediaUrl(section.media?.url);
+      return (
+        <section className="case-hero">
+          {/* Sem midia o div fica vazio e o CSS pinta fundo solido navy; sem mensagem no site publico. */}
+          <div className="case-hero__media">
+            {mediaSrc ? <img alt="" aria-hidden="true" src={mediaSrc} /> : null}
+          </div>
+          <div className="container case-hero__inner">
+            <Heading className="case-hero__title">{section.title}</Heading>
+            {section.subtitle ? <p className="case-hero__sub">{section.subtitle}</p> : null}
+          </div>
+        </section>
+      );
+    }
+
+    case "case.info-card": {
+      const logos = resolveLogos(section.partnerLogos ?? []);
+      return (
+        <article className="case-info">
+          <div className="case-info__head">
+            <CaseIcon className="case-info__icon" name={section.icon} />
+            <Heading className="case-info__title">{section.title}</Heading>
+          </div>
+          {section.rows.length > 0 ? (
+            <div className="case-info__rows">
+              {section.rows.map((row, position) => (
+                <div className="case-info__row" key={row.id ?? position}>
+                  {/* O dois-pontos e da marcacao: o editor digita o rotulo sem ele (D-09). */}
+                  <b>{row.label}</b>: {row.value}
+                </div>
+              ))}
+            </div>
+          ) : null}
+          {section.body ? <Html className="case-info__body" html={section.body} /> : null}
+          {logos.length > 0 ? (
+            <>
+              <div className="case-info__logos">
+                {logos.map((logo) =>
+                  logo.href ? (
+                    <a
+                      className="case-info__logo"
+                      href={logo.href}
+                      key={logo.key}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <img alt={logo.alt} loading="lazy" src={logo.src} />
+                    </a>
+                  ) : (
+                    <span className="case-info__logo" key={logo.key}>
+                      <img alt={logo.alt} loading="lazy" src={logo.src} />
+                    </span>
+                  ),
+                )}
+              </div>
+              {section.logosCaption ? (
+                <p className="case-info__logos-caption">{section.logosCaption}</p>
+              ) : null}
+            </>
+          ) : null}
+        </article>
+      );
+    }
+
+    case "case.lead-section":
+      return (
+        <div className="case-lead">
+          <Heading
+            className="case-lead__title"
+            dangerouslySetInnerHTML={{ __html: stripParagraphTags(section.title) }}
+          />
+          {section.subtitle ? <p className="case-lead__sub">{section.subtitle}</p> : null}
+        </div>
+      );
+
     case "case.text-section":
       return <Html className="case-text" html={section.body} />;
 
