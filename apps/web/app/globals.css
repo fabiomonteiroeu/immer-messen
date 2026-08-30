@@ -2204,12 +2204,17 @@ a.case-info__logo:focus-visible {
   outline-offset: var(--case-focus-o);
 }
 
+/* --c-gray-700 e nao --c-gray-600: a legenda da tira vive sobre --c-ice, nao
+   sobre branco. #6B7280 sobre #DFECF4 da 4.01:1 e reprova em AA (axe, serious).
+   #4B5563 sobre #DFECF4 da 5.9:1. A legenda da figura, essa sim sobre branco,
+   segue em --c-gray-600 (4.83:1). A tabela de contraste da UI-SPEC nao avaliou
+   este par. */
 .case-info__logos-caption {
   margin: 0;
   margin-top: 16px;
   font-size: var(--case-fs-100);
   line-height: var(--case-lh-100);
-  color: var(--c-gray-600);
+  color: var(--c-gray-700);
   text-align: left;
 }
 
