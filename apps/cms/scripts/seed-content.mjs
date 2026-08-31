@@ -551,7 +551,7 @@ const newsArticleDefs = [
   {
     key: "fibra-optica-como-sensor-continuo",
     slug: "fibra-optica-como-sensor-continuo",
-    assetKey: "news-placeholder-fibra-sensor",
+    assetKey: "case-bg-fibra",
     publishedDate: "2026-02-28",
     "pt-BR": {
       title: "Como um cabo de fibra óptica se torna um sensor contínuo",
@@ -578,7 +578,7 @@ const newsArticleDefs = [
   {
     key: "acustica-submarina-com-das",
     slug: "acustica-submarina-com-das",
-    assetKey: "news-placeholder-acustica-submarina",
+    assetKey: "case-fig-espectrograma",
     publishedDate: "2026-01-22",
     "pt-BR": {
       title: "Resultados de pesquisa em acústica submarina com DAS",
@@ -605,7 +605,7 @@ const newsArticleDefs = [
   {
     key: "das-em-estudos-sismicos",
     slug: "das-em-estudos-sismicos",
-    assetKey: "news-placeholder-estudos-sismicos",
+    assetKey: "application-sismica",
     publishedDate: "2026-01-16",
     "pt-BR": {
       title: "Tecnologia DAS aplicada a estudos sísmicos",
@@ -632,7 +632,7 @@ const newsArticleDefs = [
   {
     key: "cooperacao-petrobras-oceomna",
     slug: "cooperacao-petrobras-oceomna",
-    assetKey: "news-placeholder-petrobras-pd",
+    assetKey: "case-cover-petrobras",
     publishedDate: "2026-01-06",
     "pt-BR": {
       title: "Cooperação com Petrobras e Oceomna para P&D",
@@ -659,7 +659,7 @@ const newsArticleDefs = [
   {
     key: "interrogador-dats-visao-geral",
     slug: "interrogador-dats-visao-geral",
-    assetKey: "news-placeholder-dats",
+    assetKey: "interrogador-front",
     publishedDate: "2025-12-18",
     "pt-BR": {
       title: "Conheça o interrogador DATS",
@@ -686,7 +686,7 @@ const newsArticleDefs = [
   {
     key: "linhas-de-transmissao-por-fibra",
     slug: "linhas-de-transmissao-por-fibra",
-    assetKey: "news-placeholder-transmissao",
+    assetKey: "case-cover-transmissao",
     publishedDate: "2025-11-30",
     "pt-BR": {
       title: "Monitoramento de linhas de transmissão por fibra óptica",
@@ -729,7 +729,7 @@ const newsArticles = newsArticleDefs.flatMap((def) =>
         `https://www.immermessen.com/${locale}/noticias/${def.slug}`
       ),
     },
-    assetRefs: [{ assetKey: def.assetKey, usage: "news-article.coverImage", status: "placeholder-external" }],
+    assetRefs: [{ assetKey: def.assetKey, usage: "news-article.coverImage" }],
   }))
 );
 
@@ -1789,12 +1789,6 @@ export const assetManifest = {
     { assetKey: "case-placeholder-baleias", location: "layout-aprovado/cases/monitoramento-baleias.html", purpose: "case cover", currentSource: "external-unsplash" },
     { assetKey: "case-placeholder-transmissao", location: "layout-aprovado/cases/monitoramento-transmissao-energia.html", purpose: "case cover", currentSource: "external-unsplash" },
     { assetKey: "case-placeholder-gasodutos", location: "layout-aprovado/cases/monitoramento-gasodutos.html", purpose: "case cover", currentSource: "external-unsplash" },
-    { assetKey: "news-placeholder-fibra-sensor", location: "layout-aprovado/noticias.html", purpose: "news cover", currentSource: "external-unsplash" },
-    { assetKey: "news-placeholder-acustica-submarina", location: "layout-aprovado/noticias.html", purpose: "news cover", currentSource: "external-unsplash" },
-    { assetKey: "news-placeholder-estudos-sismicos", location: "layout-aprovado/noticias.html", purpose: "news cover", currentSource: "external-unsplash" },
-    { assetKey: "news-placeholder-petrobras-pd", location: "layout-aprovado/noticias.html", purpose: "news cover", currentSource: "external-unsplash" },
-    { assetKey: "news-placeholder-dats", location: "layout-aprovado/noticias.html", purpose: "news cover", currentSource: "external-unsplash" },
-    { assetKey: "news-placeholder-transmissao", location: "layout-aprovado/noticias.html", purpose: "news cover", currentSource: "external-unsplash" },
   ],
   deferredCoverage: [
     "Galerias de cases e imagens inline das paginas ainda nao possuem modelagem dedicada no CMS.",
