@@ -2192,11 +2192,17 @@ body.menu-open {
    (94.5 / 111.8 / 69.7) e um repeat(3, 1fr) daria colunas de 93.7, cortando o
    logo do meio. O comp nao normaliza as alturas (49.7 / 57.2 / 68.0); o
    contrato normaliza em 64 com align-items: center. */
+/* Tres logos por linha. A coluna do cartao mede ~432px (--case-w-wide 1068px num
+   grid 1fr/1.4fr com gap 30) e sobram ~334px uteis depois do padding de 48px de
+   cada lado. Com altura de 64px os tres somavam 373px e quebravam a linha.
+   Grid de 3 colunas iguais em vez de flex-wrap: garante a divisao independente da
+   proporcao de cada logo. */
 .case-info__logos {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   align-items: center;
-  gap: 30px;
-  flex-wrap: wrap;
+  justify-items: center;
+  gap: 16px;
   margin-top: var(--case-gap-lg);
 }
 
@@ -2205,8 +2211,12 @@ body.menu-open {
   align-items: center;
 }
 
+/* As duas travas sao necessarias: so `max-width` deixaria o logo quase quadrado
+   (Instituto Aqualie, 1.03) muito mais alto que os outros; so `max-height` deixaria
+   o mais largo (lockup empilhado da Immer, 2.17) estourar a coluna. */
 .case-info__logo img {
-  max-height: 64px;
+  max-width: 100%;
+  max-height: 48px;
   width: auto;
   object-fit: contain;
 }
@@ -2624,9 +2634,7 @@ a.case-info__logo:focus-visible {
   }
 
   .case-info__logos {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
+    gap: 12px;
   }
 
   .case-hero {
