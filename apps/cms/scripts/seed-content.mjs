@@ -537,6 +537,7 @@ const applicationAreas = applicationAreaDefs.flatMap((def) =>
 );
 
 const partners = [
+  { key: "immer-messen", data: { name: "Immer Messen", url: "https://www.immermessen.com", sortOrder: 1, active: false }, assetRefs: [{ assetKey: "partner-immer-messen", usage: "partner.logo" }] },
   { key: "petrobras", data: { name: "Petrobras", url: "https://petrobras.com.br", sortOrder: 5, active: true }, assetRefs: [{ assetKey: "partner-petrobras", usage: "partner.logo" }] },
   { key: "sebrae", data: { name: "SEBRAE", url: "https://sebrae.com.br", sortOrder: 10, active: true }, assetRefs: [{ assetKey: "partner-sebrae", usage: "partner.logo" }] },
   { key: "instituto-aqualie", data: { name: "Instituto Aqualie", url: "https://institutoaqualie.org.br", sortOrder: 20, active: true }, assetRefs: [{ assetKey: "partner-instituto-aqualie", usage: "partner.logo" }] },
@@ -749,26 +750,26 @@ const newsArticles = newsArticleDefs.flatMap((def) =>
 // adiciona o ":" (D-09).
 const caseBlockLabels = {
   "pt-BR": {
-    detailsTitle: "Detalhes do projeto",
+    detailsTitle: "Informações gerais",
     challengeTitle: "O desafio",
     client: "Cliente",
-    startDate: "Data de início",
+    startDate: "Data",
     duration: "Duração",
     tags: "Tags",
   },
   en: {
-    detailsTitle: "Project details",
+    detailsTitle: "General information",
     challengeTitle: "The challenge",
     client: "Client",
-    startDate: "Start date",
+    startDate: "Date",
     duration: "Duration",
     tags: "Tags",
   },
   es: {
-    detailsTitle: "Detalles del proyecto",
+    detailsTitle: "Información general",
     challengeTitle: "El desafío",
     client: "Cliente",
-    startDate: "Fecha de inicio",
+    startDate: "Fecha",
     duration: "Duración",
     tags: "Tags",
   },
@@ -778,15 +779,22 @@ const partnerNameByKey = new Map(partners.map((partner) => [partner.key, partner
 
 // Mesma formatacao do `formatDate` que a pagina usava antes do 10-04, com
 // timeZone UTC para nao deslocar o dia em fuso negativo.
-const formatCaseDate = (iso, locale) => {
+// `precision: "month"` rende mes por extenso + ano ("Maio de 2024") para os
+// cases em que so a competencia e conhecida — pedido na revisao do case
+// Baleias (RevisaoWeber_CaseBaleias.docx).
+const formatCaseDate = (iso, locale, precision = "day") => {
   if (!iso) return "";
   try {
-    return new Date(iso).toLocaleDateString(locale, {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      timeZone: "UTC",
-    });
+    const options =
+      precision === "month"
+        ? { month: "long", year: "numeric", timeZone: "UTC" }
+        : { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "UTC" };
+    const formatted = new Date(iso).toLocaleDateString(locale, options);
+    // pt-BR/es devolvem o mes em minuscula ("maio de 2024"); o rotulo da ficha
+    // e uma frase curta e comeca em maiuscula.
+    return precision === "month"
+      ? formatted.charAt(0).toUpperCase() + formatted.slice(1)
+      : formatted;
   } catch {
     return String(iso);
   }
@@ -824,8 +832,11 @@ const buildCaseSections = (def, locale) => {
   }
 
   const rows = [];
-  if (def.client) rows.push({ label: labels.client, value: def.client });
-  const startDate = formatCaseDate(def.startDate, locale);
+  // `client` pode ser sobrescrito por locale: nomes proprios (Instituto Aqualie)
+  // ficam no nivel do def, mas descricoes de setor precisam ser traduzidas.
+  const client = localized.client ?? def.client;
+  if (client) rows.push({ label: labels.client, value: client });
+  const startDate = formatCaseDate(def.startDate, locale, def.datePrecision);
   if (startDate) rows.push({ label: labels.startDate, value: startDate });
   if (localized.duration) rows.push({ label: labels.duration, value: localized.duration });
   const tags = joinTags(localized.tags);
@@ -867,11 +878,40 @@ const buildCaseSections = (def, locale) => {
     });
   }
 
-  if (Array.isArray(localized.sections)) {
-    for (const block of localized.sections) {
+  // Locale sem `sections` proprias herda a estrutura do pt-BR como placeholder, ate
+  // o cliente enviar a traducao — antes o fallback era so um paragrafo corrido mais
+  // as figuras soltas, o que deixava en/es visivelmente mais pobres que o pt-BR.
+  // O corpo fica em portugues, mas tudo que JA existe traduzido continua vindo do
+  // locale: hero, desafio, lead, alt e legenda das figuras, slug e SEO.
+  const sectionSource = Array.isArray(localized.sections)
+    ? localized.sections
+    : def["pt-BR"]?.sections;
+
+  if (Array.isArray(sectionSource)) {
+    for (const block of sectionSource) {
       if (block.figureKey) {
         const figure = figures.find((item) => item.key === block.figureKey);
         if (figure) blocks.push(figureBlock(figure, locale));
+        continue;
+      }
+      // Sub-blocos do painel: `figureKey` resolve alt/legenda do locale, igual ao
+      // figure-section, para a figura poder ficar dentro do painel colapsavel.
+      if (block.__component === "case.panel-section" && Array.isArray(block.blocks)) {
+        blocks.push({
+          ...block,
+          blocks: block.blocks.map((sub) => {
+            if (!sub.figureKey) return sub;
+            const figure = figures.find((item) => item.key === sub.figureKey);
+            const { figureKey, ...rest } = sub;
+            if (!figure) return rest;
+            return {
+              ...rest,
+              figureAssetKey: figure.assetKey,
+              alt: figure[locale]?.alt ?? figure["pt-BR"]?.alt ?? "",
+              caption: sub.caption ?? figure[locale]?.caption ?? figure["pt-BR"]?.caption ?? null,
+            };
+          }),
+        });
         continue;
       }
       blocks.push(block);
@@ -879,8 +919,7 @@ const buildCaseSections = (def, locale) => {
     return blocks;
   }
 
-  // Locale sem `sections` proprias: corpo corrido e, na sequencia, as figuras
-  // do case — assim o alt traduzido chega aos 3 locales.
+  // Ultimo recurso: case sem `sections` em nenhum locale (nenhum hoje).
   if (localized.body) blocks.push({ __component: "case.text-section", body: localized.body });
   for (const figure of figures) blocks.push(figureBlock(figure, locale));
 
@@ -889,55 +928,18 @@ const buildCaseSections = (def, locale) => {
 
 const caseStudyDefs = [
   {
-    key: "projeto-pd-petrobras",
-    documentId: "yi1ofae5swyt61vzdv8zcog5",
-    sectorCategory: "offshore",
-    applicationAreaKeys: ["derivacao-clandestina", "pocos-submarinos"],
-    coverAssetKey: "case-cover-petrobras",
-    client: "Petrobras",
-    startDate: "2017-01-01",
-    projectLogoKeys: ["petrobras"],
-    "pt-BR": {
-      slug: "monitoramento-de-gasodutos",
-      title: "Monitoramento de gasodutos",
-      summary: "Monitoramento de integridade de dutos flexíveis submarinos com sensoriamento distribuído.",
-      duration: "3 meses",
-      tags: "offshore, integridade de dutos, DAS, P&D",
-      body: "<p>Em um cenário de operação cada vez mais exigente, a Immer Messen aplicou sua tecnologia DAS de fase para monitoramento contínuo de toda a extensão do ativo. A solução permitiu identificar eventos com precisão de localização inferior a 5 metros, integrando-se ao SCADA do cliente e oferecendo alertas em tempo real à equipe de operação. Resultado: redução de tempo de resposta em até 80% comparado às inspeções tradicionais.</p><p>A integração com a infraestrutura existente foi um dos pontos-chave do projeto. A fibra óptica usada para monitoramento é a mesma já instalada na operação — sem necessidade de duplicação, escavação ou substituição. O interrogador DATS realizou medições simultâneas de DAS e DTS, entregando informação acústica e térmica sobre o mesmo cabo.</p><p>Os dados gerados pelo sistema alimentam dashboards operacionais customizados, permitindo análises de tendência, correlação com variáveis externas e geração de evidências para auditoria. A escalabilidade da arquitetura permite estender o monitoramento para outros trechos com mínimo investimento incremental.</p>",
-      seoTitle: "Projeto P&D Petrobras",
-      seoDescription: "Case de monitoramento de integridade de dutos flexíveis submarinos.",
-    },
-    en: {
-      slug: "projeto-pd-petrobras",
-      title: "Petrobras R&D Project",
-      summary: "Integrity monitoring of flexible submarine pipelines with distributed sensing.",
-      duration: "3 months",
-      tags: "offshore, pipeline integrity, DAS, R&D",
-      body: "<p>In an increasingly demanding operational scenario, Immer Messen applied its phase-based DAS technology for continuous monitoring along the entire asset. The solution identified events with sub-5-meter localization precision, integrating with the customer's SCADA and delivering real-time alerts to the operations team. Result: up to 80% reduction in response time compared with traditional inspections.</p><p>Integration with the existing infrastructure was a key project point. The optical fiber used for monitoring is the same already installed in the operation — no need for duplication, excavation or replacement. The DATS interrogator performed simultaneous DAS and DTS measurements, delivering acoustic and thermal information on the same cable.</p><p>The data generated by the system feeds customized operational dashboards, enabling trend analysis, correlation with external variables and audit evidence generation. The architecture scales to extend monitoring to other sections with minimal incremental investment.</p>",
-      seoTitle: "Petrobras R&D Project",
-      seoDescription: "Integrity monitoring case for flexible submarine pipelines.",
-    },
-    es: {
-      slug: "projeto-pd-petrobras",
-      title: "Proyecto I+D Petrobras",
-      summary: "Monitoreo de integridad de ductos flexibles submarinos con sensado distribuido.",
-      duration: "3 meses",
-      tags: "offshore, integridad de ductos, DAS, I+D",
-      body: "<p>En un escenario operativo cada vez más exigente, Immer Messen aplicó su tecnología DAS de fase para el monitoreo continuo de toda la extensión del activo. La solución permitió identificar eventos con precisión de localización inferior a 5 metros, integrándose al SCADA del cliente y ofreciendo alertas en tiempo real al equipo de operación. Resultado: reducción del tiempo de respuesta de hasta 80% frente a inspecciones tradicionales.</p><p>La integración con la infraestructura existente fue uno de los puntos clave del proyecto. La fibra óptica utilizada para el monitoreo es la misma ya instalada en la operación — sin necesidad de duplicación, excavación o reemplazo. El interrogador DATS realizó mediciones simultáneas de DAS y DTS, entregando información acústica y térmica sobre el mismo cable.</p><p>Los datos generados por el sistema alimentan tableros operativos personalizados, permitiendo análisis de tendencias, correlación con variables externas y generación de evidencias para auditoría. La escalabilidad de la arquitectura permite extender el monitoreo a otros tramos con inversión incremental mínima.</p>",
-      seoTitle: "Proyecto I+D Petrobras",
-      seoDescription: "Caso de monitoreo de integridad de ductos flexibles submarinos.",
-    },
-  },
-  {
     key: "monitoramento-acustico-de-cetaceos",
     documentId: "heyjvuo6793hbue6p3ehulk5",
     sectorCategory: "meio-ambiente",
     applicationAreaKeys: ["meio-ambiente", "cabos-submarinos"],
     coverAssetKey: "case-cover-baleias",
-    heroAssetKey: "case-hero-plataforma",
-    client: "Consórcio offshore",
-    startDate: "2021-06-01",
-    projectLogoKeys: ["instituto-aqualie"],
+    heroAssetKey: "case-hero-oceano",
+    // Cliente e data corrigidos na revisao (RevisaoWeber_CaseBaleias.docx): o
+    // contrato e com o Instituto Aqualie, e a competencia e maio/2024.
+    client: "Petrobras",
+    startDate: "2024-05-01",
+    datePrecision: "month",
+    projectLogoKeys: ["petrobras", "immer-messen", "instituto-aqualie"],
     // Figuras de resources/Cases_Imagens (10-ASSETS-DECISION.md).
     // O alt descreve o que a figura MOSTRA — nao repete a legenda; mapa e
     // espectrograma sao figuras tecnicas e precisam do conteudo descrito.
@@ -963,15 +965,15 @@ const caseStudyDefs = [
         assetKey: "case-fig-mapa-campos",
         "pt-BR": {
           alt: "Mapa da Bacia de Campos, no litoral do Rio de Janeiro, marcando o traçado do cabo monitorado por DAS a partir de Barra do Furado e, mais ao norte, a área dos sensores sísmicos PRM no Campo de Jubarte.",
-          caption: "Localização espacial dos sensores PRM e do cabo monitorado por DAS na Bacia de Campos.",
+          caption: "Fonte: Andriolo et al. (2026).",
         },
         en: {
           alt: "Map of the Campos Basin off the coast of Rio de Janeiro, marking the route of the DAS-monitored cable running from Barra do Furado and, further north, the area of the PRM seismic sensors at the Jubarte Field.",
-          caption: "Spatial localization of the PRM sensors and of the DAS-monitored cable in the Campos Basin.",
+          caption: "Source: Andriolo et al. (2026).",
         },
         es: {
           alt: "Mapa de la Cuenca de Campos, en el litoral de Río de Janeiro, que marca el trazado del cable monitoreado por DAS desde Barra do Furado y, más al norte, el área de los sensores sísmicos PRM en el Campo de Jubarte.",
-          caption: "Localización espacial de los sensores PRM y del cable monitoreado por DAS en la Cuenca de Campos.",
+          caption: "Fuente: Andriolo et al. (2026).",
         },
       },
       {
@@ -979,15 +981,47 @@ const caseStudyDefs = [
         assetKey: "case-fig-espectrograma",
         "pt-BR": {
           alt: "Espectrograma em cascata do sinal DAS: distância ao longo do cabo no eixo horizontal, tempo no vertical e energia acústica em escala de cor, com padrões em forma de V concentrados nas frequências baixas.",
-          caption: "Cada padrão em V marca a posição, ao longo da fibra, de onde partiu a vocalização detectada.",
+          caption: "Fonte: Andriolo et al. (2026).",
         },
         en: {
           alt: "Waterfall spectrogram of the DAS signal: distance along the cable on the horizontal axis, time on the vertical axis and acoustic energy on a colour scale, with V-shaped patterns concentrated in the low frequencies.",
-          caption: "Each V-shaped pattern marks the position along the fibre where the detected vocalisation originated.",
+          caption: "Source: Andriolo et al. (2026).",
         },
         es: {
           alt: "Espectrograma en cascada de la señal DAS: distancia a lo largo del cable en el eje horizontal, tiempo en el vertical y energía acústica en escala de color, con patrones en forma de V concentrados en las frecuencias bajas.",
-          caption: "Cada patrón en V marca la posición, a lo largo de la fibra, desde donde partió la vocalización detectada.",
+          caption: "Fuente: Andriolo et al. (2026).",
+        },
+      },
+      {
+        key: "embarcacoes",
+        assetKey: "case-fig-embarcacoes",
+        "pt-BR": {
+          alt: "Registro DAS do trecho de 30 a 37 km do cabo: distância no eixo vertical, tempo no horizontal e intensidade em escala de cor, com uma sequência de padrões hiperbólicos brilhantes concentrada em torno de 33,5 km.",
+          caption: "Padrões hiperbólicos característicos de ruído de embarcação; a intensidade cresce com a aproximação sobre o cabo. Fonte: Andriolo et al. (2026).",
+        },
+        en: {
+          alt: "DAS record of the 30 to 37 km section of the cable: distance on the vertical axis, time on the horizontal axis and intensity on a colour scale, with a sequence of bright hyperbolic patterns concentrated around 33.5 km.",
+          caption: "Hyperbolic patterns characteristic of vessel noise; intensity rises as the vessel approaches the cable. Source: Andriolo et al. (2026).",
+        },
+        es: {
+          alt: "Registro DAS del tramo de 30 a 37 km del cable: distancia en el eje vertical, tiempo en el horizontal e intensidad en escala de color, con una secuencia de patrones hiperbólicos brillantes concentrada en torno a 33,5 km.",
+          caption: "Patrones hiperbólicos característicos de ruido de embarcación; la intensidad crece con la aproximación sobre el cable. Fuente: Andriolo et al. (2026).",
+        },
+      },
+      {
+        key: "processos-oceanicos",
+        assetKey: "case-fig-processos-oceanicos",
+        "pt-BR": {
+          alt: "Registro DAS da seção costeira do cabo com faixas diagonais periódicas propagando-se do mar para a costa, um detalhe ampliado da transição espacial e, ao lado, uma foto da arrebentação na praia.",
+          caption: "Padrões de ondas de superfície propagando-se para a costa; o detalhe evidencia a dinâmica de arrebentação. Fonte: Andriolo et al. (2026).",
+        },
+        en: {
+          alt: "DAS record of the coastal section of the cable showing periodic diagonal bands travelling from the sea towards the shore, a zoomed detail of the spatial transition and, beside it, a photograph of waves breaking on the beach.",
+          caption: "Surface wave patterns travelling shoreward; the inset highlights the surf zone dynamics. Source: Andriolo et al. (2026).",
+        },
+        es: {
+          alt: "Registro DAS de la sección costera del cable con franjas diagonales periódicas propagándose del mar hacia la costa, un detalle ampliado de la transición espacial y, al lado, una foto de la rompiente en la playa.",
+          caption: "Patrones de ondas de superficie propagándose hacia la costa; el detalle evidencia la dinámica de rompiente. Fuente: Andriolo et al. (2026).",
         },
       },
     ],
@@ -998,24 +1032,28 @@ const caseStudyDefs = [
       leadSubtitle: "Como a tecnologia DAS e inteligência artificial revolucionam a bioacústica marinha.",
       sections: [
         { __component: "case.text-section", body: "<p>A Petrobras realiza monitoramento contínuo de populações de espécies marinhas ao longo de suas áreas de operação, buscando compreender e mitigar eventuais impactos ambientais de suas atividades. Como parte desse compromisso, a empresa é uma das maiores patrocinadoras de programas de proteção da biodiversidade marinha no Brasil. Um dos principais focos desse esforço é o ambiente acústico submarino: cetáceos — baleias e golfinhos — dependem do som para se comunicar, navegar e se reproduzir, o que os torna particularmente sensíveis a ruídos de origem antrópica, como os gerados por campanhas de prospecção sísmica.</p><p>Para acompanhar esse impacto, a Petrobras conta com o Instituto Aqualie, uma das principais autoridades mundiais em bioacústica marinha, responsável por um dos mais longevos programas de monitoramento acústico passivo do Atlântico Sul. O Instituto combina diferentes tecnologias — hidrofones, tags acústicas, avistamentos visuais e acompanhamento populacional — para mapear a presença, o comportamento e a distribuição sazonal de cetáceos ao longo da costa brasileira.</p>" },
-        { figureKey: "baleia" },
         { __component: "case.highlight-section", variant: "opening", eyebrow: "A solução", heading: "Fibra óptica como sensor acústico", body: "<p><b>Desde 2024, o Instituto Aqualie contratou a Immer Messen para desenvolver uma abordagem inédita no Brasil:</b> transformar cabos de telecomunicações submarinos já instalados pela Petrobras em sensores acústicos contínuos, por meio da tecnologia de Sensoriamento Distribuído a Fibra Óptica (DFOS), especificamente na modalidade DAS (Distributed Acoustic Sensing).</p>" },
         { __component: "case.text-section", body: "<p>O princípio é direto: fibras ópticas ociosas dentro de um cabo de telecomunicações — que não carregam tráfego de dados — podem ser interrogadas por um equipamento instalado em terra, capaz de detectar nanodeformações ao longo de toda a extensão do cabo. Cada metro de fibra se torna, na prática, um ponto de escuta. Não é necessário qualquer intervenção física na infraestrutura submarina existente.</p>" },
-        { __component: "case.text-section", body: "<p>O projeto também se apoia, de forma complementar, em dados históricos de Permanent Reservoir Monitoring (PRM) — sensores sísmicos originalmente instalados pela Petrobras no Campo de Jubarte para monitoramento de reservatório — reaproveitados pelo Instituto Aqualie para confirmar a ocorrência sazonal de baleias-jubarte, baleias-fin e baleias-sei na Bacia de Campos.</p><p>Após uma fase de testes laboratoriais em 2024 — que validou a sensibilidade do sistema a sons de baixa frequência e calibrou parâmetros como tensão do cabo e comprimento de gauge —, a Immer Messen instalou seu sistema de interrogação em uma estação de telecomunicações em Barra do Furado (RJ), monitorando um cabo submarino de mais de <b>110 km de extensão</b> na Bacia de Campos.</p>" },
         { figureKey: "mapa-campos" },
+        { __component: "case.text-section", body: "<p>O projeto também se apoia, de forma complementar, em dados históricos de Permanent Reservoir Monitoring (PRM) — sensores sísmicos originalmente instalados pela Petrobras no Campo de Jubarte para monitoramento de reservatório — reaproveitados pelo Instituto Aqualie para confirmar a ocorrência sazonal de baleias-jubarte, baleias-fin e baleias-sei na Bacia de Campos.</p><p>Após uma fase de testes laboratoriais em 2024 — que validou a sensibilidade do sistema a sons de baixa frequência e calibrou parâmetros como tensão do cabo e comprimento de gauge —, a Immer Messen instalou seu sistema de interrogação em uma estação de telecomunicações em Barra do Furado (RJ), monitorando um cabo submarino de mais de <b>110 km de extensão</b> na Bacia de Campos.</p>" },
         { __component: "case.section-title", title: "Inteligência artificial na detecção de anomalias" },
         { __component: "case.two-column-section", leftBody: "<p>O volume de dados gerado por um sistema DAS operando continuamente sobre uma centena de quilômetros de cabo é da ordem de dezenas de terabytes por campanha — inviável para inspeção manual. Para lidar com essa escala, a Immer Messen desenvolve, desde 2020, um algoritmo próprio de detecção automática de anomalias, baseado na análise da densidade espectral de potência (PSD) do sinal em cada ponto do cabo, ao longo de janelas temporais definidas. O algoritmo varre o conjunto de dados no espaço e no tempo, identificando variações abruptas de energia em faixas de frequência específicas e gerando um catálogo de eventos — cada um associado a posição, horário e assinatura espectral — posteriormente validado por especialistas do Instituto Aqualie.</p>", pullQuote: "hoje, o monitoramento funciona em tempo real", rightBody: "<p>Essa camada de inteligência artificial é o que torna o sistema operacionalmente viável: permitindo que biólogos do Instituto Aqualie, a partir de sua sede em Juiz de Fora, Minas Gerais, acompanhem remotamente a presença de baleias ao redor dos cabos de telecomunicações da Petrobras — sem necessidade de embarcações, equipes em campo ou deslocamento até o litoral.</p>" },
         { figureKey: "espectrograma" },
-        { __component: "case.panel-section", icon: "bar_chart", defaultOpen: true, title: "Resultados", body: "<p>As campanhas de campo confirmaram a viabilidade da tecnologia para bioacústica em escala real. Em uma medição realizada a cerca de <b>21 km da costa</b>, o sistema identificou 17 vocalizações distintas em uma janela de apenas 90 segundos, com padrões espectrais na faixa de <b>40 a 120 Hz</b> — consistentes com vocalizações de baleias-fin. Os sinais aparecem nos dados como padrões característicos em forma de \\\"V\\\", resultado da propagação da onda acústica ao longo do cabo, o que permite não apenas detectar, mas também localizar a origem do som com precisão de poucos metros.</p><p>A mesma infraestrutura e o mesmo algoritmo de detecção de anomalias demonstraram sensibilidade a outras classes de sinais relevantes para operações offshore: embarcações foram identificadas e tiveram sua trajetória estimada a partir de padrões acústicos hiperbólicos característicos de seus motores; ondulações de superfície e a dinâmica de arrebentação junto à costa também foram capturadas com clareza pelo mesmo conjunto de dados.</p>" },
+        { __component: "case.panel-section", icon: "bar_chart", defaultOpen: true, title: "Resultados", body: "<p>As campanhas de campo confirmaram a viabilidade da tecnologia para bioacústica em escala real. Em uma medição realizada a cerca de <b>21 km da costa</b>, o sistema identificou 17 vocalizações distintas em uma janela de apenas 90 segundos, com padrões espectrais na faixa de <b>40 a 120 Hz</b> — consistentes com vocalizações de baleias-fin. Os sinais aparecem nos dados como padrões característicos em forma de &quot;V&quot;, resultado da propagação da onda acústica ao longo do cabo, o que permite não apenas detectar, mas também localizar a origem do som com precisão de poucos metros.</p>", blocks: [
+          { heading: "Embarcações", body: "<p>A mesma infraestrutura e o mesmo pipeline de detecção demonstraram sensibilidade a outras classes de sinais relevantes para operações offshore. No trecho de 30 a 37 km (a cerca de 33,5 km da costa), o sistema registrou padrões hiperbólicos sequenciais característicos de ruído de embarcação. A atenuação observada junto ao ápice de cada padrão relaciona-se à geometria entre o movimento da embarcação e o cabo: a intensidade aumenta à medida que a embarcação se aproxima da fibra e diminui quando se afasta. A evolução temporal dessas chegadas permite inferir a direção de movimento e, integrada a dados de AIS, estimar a trajetória da embarcação.</p>", figureKey: "embarcacoes" },
+          { heading: "Processos oceânicos e zona de arrebentação", body: "<p>Na seção costeira, onde o cabo entra no mar, o mesmo conjunto de dados capturou com clareza processos oceânicos de grande escala. Com filtragem passa-alta em 0,01 Hz, evidenciaram-se padrões lentos e periódicos propagando-se do mar em direção à costa, atribuídos à modulação da pressão hidrostática por ondas de gravidade de superfície sobre a fibra enterrada. Ajustando o corte para 5 Hz, esses padrões terminam abruptamente em uma transição espacial específica, a partir da qual emergem oscilações mecânicas de mais alta frequência associadas à dinâmica de arrebentação na interface areia–mar. Essa resposta espectral e espacialmente ampla — de processos oceânicos de baixa frequência a emissões acústicas de mais alta frequência — evidencia a versatilidade do DAS como sensor ambiental.</p>", figureKey: "processos-oceanicos" },
+          { body: "<p>Essa característica é central para o valor da solução — a especificidade da detecção está no software, não no hardware, o que permite calibrar o mesmo sistema físico para diferentes finalidades de monitoramento.</p>" },
+        ] },
         { __component: "case.section-title", title: "Impacto e próximos passos" },
         { __component: "case.text-section", body: "<p>Os resultados devem contribuir diretamente para o entendimento científico dos padrões migratórios de cetáceos no litoral brasileiro. Espécies como a baleia-jubarte utilizam o corredor entre o Atlântico Sul e o litoral nordestino durante a temporada reprodutiva, e dados contínuos como os gerados pelo sistema DAS vão ajudar o Instituto Aqualie a refinar estimativas populacionais e identificar quais espécies transitam por diferentes trechos da costa ao longo do ano — informação essencial para orientar o planejamento de campanhas sísmicas com menor impacto ambiental.</p><p>A parceria entre Immer Messen, Instituto Aqualie e Petrobras segue em desenvolvimento, com o objetivo de expandir a cobertura geográfica do monitoramento e aprimorar os modelos de classificação automática por espécie ao longo dos próximos anos.</p>" },
         { __component: "case.highlight-section", variant: "closing", heading: "O projeto é reconhecido como o primeiro monitoramento de baleias por DAS realizado no Atlântico Sul", body: "<p>Isso consolida a Immer Messen como <b>referência em soluções de monitoramento acústico</b> distribuído para ambientes offshore — uma capacidade que se estende, com a mesma base tecnológica, a aplicações como segurança de ativos submarinos, detecção de intrusão em dutos e cabos, e monitoramento estrutural de infraestrutura crítica.</p>" },
+        { __component: "case.text-section", body: "<p>Os resultados descritos neste case estão documentados em capítulo de livro revisado por pares, de acesso aberto:</p><p>ANDRIOLO, A.; MARCON, E. H.; DE CASTRO, F. R.; RODRIGUES, G. M.; MIRANDA, G. A.; VIANA, Y.; GOLODNE, P. M.; POEYS, R. A. C.; SILVA, A. A. C.; AMORIM, T. O. S.; DJOKIC, D.; PIZZORNO, J. L. A. Permanent Reservoir Monitoring (PRM) and Distributed Acoustic Sensing (DAS) as Advanced Technologies for Maximizing the Acquisition of Acoustic Environmental Information. In: POPPER, A. N. et al. (eds.). <i>The Effects of Noise on Aquatic Life IV</i>. Cham: Springer, 2026. DOI: <a href=\"https://doi.org/10.1007/978-3-031-94229-7_225-1\" rel=\"noopener\" target=\"_blank\">10.1007/978-3-031-94229-7_225-1</a>.</p>" },
       ],
       slug: "monitoramento-de-baleias",
       title: "Monitoramento de baleias",
       summary: "Monitoramento de Cetáceos com Sensoriamento Distribuído a Fibra Óptica",
-      duration: "12 meses",
-      tags: "bioacústica, offshore, DAS",
+      duration: "3 meses",
+      tags: "offshore, integridade de dutos, DAS, P&D",
       body: "<p>Usando a fibra óptica instalada como sensor distribuído, o sistema identifica padrões acústicos característicos de diferentes espécies de cetáceos. As detecções alimentam um protocolo de mitigação que aciona pausas operacionais automáticas durante atividades sísmicas em áreas de presença confirmada.</p><p>O projeto combinou catalogação acústica, classificação por algoritmos próprios e estruturação de alertas para o time técnico — entregando maior cobertura observacional e consolidação de referência técnica para aplicações ambientais offshore.</p>",
       seoTitle: "Monitoramento acústico de cetáceos",
       seoDescription: "Case ambiental com uso de DAS para fauna marinha.",
@@ -1027,9 +1065,9 @@ const caseStudyDefs = [
       leadSubtitle: "How DAS technology and artificial intelligence are reshaping marine bioacoustics.",
       slug: "monitoramento-acustico-de-cetaceos",
       title: "Acoustic monitoring of cetaceans",
-      summary: "Study of seismic activity impact on marine fauna with distributed acoustic observability.",
-      duration: "12 months",
-      tags: "bioacoustics, offshore, DAS",
+      summary: "Cetacean Monitoring with Distributed Fibre Optic Sensing",
+      duration: "3 months",
+      tags: "offshore, pipeline integrity, DAS, R&D",
       body: "<p>Using installed optical fiber as a distributed sensor, the system identifies acoustic patterns characteristic of different cetacean species. Detections feed a mitigation protocol that automatically triggers operational pauses during seismic activity in areas of confirmed presence.</p><p>The project combined acoustic cataloging, classification by proprietary algorithms and alert structuring for the technical team — delivering greater observational coverage and a consolidated technical reference for offshore environmental applications.</p>",
       seoTitle: "Acoustic monitoring of cetaceans",
       seoDescription: "Environmental case using DAS for marine fauna.",
@@ -1041,52 +1079,12 @@ const caseStudyDefs = [
       leadSubtitle: "Cómo la tecnología DAS y la inteligencia artificial revolucionan la bioacústica marina.",
       slug: "monitoramento-acustico-de-cetaceos",
       title: "Monitoreo acústico de cetáceos",
-      summary: "Estudio del impacto de la actividad sísmica en la fauna marina con observabilidad acústica distribuida.",
-      duration: "12 meses",
-      tags: "bioacústica, offshore, DAS",
+      summary: "Monitoreo de Cetáceos con Sensado Distribuido por Fibra Óptica",
+      duration: "3 meses",
+      tags: "offshore, integridad de ductos, DAS, I+D",
       body: "<p>Usando la fibra óptica instalada como sensor distribuido, el sistema identifica patrones acústicos característicos de diferentes especies de cetáceos. Las detecciones alimentan un protocolo de mitigación que activa pausas operativas automáticas durante actividades sísmicas en áreas de presencia confirmada.</p><p>El proyecto combinó catalogación acústica, clasificación por algoritmos propios y estructuración de alertas para el equipo técnico — entregando mayor cobertura observacional y consolidación de una referencia técnica para aplicaciones ambientales offshore.</p>",
       seoTitle: "Monitoreo acústico de cetáceos",
       seoDescription: "Caso ambiental con uso de DAS para fauna marina.",
-    },
-  },
-  {
-    key: "monitoramento-de-linhas-de-transmissao",
-    documentId: "j36a33h0neyvqeow5lui5hlg",
-    sectorCategory: "energia",
-    applicationAreaKeys: ["seguranca-patrimonial", "linhas-transmissao"],
-    coverAssetKey: "case-cover-transmissao",
-    client: "Operador de transmissão",
-    startDate: "2022-03-01",
-    projectLogoKeys: [],
-    "pt-BR": {
-      slug: "monitoramento-de-linhas-de-transmissao",
-      title: "Monitoramento de linhas de transmissão",
-      summary: "Detecção precoce de falhas e intrusões em torres e corredores de transmissão.",
-      duration: "18 meses",
-      tags: "energia, DTS, alarmística",
-      body: "<p>O sistema combina DAS e DTS para monitorar vibrações anômalas (queda de torres, intrusão) e variações térmicas (incêndios, sobrecarga). Eventos são classificados por algoritmos treinados em campo brasileiro e enviados ao centro de operações em tempo real.</p><p>A arquitetura é totalmente compatível com a fibra óptica de comunicação já existente nos corredores de transmissão — sem necessidade de novos cabos ou equipamentos em torre. O resultado é melhor previsibilidade operacional e cobertura permanente sem patrulhamento físico constante.</p>",
-      seoTitle: "Monitoramento de linhas de transmissão",
-      seoDescription: "Case de energia com foco em falhas e intrusões.",
-    },
-    en: {
-      slug: "monitoramento-de-linhas-de-transmissao",
-      title: "Transmission line monitoring",
-      summary: "Early detection of failures and intrusions on transmission towers and corridors.",
-      duration: "18 months",
-      tags: "energy, DTS, alerting",
-      body: "<p>The system combines DAS and DTS to monitor anomalous vibrations (tower failures, intrusion) and thermal variations (fires, overload). Events are classified by algorithms trained on Brazilian field data and sent to the operations center in real time.</p><p>The architecture is fully compatible with the existing communication optical fiber along the transmission corridors — no new cables or tower equipment required. The result is better operational predictability and permanent coverage without constant physical patrols.</p>",
-      seoTitle: "Transmission line monitoring",
-      seoDescription: "Energy case focused on failures and intrusions.",
-    },
-    es: {
-      slug: "monitoramento-de-linhas-de-transmissao",
-      title: "Monitoreo de líneas de transmisión",
-      summary: "Detección temprana de fallas e intrusiones en torres y corredores de transmisión.",
-      duration: "18 meses",
-      tags: "energía, DTS, alertas",
-      body: "<p>El sistema combina DAS y DTS para monitorear vibraciones anómalas (caída de torres, intrusión) y variaciones térmicas (incendios, sobrecarga). Los eventos son clasificados por algoritmos entrenados con datos de campo brasileños y enviados al centro de operaciones en tiempo real.</p><p>La arquitectura es totalmente compatible con la fibra óptica de comunicación ya existente en los corredores de transmisión — sin necesidad de nuevos cables ni equipos en torres. El resultado es una mejor previsibilidad operativa y cobertura permanente sin patrullaje físico constante.</p>",
-      seoTitle: "Monitoreo de líneas de transmisión",
-      seoDescription: "Caso de energía enfocado en fallas e intrusiones.",
     },
   },
   {
@@ -1094,39 +1092,96 @@ const caseStudyDefs = [
     documentId: "c07mowtisq6wm8vuezg2tyzb",
     sectorCategory: "oleo-e-gas",
     applicationAreaKeys: ["derivacao-clandestina", "seguranca-patrimonial"],
-    coverAssetKey: "case-cover-gasodutos",
-    client: "Operadora de gasodutos",
-    startDate: "2020-09-01",
-    projectLogoKeys: [],
+    coverAssetKey: "case-cover-gasodutos-onshore",
+    heroAssetKey: "case-cover-gasodutos-onshore",
+    client: "Transporte de Gás Natural / Brasil",
+    startDate: "2024-06-01",
+    datePrecision: "month",
+    projectLogoKeys: ["immer-messen"],
+    figures: [
+      {
+        key: "dutos-sinais",
+        assetKey: "case-fig-dutos-sinais",
+        "pt-BR": {
+          alt: "Três registros DAS empilhados e rotulados I, II e III, cada um com a janela de detecção destacada e a classe atribuída pelo algoritmo: pessoa, veículo leve e escavadeira.",
+          caption: "Fonte: Imagem I.: Identificação automática de passos humanos em torno do ativo monitorado; Imagem II.: Identificação automática de veículo leve trafegando próximo ao ativo monitorado; Imagem III. Identificação automática de escavadeira operando próximo ao ativo monitorado",
+        },
+        en: {
+          alt: "Three stacked DAS records labelled I, II and III, each with the detection window highlighted and the class assigned by the algorithm: person, light vehicle and excavator.",
+          caption: "Source: Image I: automatic identification of human footsteps around the monitored asset; Image II: automatic identification of a light vehicle travelling near the monitored asset; Image III: automatic identification of an excavator operating near the monitored asset",
+        },
+        es: {
+          alt: "Tres registros DAS apilados y rotulados I, II y III, cada uno con la ventana de detección destacada y la clase asignada por el algoritmo: persona, vehículo ligero y excavadora.",
+          caption: "Fuente: Imagen I: identificación automática de pasos humanos en torno al activo monitoreado; Imagen II: identificación automática de vehículo ligero circulando cerca del activo monitoreado; Imagen III: identificación automática de excavadora operando cerca del activo monitoreado",
+        },
+      },
+      {
+        key: "dutos-dashboard",
+        assetKey: "case-fig-dutos-dashboard",
+        "pt-BR": {
+          alt: "Painel de eventos do sistema sobre imagem de satélite do trecho monitorado, com o traçado do duto destacado, e um celular em primeiro plano exibindo a sequência de alertas de escavação recebidos por SMS.",
+          caption: "Fonte: Exemplo de alerta enviado via SMS para cliente após identificação de escavação ao longo do trecho monitorado",
+        },
+        en: {
+          alt: "System event dashboard over a satellite view of the monitored section, with the pipeline route highlighted, and a phone in the foreground showing the sequence of digging alerts received by SMS.",
+          caption: "Source: Example of an SMS alert sent to the client after digging was identified along the monitored section",
+        },
+        es: {
+          alt: "Panel de eventos del sistema sobre una imagen satelital del tramo monitoreado, con el trazado del ducto destacado, y un teléfono en primer plano que muestra la secuencia de alertas de excavación recibidas por SMS.",
+          caption: "Fuente: Ejemplo de alerta enviada por SMS al cliente tras identificar una excavación a lo largo del tramo monitoreado",
+        },
+      },
+    ],
     "pt-BR": {
-      slug: "monitoramento-de-cabos-submarinos",
-      title: "Monitoramento de cabos submarinos",
-      summary: "Detecção de vazamentos e derivação clandestina em gasodutos de longa distância.",
-      duration: "24 meses",
-      tags: "dutos, DAS, DTS, vazamentos",
-      body: "<p>O sistema cobre centenas de quilômetros do duto com um único interrogador DATS, classificando eventos de vazamento, escavação não autorizada, derivação clandestina e atividade humana próxima. A latência de alerta é tipicamente inferior a 30 segundos do evento ao centro de operações.</p><p>A plataforma DATS combina leitura distribuída, filtragem de ruído e alertas operacionais com localização precisa, entregando mais rapidez na resposta e base técnica para expandir monitoramento a novos trechos com menor investimento incremental.</p>",
-      seoTitle: "Monitoramento de gasodutos onshore",
-      seoDescription: "Case de vazamentos e derivação clandestina em gasodutos.",
+      heroTitle: "Monitoramento Inteligente de Dutos por Fibra Óptica",
+      challenge: "<p>Grandes operadoras de infraestrutura de transporte de gás natural enfrentam um desafio permanente: monitorar extensos trechos de dutos em áreas remotas, muitas vezes de difícil acesso, contra ameaças que vão desde invasões e vandalismo até interferências involuntárias causadas por máquinas e veículos próximos à faixa de segurança — ou, no cenário mais crítico, tentativas deliberadas de perfuração do duto.</p><p>Os métodos convencionais de monitoramento — patrulhamento físico, câmeras pontuais e inspeções periódicas — não oferecem cobertura contínua nem capacidade de resposta imediata. O tempo entre o evento e a detecção pode ser fatal para a integridade do sistema e para a segurança das comunidades no entorno.</p>",
+      sections: [
+        { __component: "case.highlight-section", variant: "opening", eyebrow: "A solução", heading: "Máxima precisão sem infraestrutura complexa", body: "<p>Uma grande transportadora de gás natural do Brasil contratou a Immer Messen para um projeto de monitoramento contínuo e autônomo de um trecho de gasoduto por meio de tecnologia DFOS — Distributed Fiber Optic Sensing — combinada com Inteligência Artificial.</p>" },
+        { __component: "case.text-section", body: "<p>Utilizando um cabo de fibra óptica de telecomunicações comum instalado ao longo do duto, o sistema DATS da Immer Messen transformou a fibra em uma rede densa de sensores acústicos distribuídos, capaz de detectar qualquer perturbação ao longo de toda a extensão monitorada — sem equipamentos adicionais em campo, sem intervenção humana contínua e sem obras de infraestrutura complexas.</p>" },
+        { __component: "case.section-title", title: "Como funciona" },
+        { __component: "case.text-section", body: "<p>O interrogador óptico DATS envia pulsos de luz pela fibra e analisa os sinais refletidos com resolução espacial de 3 metros. Qualquer evento acústico ou vibração mecânica ao longo do duto — seja um passo humano, a passagem de um veículo ou a vibração de uma escavadeira — altera o padrão do sinal de forma característica. <b>Os algoritmos de IA da Immer Messen processam essas variações em tempo real e classificam automaticamente cada evento detectado.</b></p><p>O operador acompanha tudo remotamente, de sua sala de controle, a mais de 200 km de distância do trecho monitorado.</p>" },
+        { __component: "case.panel-section", icon: "bar_chart", defaultOpen: true, title: "Resultados", body: "<p>Durante semanas de operação autônoma e contínua, o sistema DATS demonstrou ótimo desempenho em todos os cenários testados. Eventos simulados às cegas foram realizados ao longo do trecho monitorado, sem que a equipe de operação soubesse o tipo, o local ou o momento de cada ocorrência. O sistema detecta as anomalias, e classifica em eventos através das classes:</p><ul><li>Pessoa caminhando na faixa (exemplo de sinal I.)</li><li>Motocicleta</li><li>Veículo leve (exemplo de sinal II.)</li><li>Veículo pesado</li><li>Escavadeira em operação (exemplo de sinal III.)</li><li>Perfuração do duto</li><li>Animais (gado transitando no pasto adjacente)</li></ul><p><b>Todos os alertas foram disparados e enviados por SMS à equipe de operação em menos de 1 minuto após o evento — sem qualquer supervisão local.</b></p>", blocks: [
+          { body: "<p>Algumas amostras de sinais de detecção e classificação automática são apresentadas abaixo.</p><p>I, Pessoa caminhando na faixa: sinais explícitos revelam os passos e o deslocamento da pessoa nas imediações do cabo óptico;</p><p>II. Veículo leve: padrões mecânicos mais intensos se espalhando pelo espaço-tempo cujos apex revelam o deslocamento espacial com velocidade superior e sob intensidades variáveis – associadas ao relevo irregular da região;</p><p>III. Escavadeira: sinal sob três tipos de padrão revelam estágios de operação distintos. No início os sinais são associados a escavações de fato, com a ação periódica que cria padrões mecânicos intensos que se espalham pelo espaço. No segundo estágio nota-se um comportamento constante com padrões de mais alta frequência dominantes, associados somente à máquina escavadeira ligada, porém parada. No terceiro estágio então sinais mecânicos mais intensos com deslocamento espacial-temporal revelam a movimentação da escavadeira.</p>", figureKey: "dutos-sinais" },
+        ] },
+        { __component: "case.section-title", title: "Diferenciais técnicos" },
+        { __component: "case.text-section", body: "<ul><li>Monitoramento contínuo 24/7, sem supervisão em campo</li><li>Classificação automática de eventos por IA — não apenas detecção, mas identificação do tipo de ameaça</li><li>Alertas em tempo real via SMS em menos de 1 minuto</li><li>Acompanhamento remoto em sala de controle a centenas de quilômetros do ponto monitorado</li><li>Operação sobre fibra óptica de telecomunicações comum — sem sensores pontuais adicionais</li><li>Resolução espacial de 3 metros ao longo de todo o trecho monitorado</li></ul>" },
+        { figureKey: "dutos-dashboard" },
+        { __component: "case.highlight-section", variant: "closing", heading: "Conclusão: Tecnologia DFOS e IA elevam a segurança de dutos a um novo patamar", body: "<p>O projeto demonstrou que a tecnologia DFOS da Immer Messen, combinada com algoritmos proprietários de IA, é capaz de transformar a fibra óptica já disponível em infraestruturas de dutos em um sistema robusto, autônomo e preciso de monitoramento de segurança — <b>entregando ao operador uma visibilidade em tempo real que os métodos convencionais simplesmente não oferecem.</b></p>" },
+      ],
+      slug: "monitoramento-inteligente-de-dutos",
+      title: "Monitoramento Inteligente de Dutos por Fibra Óptica",
+      summary: "Detecção de Anomalias em Tempo Real",
+      duration: "3 meses",
+      tags: "DFOS, Fibra Óptica, Monitoramento de Dutos, Detecção de Anomalias, Inteligência Artificial, Machine Learning, Segurança de Dutos, Pipelines, Monitoramento em Tempo Real, Oil & Gas",
+      body: "<p>Utilizando um cabo de fibra óptica de telecomunicações comum instalado ao longo do duto, o sistema DATS transformou a fibra em uma rede densa de sensores acústicos distribuídos, com resolução espacial de 3 metros e sem qualquer equipamento adicional em campo.</p><p>Os algoritmos de IA classificam automaticamente cada evento detectado — pessoa, motocicleta, veículo leve, veículo pesado, escavadeira, perfuração do duto e animais — e disparam alertas por SMS em menos de 1 minuto, acompanhados remotamente de uma sala de controle a mais de 200 km do trecho monitorado.</p>",
+      seoTitle: "Monitoramento inteligente de dutos por fibra óptica",
+      seoDescription: "Case de detecção e classificação automática de anomalias em gasoduto onshore com DAS e IA.",
     },
     en: {
+      client: "Natural Gas Transmission / Brazil",
+      heroTitle: "Intelligent Pipeline Monitoring with Optical Fibre",
+      challenge: "<p>Large natural gas transmission operators face a permanent challenge: monitoring long pipeline sections in remote, often hard-to-reach areas against threats ranging from intrusion and vandalism to unintentional interference from machinery and vehicles near the right of way — or, in the most critical scenario, deliberate attempts to drill into the pipeline.</p><p>Conventional monitoring methods — foot patrols, fixed cameras and periodic inspections — offer neither continuous coverage nor immediate response. The time between event and detection can be fatal to the integrity of the system and to the safety of surrounding communities.</p>",
       slug: "monitoramento-de-gasodutos-onshore",
-      title: "Onshore gas pipeline monitoring",
-      summary: "Leak detection and illegal tapping detection on long-distance gas pipelines.",
-      duration: "24 months",
-      tags: "pipelines, DAS, DTS, leaks",
-      body: "<p>The system covers hundreds of kilometers of pipeline with a single DATS interrogator, classifying leak events, unauthorized excavation, illegal tapping and nearby human activity. Alert latency is typically under 30 seconds from event to operations center.</p><p>The DATS platform combines distributed reading, noise filtering and operational alerts with precise localization, delivering faster response and a technical foundation to extend monitoring to new sections with lower incremental investment.</p>",
-      seoTitle: "Onshore gas pipeline monitoring",
-      seoDescription: "Case on leaks and illegal tapping in gas pipelines.",
+      title: "Intelligent Pipeline Monitoring with Optical Fibre",
+      summary: "Real-Time Anomaly Detection",
+      duration: "3 months",
+      tags: "DFOS, Optical Fibre, Pipeline Monitoring, Anomaly Detection, Artificial Intelligence, Machine Learning, Pipeline Security, Pipelines, Real-Time Monitoring, Oil & Gas",
+      body: "<p>Using an ordinary telecom optical fibre cable installed along the pipeline, the DATS system turned the fibre into a dense array of distributed acoustic sensors, with 3-metre spatial resolution and no additional equipment in the field.</p><p>AI algorithms automatically classify every detected event — person, motorcycle, light vehicle, heavy vehicle, excavator, pipeline drilling and livestock — and trigger SMS alerts in under a minute, monitored remotely from a control room more than 200 km from the section under surveillance.</p>",
+      seoTitle: "Intelligent pipeline monitoring with optical fibre",
+      seoDescription: "Case on automatic detection and classification of anomalies on an onshore gas pipeline with DAS and AI.",
     },
     es: {
+      client: "Transporte de Gas Natural / Brasil",
+      heroTitle: "Monitoreo Inteligente de Ductos por Fibra Óptica",
+      challenge: "<p>Las grandes operadoras de infraestructura de transporte de gas natural enfrentan un desafío permanente: monitorear extensos tramos de ductos en áreas remotas, muchas veces de difícil acceso, contra amenazas que van desde invasiones y vandalismo hasta interferencias involuntarias causadas por máquinas y vehículos próximos a la franja de seguridad — o, en el escenario más crítico, intentos deliberados de perforación del ducto.</p><p>Los métodos convencionales de monitoreo — patrullaje físico, cámaras puntuales e inspecciones periódicas — no ofrecen cobertura continua ni capacidad de respuesta inmediata. El tiempo entre el evento y la detección puede ser fatal para la integridad del sistema y para la seguridad de las comunidades del entorno.</p>",
       slug: "monitoramento-de-gasodutos-onshore",
-      title: "Monitoreo de gasoductos onshore",
-      summary: "Detección de fugas y derivación clandestina en gasoductos de larga distancia.",
-      duration: "24 meses",
-      tags: "ductos, DAS, DTS, fugas",
-      body: "<p>El sistema cubre cientos de kilómetros del ducto con un único interrogador DATS, clasificando eventos de fuga, excavación no autorizada, derivación clandestina y actividad humana cercana. La latencia de alerta es típicamente inferior a 30 segundos desde el evento hasta el centro de operaciones.</p><p>La plataforma DATS combina lectura distribuida, filtrado de ruido y alertas operativas con localización precisa, entregando mayor rapidez en la respuesta y una base técnica para extender el monitoreo a nuevos tramos con menor inversión incremental.</p>",
-      seoTitle: "Monitoreo de gasoductos onshore",
-      seoDescription: "Caso de fugas y derivación clandestina en gasoductos.",
+      title: "Monitoreo Inteligente de Ductos por Fibra Óptica",
+      summary: "Detección de Anomalías en Tiempo Real",
+      duration: "3 meses",
+      tags: "DFOS, Fibra Óptica, Monitoreo de Ductos, Detección de Anomalías, Inteligencia Artificial, Machine Learning, Seguridad de Ductos, Pipelines, Monitoreo en Tiempo Real, Oil & Gas",
+      body: "<p>Utilizando un cable de fibra óptica de telecomunicaciones común instalado a lo largo del ducto, el sistema DATS transformó la fibra en una red densa de sensores acústicos distribuidos, con resolución espacial de 3 metros y sin ningún equipo adicional en campo.</p><p>Los algoritmos de IA clasifican automáticamente cada evento detectado — persona, motocicleta, vehículo ligero, vehículo pesado, excavadora, perforación del ducto y animales — y disparan alertas por SMS en menos de 1 minuto, monitoreados remotamente desde una sala de control a más de 200 km del tramo vigilado.</p>",
+      seoTitle: "Monitoreo inteligente de ductos por fibra óptica",
+      seoDescription: "Caso de detección y clasificación automática de anomalías en gasoducto onshore con DAS e IA.",
     },
   },
 ];
@@ -1151,6 +1206,15 @@ const caseStudies = caseStudyDefs.flatMap((def) =>
     const figureRefs = sections
       .filter((block) => block.__component === "case.figure-section")
       .map((block) => ({ assetKey: block.figureAssetKey, usage: "case.figure-section.image" }));
+    // Figuras dentro do painel colapsavel (case.panel-block). Usage proprio, entao
+    // formam uma fila separada da dos figure-section — so a ordem entre si importa.
+    const panelFigureRefs = sections
+      .filter((block) => block.__component === "case.panel-section")
+      .flatMap((block) =>
+        (block.blocks ?? [])
+          .filter((sub) => sub.figureAssetKey)
+          .map((sub) => ({ assetKey: sub.figureAssetKey, usage: "case.panel-section.blocks.image" }))
+      );
 
     return {
       key: def.key,
@@ -1178,6 +1242,7 @@ const caseStudies = caseStudyDefs.flatMap((def) =>
         ...heroRefs,
         ...logoRefs,
         ...figureRefs,
+        ...panelFigureRefs,
       ],
     };
   })
@@ -1744,6 +1809,16 @@ export const assetManifest = {
     { assetKey: "case-fig-baleia", sourcePath: "resources/Cases_Imagens/image_004.png", kind: "image" },
     { assetKey: "case-fig-mapa-campos", sourcePath: "resources/Cases_Imagens/image_008.png", kind: "image" },
     { assetKey: "case-fig-espectrograma", sourcePath: "resources/Cases_Imagens/image_010.png", kind: "image" },
+    // Figuras acrescentadas na revisao do case Baleias (RevisaoWeber_CaseBaleias.docx).
+    { assetKey: "case-fig-embarcacoes", sourcePath: "resources/Cases_Imagens/fig-embarcacoes.png", kind: "image" },
+    { assetKey: "case-fig-processos-oceanicos", sourcePath: "resources/Cases_Imagens/fig-processos-oceanicos.png", kind: "image" },
+    { assetKey: "case-cover-gasodutos-onshore", sourcePath: "resources/cases-03-onshore.jpeg", kind: "image" },
+    // Vindos dos PDFs de layout aprovado (docs/Case *.pdf).
+    { assetKey: "case-hero-oceano", sourcePath: "resources/Cases_Imagens/hero-oceano.jpg", kind: "image" },
+    { assetKey: "case-fig-dutos-dashboard", sourcePath: "resources/Cases_Imagens/fig-dutos-dashboard.png", kind: "image" },
+    { assetKey: "case-fig-dutos-sinais", sourcePath: "resources/Cases_Imagens/fig-dutos-sinais.png", kind: "image" },
+    // Lockup empilhado sobre fundo claro: o logo-immer padrao e branco, para fundo escuro.
+    { assetKey: "partner-immer-messen", sourcePath: "resources/Cases_Imagens/logo-immer-empilhado.png", kind: "image" },
     { assetKey: "case-bg-fibra", sourcePath: "resources/Cases_Imagens/image_022.png", kind: "image" },
     { assetKey: "application-integridade-estrutural", sourcePath: "layout-aprovado/assets/img/areas/integridade-estrutural.png", kind: "image" },
     { assetKey: "application-vazamentos", sourcePath: "layout-aprovado/assets/img/areas/vazamentos.png", kind: "image" },
