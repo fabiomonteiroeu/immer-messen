@@ -17,7 +17,7 @@ export interface CaseFigureSection extends Struct.ComponentSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 240;
       }>;
-    caption: Schema.Attribute.String;
+    caption: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images'>;
   };
 }
@@ -171,6 +171,30 @@ export interface CaseLeadSection extends Struct.ComponentSchema {
   };
 }
 
+export interface CasePanelBlock extends Struct.ComponentSchema {
+  collectionName: 'components_case_panel_blocks';
+  info: {
+    description: 'Sub-bloco dentro do painel colapsavel: subtitulo, texto e/ou figura com legenda. Permite intercalar figuras no corpo do painel, que antes so aceitava richtext. Preencha so os campos que o bloco usa \u2014 um bloco pode ser so texto, so figura, ou os dois.';
+    displayName: 'Case Panel Block';
+    icon: 'picture';
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    alt: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 240;
+      }>;
+    body: Schema.Attribute.RichText;
+    caption: Schema.Attribute.Text;
+    heading: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
+  };
+}
+
 export interface CasePanelSection extends Struct.ComponentSchema {
   collectionName: 'components_case_panel_sections';
   info: {
@@ -183,6 +207,7 @@ export interface CasePanelSection extends Struct.ComponentSchema {
     };
   };
   attributes: {
+    blocks: Schema.Attribute.Component<'case.panel-block', true>;
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
     defaultOpen: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     icon: Schema.Attribute.Enumeration<
@@ -924,6 +949,7 @@ declare module '@strapi/strapi' {
       'case.info-card': CaseInfoCard;
       'case.info-row': CaseInfoRow;
       'case.lead-section': CaseLeadSection;
+      'case.panel-block': CasePanelBlock;
       'case.panel-section': CasePanelSection;
       'case.project-logo': CaseProjectLogo;
       'case.section-title': CaseSectionTitle;

@@ -10,6 +10,6 @@
   "attributes": {
     "image": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
     "alt": { "type": "string", "maxLength": 240 },
-    "caption": { "type": "string" }
+    "caption": { "type": "text" }
   }
 }

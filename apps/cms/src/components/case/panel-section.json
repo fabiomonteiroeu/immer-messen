@@ -25,6 +25,11 @@
     },
     "title": { "type": "string", "required": true },
     "body": { "type": "richtext", "required": true },
+    "blocks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "case.panel-block"
+    },
     "defaultOpen": { "type": "boolean", "default": true }
   }
 }

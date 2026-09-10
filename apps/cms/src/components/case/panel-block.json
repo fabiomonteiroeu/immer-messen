@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_case_panel_blocks",
+  "info": {
+    "displayName": "Case Panel Block",
+    "icon": "picture",
+    "description": "Sub-bloco dentro do painel colapsavel: subtitulo, texto e/ou figura com legenda. Permite intercalar figuras no corpo do painel, que antes so aceitava richtext. Preencha so os campos que o bloco usa — um bloco pode ser so texto, so figura, ou os dois."
+  },
+  "options": {},
+  "pluginOptions": { "i18n": { "localized": true } },
+  "attributes": {
+    "heading": { "type": "string" },
+    "body": { "type": "richtext" },
+    "image": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "alt": { "type": "string", "maxLength": 240 },
+    "caption": { "type": "text" }
+  }
+}

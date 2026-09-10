@@ -293,6 +293,20 @@ function applyAssetsToCaseBlocks(blocks, consumer) {
         next.figureAssetKey = undefined;
         break;
       }
+      case "case.panel-section": {
+        // Figuras intercaladas no corpo do painel (case.panel-block). A fila e
+        // consumida na ordem dos sub-blocos, igual ao resto.
+        if (Array.isArray(next.blocks) && next.blocks.length > 0) {
+          next.blocks = next.blocks.map((sub) => {
+            const nextSub = { ...sub, figureAssetKey: undefined };
+            if (!sub.figureAssetKey) return nextSub;
+            const image = consumer.take("case.panel-section.blocks.image");
+            if (image) nextSub.image = image;
+            return nextSub;
+          });
+        }
+        break;
+      }
       default:
         break;
     }
@@ -625,6 +639,46 @@ async function seedCaseStudies(assetIdByKey, areaIds) {
   });
 }
 
+/**
+ * Campos que o seed deliberadamente NAO sobrescreve.
+ *
+ * A imagem de fundo do bloco "Quem somos" da home e trocada pelo admin e a escolha
+ * do editor precisa sobreviver ao proximo seed. Aqui o valor atual e lido antes de
+ * montar os blocos; se ja existir midia gravada, ela vence o asset do seed. Numa
+ * base vazia nao ha nada para preservar e o asset do seed entra como padrao.
+ */
+async function readPreservedPageFields(pageKey, locale) {
+  if (DRY_RUN) return {};
+  try {
+    const search = new URLSearchParams({
+      "filters[pageKey][$eq]": pageKey,
+      locale,
+      status: "draft",
+      "pagination[pageSize]": "1",
+      "populate[blocks][on][page.about-content-block][populate][backgroundImage]": "true",
+    });
+    const res = await strapi(`/api/pages?${search.toString()}`);
+    const about = (res?.data?.[0]?.blocks ?? []).find(
+      (block) =>
+        block.__component === "page.about-content-block" && block.variant === "home-about"
+    );
+    const id = about?.backgroundImage?.id;
+    return id ? { aboutBackgroundId: id } : {};
+  } catch {
+    // Pagina ainda nao existe ou o populate falhou: segue com o asset do seed.
+    return {};
+  }
+}
+
+function applyPreservedPageFields(blocks, preserved) {
+  if (!preserved.aboutBackgroundId) return blocks;
+  return blocks.map((block) =>
+    block.__component === "page.about-content-block" && block.variant === "home-about"
+      ? { ...block, backgroundImage: preserved.aboutBackgroundId }
+      : block
+  );
+}
+
 async function seedPages({ assetIdByKey, areaIds, partnerIds, articleIds, caseIds }) {
   const pagesByKey = new Map();
   for (const entry of seedContent.pages) {
@@ -638,13 +692,17 @@ async function seedPages({ assetIdByKey, areaIds, partnerIds, articleIds, caseId
 
     for (const variant of variants) {
       const consumer = buildAssetConsumer(variant.assetRefs, assetIdByKey);
+      const preserved = await readPreservedPageFields(variant.data.pageKey, variant.locale);
       const baseBlocks = applyAssetsToBlocks(variant.data.blocks, consumer);
-      const finalBlocks = applyRelationsToBlocks(baseBlocks, {
-        areaIds,
-        partnerIds,
-        articleIds,
-        caseIds,
-      });
+      const finalBlocks = applyPreservedPageFields(
+        applyRelationsToBlocks(baseBlocks, {
+          areaIds,
+          partnerIds,
+          articleIds,
+          caseIds,
+        }),
+        preserved
+      );
 
       const data = {
         ...variant.data,
