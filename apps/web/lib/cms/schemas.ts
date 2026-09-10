@@ -364,6 +364,21 @@ export const cmsCaseSectionSchema = z.discriminatedUnion("__component", [
     icon: cmsCaseIconKeySchema.nullable().optional(),
     title: z.string().min(1),
     body: z.string().min(1),
+    // Sub-blocos que intercalam subtitulo, texto e figura dentro do painel.
+    // Cada campo e opcional: um bloco pode ser so texto, so figura, ou os dois.
+    blocks: z
+      .array(
+        z.object({
+          id: z.number().int().nonnegative().optional(),
+          heading: z.string().nullable().optional(),
+          body: z.string().nullable().optional(),
+          image: cmsMediaSchema.nullable().optional(),
+          alt: z.string().nullable().optional(),
+          caption: z.string().nullable().optional(),
+        })
+      )
+      .nullable()
+      .optional(),
     defaultOpen: z.boolean().nullable().optional(),
   }),
 ]);
@@ -372,6 +387,9 @@ export type CmsCaseSection = z.infer<typeof cmsCaseSectionSchema>;
 
 export const cmsCaseSchema = z.object({
   id: z.number().int().nonnegative(),
+  // Identifica o case atraves dos idiomas: o `id` muda por locale, o `documentId` nao.
+  // E o que permite traduzir o slug ao trocar de idioma (o mock nao tem, por isso opcional).
+  documentId: z.string().min(1).optional(),
   title: z.string().min(1),
   slug: z.string().min(1),
   locale: cmsLocaleSchema,

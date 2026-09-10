@@ -1,5 +1,7 @@
 import "server-only";
 
+import { z } from "zod";
+
 import { fetchFromCms } from "@/lib/cms/client";
 import {
   cmsCaseSchema,
@@ -7,7 +9,7 @@ import {
   type CmsCase,
 } from "@/lib/cms/schemas";
 import { getMockCaseBySlug, getMockCases } from "@/lib/cms/mock-cases";
-import type { SupportedLocale } from "@/lib/i18n/config";
+import { supportedLocales, type SupportedLocale } from "@/lib/i18n/config";
 
 const cmsCaseCollectionSchema = cmsCollectionResponseSchema(cmsCaseSchema);
 
@@ -31,8 +33,45 @@ const caseSectionsPopulate = {
   "populate[sections][on][case.highlight-section][populate]": "*",
   "populate[sections][on][case.figure-section][populate][image]": true,
   "populate[sections][on][case.two-column-section][populate]": "*",
-  "populate[sections][on][case.panel-section][populate]": "*",
 } as const;
+
+/* Componentes adicionados depois do CMS ir para producao. Se a Strapi ainda nao os
+   conhece, o `populate ... on` deles derruba a requisicao inteira com 400 e a pagina
+   cai no mock. Ficam separados para serem removidos no retry — mesmo mecanismo que
+   `pages.ts` ganhou em a12dd61, que aqui faltava.
+
+   `case.panel-section` ja existia; o que e novo e o `blocks` (case.panel-block) dentro
+   dele. Sem a linha, o painel perde as figuras ate o cms subir, mas a pagina continua
+   vindo do CMS em vez do mock. */
+const optionalCasePopulate = {
+  "populate[sections][on][case.panel-section][populate][blocks][populate][image]": true,
+} as const;
+
+/**
+ * Roda a query de cases com os populates opcionais e, se a Strapi ainda nao conhecer
+ * um componente novo (400 "Invalid key ... at sections.on"), repete sem eles. Assim um
+ * CMS mais antigo que o frontend custa as figuras do painel, e nao a pagina inteira
+ * caindo no mock.
+ */
+async function fetchCasesWithFallback(
+  query: Record<string, string | number | boolean>,
+  init?: RequestInit
+) {
+  const run = (extra: Record<string, string | number | boolean>) =>
+    fetchFromCms({
+      path: "/api/case-studies",
+      query: { ...query, ...extra },
+      schema: cmsCaseCollectionSchema,
+      init,
+    });
+
+  try {
+    return await run(optionalCasePopulate);
+  } catch (error) {
+    console.warn("[CMS] populate completo de case falhou, repetindo sem os componentes novos:", error);
+    return run({});
+  }
+}
 
 type GetCasesArgs = {
   locale: SupportedLocale;
@@ -41,20 +80,16 @@ type GetCasesArgs = {
 
 export async function getCases({ locale, limit }: GetCasesArgs): Promise<CmsCase[]> {
   try {
-    const response = await fetchFromCms({
-      path: "/api/case-studies",
-      query: {
+    const response = await fetchCasesWithFallback(
+      {
         locale,
         sort: "publishedAt:desc",
         ...(limit ? { "pagination[pageSize]": limit } : {}),
         "populate[coverImage]": true,
         ...caseSectionsPopulate,
       },
-      schema: cmsCaseCollectionSchema,
-      init: {
-        next: { revalidate: 300, tags: ["cases"] },
-      },
-    });
+      { next: { revalidate: 300, tags: ["cases"] } }
+    );
 
     if (response.data.length === 0) {
       return sliceLimit(getMockCases(locale), limit);
@@ -90,9 +125,8 @@ export async function getCasesPage({
   perPage?: number;
 }): Promise<CasesPage> {
   try {
-    const response = await fetchFromCms({
-      path: "/api/case-studies",
-      query: {
+    const response = await fetchCasesWithFallback(
+      {
         locale,
         sort: "publishedAt:desc",
         "pagination[page]": page,
@@ -100,9 +134,8 @@ export async function getCasesPage({
         "populate[coverImage]": true,
         ...caseSectionsPopulate,
       },
-      schema: cmsCaseCollectionSchema,
-      init: { next: { revalidate: 300, tags: ["cases", `cases:page:${page}`] } },
-    });
+      { next: { revalidate: 300, tags: ["cases", `cases:page:${page}`] } }
+    );
     const meta = response.meta?.pagination;
     if (response.data.length > 0 && meta) {
       return {
@@ -143,21 +176,94 @@ export async function getCaseBySlug({
   slug: string;
 }): Promise<CmsCase | null> {
   try {
-    const response = await fetchFromCms({
-      path: "/api/case-studies",
-      query: {
+    const response = await fetchCasesWithFallback(
+      {
         locale,
         "filters[slug][$eq]": slug,
         "pagination[pageSize]": 1,
         "populate[coverImage]": true,
         ...caseSectionsPopulate,
       },
-      schema: cmsCaseCollectionSchema,
-      init: { next: { revalidate: 300, tags: ["cases", `case:${slug}`] } },
-    });
+      { next: { revalidate: 300, tags: ["cases", `case:${slug}`] } }
+    );
     return response.data[0] ?? getMockCaseBySlug(locale, slug);
   } catch (error) {
     console.error(`[CMS ERROR] getCaseBySlug failed (locale: ${locale}, slug: ${slug}):`, error);
     return getMockCaseBySlug(locale, slug);
   }
+}
+
+/**
+ * Um case e um unico documento no Strapi (`documentId`) com **slug proprio por idioma**:
+ * `monitoramento-de-baleias` em pt-BR e `monitoramento-acustico-de-cetaceos` em en/es.
+ *
+ * O seletor de idioma do header vive no layout, que nao conhece o slug da rota filha, entao
+ * ele so troca o segmento do locale e mantem o slug — o que caia em 404 ao sair do pt-BR.
+ * Estas duas funcoes deixam a **rota** resolver isso: ela redireciona para o slug correto e
+ * emite os `hreflang` certos.
+ */
+const caseSlugCollectionSchema = cmsCollectionResponseSchema(
+  z.object({
+    documentId: z.string().min(1),
+    slug: z.string().min(1),
+  })
+);
+
+async function fetchCaseSlugs(query: Record<string, string | number | boolean>) {
+  const response = await fetchFromCms({
+    path: "/api/case-studies",
+    query: { "fields[0]": "slug", "pagination[pageSize]": 1, ...query },
+    schema: caseSlugCollectionSchema,
+    init: { next: { revalidate: 300, tags: ["cases"] } },
+  });
+  return response.data;
+}
+
+/** Slug do case em cada idioma, para os `hreflang` da pagina. */
+export async function getCaseSlugsByDocumentId(
+  documentId: string
+): Promise<Partial<Record<SupportedLocale, string>>> {
+  const pairs = await Promise.all(
+    supportedLocales.map(async (locale) => {
+      try {
+        const [entry] = await fetchCaseSlugs({
+          locale,
+          "filters[documentId][$eq]": documentId,
+        });
+        return [locale, entry?.slug] as const;
+      } catch {
+        return [locale, undefined] as const;
+      }
+    })
+  );
+
+  return Object.fromEntries(pairs.filter(([, slug]) => Boolean(slug))) as Partial<
+    Record<SupportedLocale, string>
+  >;
+}
+
+/**
+ * Dado um slug que nao existe em `targetLocale`, procura a que documento ele pertence nos
+ * demais idiomas e devolve o slug equivalente no idioma pedido. `null` quando o slug nao
+ * existe em idioma nenhum — ai e 404 de verdade.
+ */
+export async function translateCaseSlug({
+  slug,
+  targetLocale,
+}: {
+  slug: string;
+  targetLocale: SupportedLocale;
+}): Promise<string | null> {
+  for (const locale of supportedLocales) {
+    if (locale === targetLocale) continue;
+    try {
+      const [entry] = await fetchCaseSlugs({ locale, "filters[slug][$eq]": slug });
+      if (!entry) continue;
+      const slugs = await getCaseSlugsByDocumentId(entry.documentId);
+      return slugs[targetLocale] ?? null;
+    } catch {
+      // Idioma indisponivel no CMS: tenta o proximo.
+    }
+  }
+  return null;
 }

@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { CaseSections } from "@/components/ui/case-sections";
 import { ContactCard } from "@/components/ui/contact-card";
-import { getCaseBySlug } from "@/lib/cms/cases";
+import {
+  getCaseBySlug,
+  getCaseSlugsByDocumentId,
+  translateCaseSlug,
+} from "@/lib/cms/cases";
 import { getMockCases } from "@/lib/cms/mock-cases";
 import { articleJsonLd, jsonLdScript } from "@/lib/seo/jsonld";
 import { getSiteUrl } from "@/lib/seo/site-url";
@@ -66,9 +70,18 @@ export async function generateMetadata({ params }: CaseDetailPageProps): Promise
   const canonical = `/${locale}/cases/${caseEntry.slug}`;
   // D-05: a imagem social vem de coverImage, o campo de metadado que permanece no content type.
   const ogImageUrl = resolveMediaUrl(caseEntry.coverImage?.url);
+  // Cada idioma tem slug proprio; repetir o slug do locale atual apontava os hreflang
+  // para URLs inexistentes.
+  const slugByLocale = caseEntry.documentId
+    ? await getCaseSlugsByDocumentId(caseEntry.documentId)
+    : {};
   const languages: Record<string, string> = {};
-  for (const l of supportedLocales) languages[l] = `/${l}/cases/${caseEntry.slug}`;
-  languages["x-default"] = `/pt-BR/cases/${caseEntry.slug}`;
+  for (const l of supportedLocales) {
+    const localizedSlug = slugByLocale[l];
+    if (localizedSlug) languages[l] = `/${l}/cases/${localizedSlug}`;
+  }
+  const defaultSlug = slugByLocale["pt-BR"] ?? caseEntry.slug;
+  languages["x-default"] = `/pt-BR/cases/${defaultSlug}`;
   return {
     title: `${caseEntry.title} | Immer Messen`,
     description: caseEntry.summary,
@@ -94,6 +107,13 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
   const caseEntry = await getCaseBySlug({ locale: resolvedLocale, slug });
 
   if (!caseEntry) {
+    // O seletor de idioma do header troca so o segmento do locale e mantem o slug, que e
+    // proprio de cada idioma. Em vez de 404, resolve para o slug equivalente — isso tambem
+    // conserta links antigos e colados de outro idioma.
+    const translated = await translateCaseSlug({ slug, targetLocale: resolvedLocale });
+    if (translated) {
+      redirect(`/${resolvedLocale}/cases/${translated}`);
+    }
     notFound();
   }
 

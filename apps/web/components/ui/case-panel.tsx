@@ -28,9 +28,23 @@ import { useId, useState } from "react";
 
 import { CaseIcon, type CaseIconKey } from "@/components/ui/case-icons";
 
+/**
+ * Sub-bloco do corpo do painel (`case.panel-block`). Existe para intercalar figuras
+ * com o texto: o `body` do painel sozinho e richtext e nao carrega midia do Strapi.
+ */
+export type CasePanelBlock = {
+  id?: number;
+  heading?: string | null;
+  bodyHtml?: string | null;
+  imageSrc?: string | null;
+  alt?: string | null;
+  caption?: string | null;
+};
+
 type CasePanelProps = {
   title: string;
   bodyHtml: string;
+  blocks?: CasePanelBlock[];
   iconName?: CaseIconKey | string | null;
   /** Estado inicial vindo do campo `defaultOpen` do editor (D-10). Renderizado no servidor. */
   defaultOpen?: boolean;
@@ -41,6 +55,7 @@ type CasePanelProps = {
 export function CasePanel({
   title,
   bodyHtml,
+  blocks,
   iconName,
   defaultOpen,
   headingLevel,
@@ -87,12 +102,56 @@ export function CasePanel({
         id={panelId}
         role="region"
       >
-        <div
-          className="case-panel__body-inner"
-          dangerouslySetInnerHTML={{ __html: bodyHtml }}
-          inert={!open}
-        />
+        <div className="case-panel__body-inner" inert={!open}>
+          <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+          {(blocks ?? []).map((block, position) => (
+            <CasePanelSubBlock
+              block={block}
+              key={block.id ?? position}
+              /* Um nivel abaixo do titulo do painel, para nao pular degrau na arvore. */
+              headingLevel={headingLevel === 1 ? 2 : 3}
+            />
+          ))}
+        </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * Um sub-bloco do painel. Todos os campos sao opcionais no content type, entao cada
+ * parte so entra se estiver preenchida — um bloco pode ser so texto, so figura, ou os dois.
+ *
+ * A figura segue o mesmo contrato de `case.figure-section`: sem `src` nao renderiza, e o
+ * `alt` do bloco vence o `alternativeText` da midia (que e global, nao acompanha o locale).
+ */
+function CasePanelSubBlock({
+  block,
+  headingLevel,
+}: {
+  block: CasePanelBlock;
+  headingLevel: 2 | 3;
+}) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
+  const src = (block.imageSrc ?? "").trim();
+  const alt = (block.alt ?? "").trim();
+
+  return (
+    <div className="case-panel__block">
+      {block.heading ? (
+        <Heading className="case-panel__block-title">{block.heading}</Heading>
+      ) : null}
+      {block.bodyHtml ? (
+        <div dangerouslySetInnerHTML={{ __html: block.bodyHtml }} />
+      ) : null}
+      {src ? (
+        <figure className="case-panel__figure">
+          <img alt={alt} loading="lazy" src={src} />
+          {block.caption ? (
+            <figcaption className="case-panel__figure-caption">{block.caption}</figcaption>
+          ) : null}
+        </figure>
+      ) : null}
+    </div>
   );
 }

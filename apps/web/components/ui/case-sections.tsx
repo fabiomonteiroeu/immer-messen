@@ -329,6 +329,14 @@ function CaseBlock({
     case "case.panel-section":
       return (
         <CasePanel
+          blocks={(section.blocks ?? []).map((block) => ({
+            alt: block.alt ?? block.image?.alternativeText ?? null,
+            bodyHtml: block.body ?? null,
+            caption: block.caption ?? null,
+            heading: block.heading ?? null,
+            id: block.id,
+            imageSrc: resolveMediaUrl(block.image?.url),
+          }))}
           bodyHtml={section.body}
           defaultOpen={section.defaultOpen ?? true}
           headingLevel={headingLevel}
