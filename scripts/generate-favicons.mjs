@@ -2,7 +2,7 @@
 // Gera o set de favicons a partir do símbolo vetorial da marca.
 // O favicon antigo era o logo horizontal (85x48) servido numa caixa quadrada,
 // então o browser esmagava a proporção. Aqui o mark é centralizado num canvas
-// quadrado sobre o navy da marca, mantendo o aspect-ratio original.
+// quadrado com fundo transparente, mantendo o aspect-ratio original.
 
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -14,7 +14,8 @@ const repoRoot = path.resolve(here, "..");
 const require = createRequire(import.meta.url);
 const sharp = require("sharp");
 
-const BG = "#060814"; // var(--c-navy-deep) — preserva a silhueta do símbolo, que se funde no navy claro
+// Fundo transparente: o simbolo aparece sobre a cor da aba do browser, sem caixa.
+const BG = { r: 0, g: 0, b: 0, alpha: 0 };
 const MARK_WIDTH_RATIO = 0.72; // largura do símbolo em relação ao lado do canvas
 
 const markPath = path.join(repoRoot, "apps/web/public/assets/img/logo-mark.svg");
