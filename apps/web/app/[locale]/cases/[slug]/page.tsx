@@ -6,19 +6,35 @@ import { CaseSections } from "@/components/ui/case-sections";
 import { ContactCard } from "@/components/ui/contact-card";
 import {
   getCaseBySlug,
+  getCases,
   getCaseSlugsByDocumentId,
   translateCaseSlug,
 } from "@/lib/cms/cases";
-import { getMockCases } from "@/lib/cms/mock-cases";
 import { articleJsonLd, jsonLdScript } from "@/lib/seo/jsonld";
 import { getSiteUrl } from "@/lib/seo/site-url";
 import { isSupportedLocale, supportedLocales, type SupportedLocale } from "@/lib/i18n/config";
 import { resolveMediaUrl } from "@/lib/cms/media";
 
-export function generateStaticParams() {
-  return supportedLocales.flatMap((locale) =>
-    getMockCases(locale).map((entry) => ({ locale, slug: entry.slug })),
+/**
+ * Pre-renderiza a partir do CMS, nao do mock.
+ *
+ * Usar `getMockCases` aqui pre-renderizava slugs que so existem no mock, e o site
+ * publicava paginas fantasma com conteudo de placeholder. Se o CMS estiver
+ * indisponivel no build, a lista vem vazia e cada case e renderizado sob demanda —
+ * melhor nenhuma pagina pre-renderizada do que paginas erradas.
+ */
+export async function generateStaticParams() {
+  const perLocale = await Promise.all(
+    supportedLocales.map(async (locale) => {
+      try {
+        const cases = await getCases({ locale });
+        return cases.map((entry) => ({ locale, slug: entry.slug }));
+      } catch {
+        return [];
+      }
+    })
   );
+  return perLocale.flat();
 }
 
 type CaseDetailPageProps = {

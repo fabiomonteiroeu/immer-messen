@@ -186,7 +186,11 @@ export async function getCaseBySlug({
       },
       { next: { revalidate: 300, tags: ["cases", `case:${slug}`] } }
     );
-    return response.data[0] ?? getMockCaseBySlug(locale, slug);
+    // Resposta vazia do CMS significa "nao existe", e nao "CMS indisponivel": cair no
+    // mock aqui criava paginas fantasma — slugs que so existem no mock respondiam 200
+    // com conteudo de placeholder. O fallback fica so no catch, para o caso de o CMS
+    // estar fora do ar.
+    return response.data[0] ?? null;
   } catch (error) {
     console.error(`[CMS ERROR] getCaseBySlug failed (locale: ${locale}, slug: ${slug}):`, error);
     return getMockCaseBySlug(locale, slug);
