@@ -82,6 +82,20 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
+  /* O case de gasoduto onshore estava publicado sob um slug copiado por engano de
+     outro case ("cabos submarinos" num case de duto terrestre). O slug foi corrigido
+     em 8d9d057; o redirect preserva qualquer link ja compartilhado.
+     Redirect de slug antigo mora aqui, e nao na rota: a rota so sabe traduzir slug
+     entre idiomas, a partir de slugs que ainda existem no CMS. */
+  async redirects() {
+    return [
+      {
+        source: "/:locale(pt-BR|en|es)/cases/monitoramento-de-cabos-submarinos",
+        destination: "/:locale/cases/monitoramento-inteligente-de-dutos",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
