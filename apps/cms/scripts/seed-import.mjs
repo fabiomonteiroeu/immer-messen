@@ -23,6 +23,18 @@ const REPO_ROOT = path.resolve(SCRIPT_DIR, "../../..");
 const STRAPI_URL = process.env.STRAPI_URL ?? "http://localhost:1337";
 const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
 const DRY_RUN = process.argv.includes("--dry-run");
+// Escopo opcional da execucao. Sem flag, o comportamento e o de sempre (5 fases,
+// todos os locales). `--only=cases` roda so a fase de case studies e `--locales=`
+// restringe quais variantes sao gravadas — juntos permitem publicar uma traducao
+// sem reescrever paginas, single types e catalogos que possam ter sido editados
+// no admin depois do ultimo seed.
+const ONLY = process.argv.find((a) => a.startsWith("--only="))?.split("=")[1] ?? null;
+const LOCALES_FILTER = (() => {
+  const raw = process.argv.find((a) => a.startsWith("--locales="))?.split("=")[1];
+  if (!raw) return null;
+  const list = raw.split(",").map((s) => s.trim()).filter(Boolean);
+  return list.length > 0 ? list : null;
+})();
 const VERBOSE = process.env.SEED_VERBOSE === "1";
 
 if (!STRAPI_API_TOKEN && !DRY_RUN) {
@@ -528,6 +540,7 @@ async function seedLocalizedCollection({ collectionKey, plural, items, assetMap,
   // Group items by key
   const itemsByKey = new Map();
   for (const item of items) {
+    if (LOCALES_FILTER && !LOCALES_FILTER.includes(item.locale)) continue;
     if (!itemsByKey.has(item.key)) itemsByKey.set(item.key, []);
     itemsByKey.get(item.key).push(item);
   }
@@ -611,6 +624,25 @@ async function seedNewsArticles(assetIdByKey) {
   });
 }
 
+// Le os ids das application areas ja existentes no CMS em vez de regravá-las.
+// Usado pelo `--only=cases`: os cases precisam dos ids para manter a relacao,
+// mas nao ha motivo para reescrever o catalogo de areas.
+async function resolveApplicationAreaIds() {
+  const ids = new Map();
+  const seen = new Set();
+  for (const area of seedContent.applicationAreas) {
+    if (area.locale !== "pt-BR" || seen.has(area.key)) continue;
+    seen.add(area.key);
+    const found = await findOneByFilter("application-areas", {
+      "filters[slug][$eq]": area.data.slug,
+      locale: "pt-BR",
+    });
+    if (found?.id) ids.set(area.key, found.id);
+    else log(`application area ${area.key} nao encontrada no CMS`);
+  }
+  return ids;
+}
+
 async function seedCaseStudies(assetIdByKey, areaIds) {
   return seedLocalizedCollection({
     collectionKey: "case-study",
@@ -624,9 +656,17 @@ async function seedCaseStudies(assetIdByKey, areaIds) {
       if (coverId) data.coverImage = coverId;
 
       if (variant.relationRefs?.applicationAreaKeys?.length) {
-        data.applicationAreas = variant.relationRefs.applicationAreaKeys
-          .map((k) => areaIds.get(k))
-          .filter((id) => typeof id === "number");
+        const keys = variant.relationRefs.applicationAreaKeys;
+        const mapped = keys.map((k) => areaIds.get(k));
+        // Antes o `.filter` mandava um array vazio quando nada resolvia, o que
+        // APAGA a relacao no Strapi. Melhor abortar do que gravar isso.
+        const missing = keys.filter((_, i) => typeof mapped[i] !== "number");
+        if (missing.length > 0) {
+          throw new Error(
+            `case ${variant.key} [${variant.locale}]: application areas nao resolvidas (${missing.join(", ")}) — abortando para nao apagar a relacao`
+          );
+        }
+        data.applicationAreas = mapped;
       }
 
       // Hero, logos de parceiro e figuras vivem dentro de `sections` desde o
@@ -741,7 +781,29 @@ async function seedPages({ assetIdByKey, areaIds, partnerIds, articleIds, caseId
 }
 
 async function main() {
-  log(`Strapi URL: ${STRAPI_URL}${DRY_RUN ? " (dry-run)" : ""}`);
+  const scope = [DRY_RUN ? "dry-run" : null, ONLY ? `only=${ONLY}` : null, LOCALES_FILTER ? `locales=${LOCALES_FILTER.join(",")}` : null]
+    .filter(Boolean)
+    .join(", ");
+  log(`Strapi URL: ${STRAPI_URL}${scope ? ` (${scope})` : ""}`);
+
+  if (ONLY === "cases") {
+    // A fase de assets e idempotente: `uploadAsset` reaproveita por nome o arquivo
+    // que ja esta em /uploads e so envia o que falta — nao substitui nada.
+    log("Phase 1/3 — assets");
+    const assetIdByKey = await uploadAllAssets();
+    log(`  uploaded/resolved ${assetIdByKey.size} assets`);
+
+    log("Phase 2/3 — application areas (somente leitura, para as relacoes)");
+    const areaIds = await resolveApplicationAreaIds();
+    log(`  resolved ${areaIds.size} application areas`);
+
+    log("Phase 3/3 — case studies");
+    const caseIds = await seedCaseStudies(assetIdByKey, areaIds);
+    log(JSON.stringify({ assets: assetIdByKey.size, caseStudies: caseIds.size }, null, 2));
+    return;
+  }
+
+  if (ONLY) throw new Error(`--only=${ONLY} desconhecido (suportado: cases)`);
 
   log("Phase 1/5 — assets");
   const assetIdByKey = await uploadAllAssets();
