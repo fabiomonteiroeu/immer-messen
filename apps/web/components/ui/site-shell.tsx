@@ -28,7 +28,6 @@ type SiteShellProps = {
 
 const FALLBACK_LOGO = "/assets/img/logo-immer.png";
 const FALLBACK_CONTACT_EMAIL = "contato@immermessen.com";
-const FALLBACK_CONTACT_PHONE = "+55 41 00000-0000";
 
 function isActive(pathname: string, href: string) {
   if (pathname === href) return true;
@@ -150,9 +149,6 @@ export function SiteShell({
 
   const contactEmail =
     footer?.contactDetails?.email ?? global?.contactDetails?.email ?? FALLBACK_CONTACT_EMAIL;
-  const contactPhone =
-    footer?.contactDetails?.phone ?? global?.contactDetails?.phone ?? FALLBACK_CONTACT_PHONE;
-  const contactPhoneHref = `tel:${contactPhone.replace(/\D+/g, "")}`;
   const contactAddress =
     footer?.contactDetails?.address ?? global?.contactDetails?.address ?? null;
   const socialLinks = (global?.socialLinks ?? []).filter((social) =>
@@ -214,7 +210,6 @@ export function SiteShell({
               ) : null}
               <div className="footer-contact__links">
                 <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
-                <a href={contactPhoneHref}>{contactPhone}</a>
               </div>
               {socialLinks.length > 0 ? (
                 <ul className="footer-social">

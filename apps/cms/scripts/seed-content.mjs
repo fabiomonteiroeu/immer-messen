@@ -177,8 +177,10 @@ const shell = {
         "https://www.immermessen.com/pt-BR"
       ),
       contactDetails: {
+        // Telefone retirado do rodape na revisao do cliente de 10/09; `null`
+        // explicito para o seed limpar o valor que ja esta gravado no CMS.
+        phone: null,
         email: "contato@immermessen.com",
-        phone: "+55 41 00000-0000",
         address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       socialLinks: [
@@ -203,8 +205,10 @@ const shell = {
         },
       ],
       contactDetails: {
+        // Telefone retirado do rodape na revisao do cliente de 10/09; `null`
+        // explicito para o seed limpar o valor que ja esta gravado no CMS.
+        phone: null,
         email: "contato@immermessen.com",
-        phone: "+55 41 00000-0000",
         address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       copyrightText: "© 2026 Immer Messen. Todos os direitos reservados.",
@@ -234,8 +238,10 @@ const shell = {
         "https://www.immermessen.com/en"
       ),
       contactDetails: {
+        // Telefone retirado do rodape na revisao do cliente de 10/09; `null`
+        // explicito para o seed limpar o valor que ja esta gravado no CMS.
+        phone: null,
         email: "contato@immermessen.com",
-        phone: "+55 41 00000-0000",
         address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       socialLinks: [
@@ -260,8 +266,10 @@ const shell = {
         },
       ],
       contactDetails: {
+        // Telefone retirado do rodape na revisao do cliente de 10/09; `null`
+        // explicito para o seed limpar o valor que ja esta gravado no CMS.
+        phone: null,
         email: "contato@immermessen.com",
-        phone: "+55 41 00000-0000",
         address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       copyrightText: "© 2026 Immer Messen. All rights reserved.",
@@ -291,8 +299,10 @@ const shell = {
         "https://www.immermessen.com/es"
       ),
       contactDetails: {
+        // Telefone retirado do rodape na revisao do cliente de 10/09; `null`
+        // explicito para o seed limpar o valor que ja esta gravado no CMS.
+        phone: null,
         email: "contato@immermessen.com",
-        phone: "+55 41 00000-0000",
         address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       socialLinks: [
@@ -317,8 +327,10 @@ const shell = {
         },
       ],
       contactDetails: {
+        // Telefone retirado do rodape na revisao do cliente de 10/09; `null`
+        // explicito para o seed limpar o valor que ja esta gravado no CMS.
+        phone: null,
         email: "contato@immermessen.com",
-        phone: "+55 41 00000-0000",
         address: "Rua Desembargador Westphalen, 868 - Sala 504\nRebouças - Curitiba - PR\nCEP: 80.230-100",
       },
       copyrightText: "© 2026 Immer Messen. Todos los derechos reservados.",
@@ -1052,8 +1064,8 @@ const caseStudyDefs = [
       slug: "monitoramento-de-baleias",
       title: "Monitoramento de baleias",
       summary: "Monitoramento de Cetáceos com Sensoriamento Distribuído a Fibra Óptica",
-      duration: "3 meses",
-      tags: "offshore, integridade de dutos, DAS, P&D",
+      duration: "2 anos",
+      tags: "offshore, bioacústica marinha, cetáceos, DAS, P&D",
       body: "<p>Usando a fibra óptica instalada como sensor distribuído, o sistema identifica padrões acústicos característicos de diferentes espécies de cetáceos. As detecções alimentam um protocolo de mitigação que aciona pausas operacionais automáticas durante atividades sísmicas em áreas de presença confirmada.</p><p>O projeto combinou catalogação acústica, classificação por algoritmos próprios e estruturação de alertas para o time técnico — entregando maior cobertura observacional e consolidação de referência técnica para aplicações ambientais offshore.</p>",
       seoTitle: "Monitoramento acústico de cetáceos",
       seoDescription: "Case ambiental com uso de DAS para fauna marinha.",
@@ -1085,8 +1097,8 @@ const caseStudyDefs = [
       slug: "monitoramento-acustico-de-cetaceos",
       title: "Acoustic monitoring of cetaceans",
       summary: "Cetacean Monitoring with Distributed Fibre Optic Sensing",
-      duration: "3 months",
-      tags: "offshore, pipeline integrity, DAS, R&D",
+      duration: "2 years",
+      tags: "offshore, marine bioacoustics, cetaceans, DAS, R&D",
       body: "<p>Using installed optical fiber as a distributed sensor, the system identifies acoustic patterns characteristic of different cetacean species. Detections feed a mitigation protocol that automatically triggers operational pauses during seismic activity in areas of confirmed presence.</p><p>The project combined acoustic cataloging, classification by proprietary algorithms and alert structuring for the technical team — delivering greater observational coverage and a consolidated technical reference for offshore environmental applications.</p>",
       seoTitle: "Acoustic monitoring of cetaceans",
       seoDescription: "Environmental case using DAS for marine fauna.",
@@ -1118,8 +1130,8 @@ const caseStudyDefs = [
       slug: "monitoramento-acustico-de-cetaceos",
       title: "Monitoreo acústico de cetáceos",
       summary: "Monitoreo de Cetáceos con Sensado Distribuido por Fibra Óptica",
-      duration: "3 meses",
-      tags: "offshore, integridad de ductos, DAS, I+D",
+      duration: "2 años",
+      tags: "offshore, bioacústica marina, cetáceos, DAS, I+D",
       body: "<p>Usando la fibra óptica instalada como sensor distribuido, el sistema identifica patrones acústicos característicos de diferentes especies de cetáceos. Las detecciones alimentan un protocolo de mitigación que activa pausas operativas automáticas durante actividades sísmicas en áreas de presencia confirmada.</p><p>El proyecto combinó catalogación acústica, clasificación por algoritmos propios y estructuración de alertas para el equipo técnico — entregando mayor cobertura observacional y consolidación de una referencia técnica para aplicaciones ambientales offshore.</p>",
       seoTitle: "Monitoreo acústico de cetáceos",
       seoDescription: "Caso ambiental con uso de DAS para fauna marina.",
@@ -1133,7 +1145,7 @@ const caseStudyDefs = [
     coverAssetKey: "case-cover-gasodutos-onshore",
     heroAssetKey: "case-cover-gasodutos-onshore",
     client: "Transporte de Gás Natural / Brasil",
-    startDate: "2024-06-01",
+    startDate: "2026-07-01",
     datePrecision: "month",
     projectLogoKeys: ["immer-messen"],
     figures: [
@@ -1142,15 +1154,24 @@ const caseStudyDefs = [
         assetKey: "case-fig-dutos-sinais",
         "pt-BR": {
           alt: "Três registros DAS empilhados e rotulados I, II e III, cada um com a janela de detecção destacada e a classe atribuída pelo algoritmo: pessoa, veículo leve e escavadeira.",
-          caption: "Fonte: Imagem I.: Identificação automática de passos humanos em torno do ativo monitorado; Imagem II.: Identificação automática de veículo leve trafegando próximo ao ativo monitorado; Imagem III. Identificação automática de escavadeira operando próximo ao ativo monitorado",
+          caption:
+            "Fonte: Imagem I: Identificação automática de passos humanos em torno do ativo monitorado\n" +
+            "Imagem II: Identificação automática de veículo leve trafegando próximo ao ativo monitorado\n" +
+            "Imagem III: Identificação automática de escavadeira operando próximo ao ativo monitorado",
         },
         en: {
           alt: "Three stacked DAS records labelled I, II and III, each with the detection window highlighted and the class assigned by the algorithm: person, light vehicle and excavator.",
-          caption: "Source: Image I: automatic identification of human footsteps around the monitored asset; Image II: automatic identification of a light vehicle travelling near the monitored asset; Image III: automatic identification of an excavator operating near the monitored asset",
+          caption:
+            "Source: Image I: automatic identification of human footsteps around the monitored asset\n" +
+            "Image II: automatic identification of a light vehicle travelling near the monitored asset\n" +
+            "Image III: automatic identification of an excavator operating near the monitored asset",
         },
         es: {
           alt: "Tres registros DAS apilados y rotulados I, II y III, cada uno con la ventana de detección destacada y la clase asignada por el algoritmo: persona, vehículo ligero y excavadora.",
-          caption: "Fuente: Imagen I: identificación automática de pasos humanos en torno al activo monitoreado; Imagen II: identificación automática de vehículo ligero circulando cerca del activo monitoreado; Imagen III: identificación automática de excavadora operando cerca del activo monitoreado",
+          caption:
+            "Fuente: Imagen I: identificación automática de pasos humanos en torno al activo monitoreado\n" +
+            "Imagen II: identificación automática de vehículo ligero circulando cerca del activo monitoreado\n" +
+            "Imagen III: identificación automática de excavadora operando cerca del activo monitoreado",
         },
       },
       {
@@ -1189,7 +1210,7 @@ const caseStudyDefs = [
       slug: "monitoramento-inteligente-de-dutos",
       title: "Monitoramento Inteligente de Dutos por Fibra Óptica",
       summary: "Detecção de Anomalias em Tempo Real",
-      duration: "3 meses",
+      duration: "3 semanas",
       tags: "DFOS, Fibra Óptica, Monitoramento de Dutos, Detecção de Anomalias, Inteligência Artificial, Machine Learning, Segurança de Dutos, Pipelines, Monitoramento em Tempo Real, Oil & Gas",
       body: "<p>Utilizando um cabo de fibra óptica de telecomunicações comum instalado ao longo do duto, o sistema DATS transformou a fibra em uma rede densa de sensores acústicos distribuídos, com resolução espacial de 3 metros e sem qualquer equipamento adicional em campo.</p><p>Os algoritmos de IA classificam automaticamente cada evento detectado — pessoa, motocicleta, veículo leve, veículo pesado, escavadeira, perfuração do duto e animais — e disparam alertas por SMS em menos de 1 minuto, acompanhados remotamente de uma sala de controle a mais de 200 km do trecho monitorado.</p>",
       seoTitle: "Monitoramento inteligente de dutos por fibra óptica",
@@ -1215,7 +1236,7 @@ const caseStudyDefs = [
       slug: "monitoramento-de-gasodutos-onshore",
       title: "Intelligent Pipeline Monitoring with Optical Fibre",
       summary: "Real-Time Anomaly Detection",
-      duration: "3 months",
+      duration: "3 weeks",
       tags: "DFOS, Optical Fibre, Pipeline Monitoring, Anomaly Detection, Artificial Intelligence, Machine Learning, Pipeline Security, Pipelines, Real-Time Monitoring, Oil & Gas",
       body: "<p>Using an ordinary telecom optical fibre cable installed along the pipeline, the DATS system turned the fibre into a dense array of distributed acoustic sensors, with 3-metre spatial resolution and no additional equipment in the field.</p><p>AI algorithms automatically classify every detected event — person, motorcycle, light vehicle, heavy vehicle, excavator, pipeline drilling and livestock — and trigger SMS alerts in under a minute, monitored remotely from a control room more than 200 km from the section under surveillance.</p>",
       seoTitle: "Intelligent pipeline monitoring with optical fibre",
@@ -1241,7 +1262,7 @@ const caseStudyDefs = [
       slug: "monitoramento-de-gasodutos-onshore",
       title: "Monitoreo Inteligente de Ductos por Fibra Óptica",
       summary: "Detección de Anomalías en Tiempo Real",
-      duration: "3 meses",
+      duration: "3 semanas",
       tags: "DFOS, Fibra Óptica, Monitoreo de Ductos, Detección de Anomalías, Inteligencia Artificial, Machine Learning, Seguridad de Ductos, Pipelines, Monitoreo en Tiempo Real, Oil & Gas",
       body: "<p>Utilizando un cable de fibra óptica de telecomunicaciones común instalado a lo largo del ducto, el sistema DATS transformó la fibra en una red densa de sensores acústicos distribuidos, con resolución espacial de 3 metros y sin ningún equipo adicional en campo.</p><p>Los algoritmos de IA clasifican automáticamente cada evento detectado — persona, motocicleta, vehículo ligero, vehículo pesado, excavadora, perforación del ducto y animales — y disparan alertas por SMS en menos de 1 minuto, monitoreados remotamente desde una sala de control a más de 200 km del tramo vigilado.</p>",
       seoTitle: "Monitoreo inteligente de ductos por fibra óptica",
@@ -1882,7 +1903,7 @@ export const assetManifest = {
     { assetKey: "case-fig-dutos-dashboard", sourcePath: "resources/Cases_Imagens/fig-dutos-dashboard.png", kind: "image" },
     { assetKey: "case-fig-dutos-sinais", sourcePath: "resources/Cases_Imagens/fig-dutos-sinais.png", kind: "image" },
     // Lockup empilhado sobre fundo claro: o logo-immer padrao e branco, para fundo escuro.
-    { assetKey: "partner-immer-messen", sourcePath: "resources/Cases_Imagens/logo-immer-empilhado.png", kind: "image" },
+    { assetKey: "partner-immer-messen", sourcePath: "resources/Cases_Imagens/logo-immer-empilhado-completo.png", kind: "image" },
     { assetKey: "case-bg-fibra", sourcePath: "resources/Cases_Imagens/image_022.png", kind: "image" },
     { assetKey: "application-integridade-estrutural", sourcePath: "layout-aprovado/assets/img/areas/integridade-estrutural.png", kind: "image" },
     { assetKey: "application-vazamentos", sourcePath: "layout-aprovado/assets/img/areas/vazamentos.png", kind: "image" },
