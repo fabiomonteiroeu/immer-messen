@@ -1856,6 +1856,24 @@ body.menu-open {
   display: block;
 }
 
+/* Sem esta regra o grid de 1.35fr/1fr sobrevivia ate no celular: a imagem
+   encolhia para pouco mais de metade da tela e o texto descia numa coluna de
+   ~3 palavras por linha. No mobile a captura ocupa a largura toda e titulo,
+   chamada e corpo vem empilhados abaixo dela. */
+@media (max-width: 900px) {
+  .itf__grid {
+    grid-template-columns: 1fr;
+    gap: clamp(1.5rem, 5vw, 2.5rem);
+  }
+
+  /* O `max-width: 12ch` existe para o titulo empilhar dentro da coluna
+     estreita do desktop. Empilhado, a coluna e a tela inteira e o mesmo limite
+     so quebrava o titulo em tres linhas a toa. */
+  .itf__title {
+    max-width: none;
+  }
+}
+
 .tech-cta {
   position: relative;
   isolation: isolate;
@@ -2792,6 +2810,42 @@ a.case-info__logo:focus-visible {
   line-height: 1.35;
   color: rgba(255, 255, 255, .82);
   max-width: 18ch;
+}
+
+@media (max-width: 768px) {
+  /* Os dois selos ficavam ancorados a direita com largura propria, sobrando
+     uma faixa vazia a esquerda. No celular eles dividem a linha inteira. */
+  .hero-badges {
+    left: clamp(1.5rem, 4.6vw, 4.2rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero-badges__item {
+    min-width: 0;
+  }
+
+  /* Quatro colunas numa tela de celular davam ~110px cada: "0,5 - 100 kHz"
+     quebrava em tres linhas. Um dado por linha, e o filete separador passa de
+     lateral para superior porque agora eles se empilham. */
+  .spec-strip__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .spec {
+    min-height: 0;
+    padding: 1.5rem 1.25rem;
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, .16);
+  }
+
+  .spec:first-child {
+    border-top: 0;
+  }
+
+  .spec__label {
+    max-width: none;
+  }
 }
 
 .tech-highlights {
@@ -4809,8 +4863,12 @@ a.case-info__logo:focus-visible {
     padding-top: 1.75rem;
   }
 
+  /* Empilhado, a coluna da marca encosta nos icones sociais logo acima. Mesmo
+     respiro que `.footer-contact` ja usa, sem o filete: acima do logo uma linha
+     divisoria competiria com a propria marca. */
   .footer-brand {
     justify-content: flex-start;
+    padding-top: 1.75rem;
   }
 
   .news-card {
