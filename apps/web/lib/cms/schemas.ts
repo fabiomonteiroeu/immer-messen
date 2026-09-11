@@ -467,10 +467,14 @@ export const cmsMenuColumnSchema = z.object({
   links: z.array(cmsLinkItemSchema).default([]),
 });
 
+/* A Strapi devolve `null` — nao ausente — para campo de componente que foi
+   esvaziado. Sem `.nullable()` o parse estoura e `getGlobalSetting` derruba o
+   layout inteiro para os valores padrao: menu e endereco somem junto. Foi o que
+   aconteceu ao tirar o telefone do rodape na revisao de 10/09. */
 export const cmsContactDetailsSchema = z.object({
-  email: z.string().optional(),
-  phone: z.string().optional(),
-  address: z.string().optional(),
+  email: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
 });
 
 export const cmsSocialLinkSchema = z.object({
